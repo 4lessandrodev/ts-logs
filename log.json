@@ -1,0 +1,33 @@
+{
+  "uid": "266e8f5d-250f-4d05-9486-45d9a9d84671",
+  "name": "First Log",
+  "ip": "none",
+  "origin": "none",
+  "createdAt": "2023-01-28T04:52:09.416Z",
+  "steps": [
+    {
+      "uid": "b489a2fa-219d-48db-8329-96288826c3c8",
+      "name": "Request",
+      "tags": [],
+      "url": "none",
+      "stack": "none",
+      "data": "none",
+      "statusCode": 200,
+      "message": "Some step",
+      "type": "info",
+      "createdAt": "2023-01-28T04:52:09.416Z"
+    },
+    {
+      "uid": "ae8b33a4-616f-4af4-9765-9f9f34133608",
+      "name": "Login",
+      "tags": [],
+      "url": "none",
+      "stack": "Error(\"myError\")@:0\n                    trace()@file:///C:/example.html:9\n                    b(3,,(void 0),[object Object])@file:///C:/example.html:16\n                    first call, firsta)@file:///C:/example.html:19\n                    @file:///C:/example.html:21\n            ",
+      "data": "none",
+      "statusCode": 400,
+      "message": "Tieout",
+      "type": "error",
+      "createdAt": "2023-01-28T04:52:09.416Z"
+    }
+  ]
+}
