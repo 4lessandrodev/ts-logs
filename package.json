@@ -1,5 +1,5 @@
 {
-	"name": "logs",
+	"name": "ts-logs",
 	"description": "This package provide a skd for audit and manager logs in nodejs",
 	"version": "0.0.1-beta.0",
 	"main": "index.js",
