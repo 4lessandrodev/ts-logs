@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import { SProps, Steps, Type } from "../types";
 
 export class Step implements Steps {

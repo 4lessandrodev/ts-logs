@@ -1,6 +1,6 @@
-import { randomUUID } from "crypto";
-import { writeFileSync } from "fs";
-import { resolve } from "path";
+import { randomUUID } from "node:crypto";
+import { writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { Logs, LProps, Steps } from "../types";
 
 export class Log implements Logs {
