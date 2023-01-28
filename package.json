@@ -1,0 +1,61 @@
+{
+	"name": "logs",
+	"devDependencies": {
+		"@types/jest": "^29.4.0",
+		"@types/node": "^18.11.18",
+		"jest": "^29.4.1",
+		"madge": "^5.0.2",
+		"rimraf": "^4.1.2",
+		"ts-jest": "^29.0.5",
+		"ts-node": "^10.9.1",
+		"typescript": "^4.9.4"
+	},
+	"scripts": {
+		"test": "jest --runInBand --silent",
+		"test:verbose": "jest --runInBand",
+		"prebuild": "rimraf ./dist && npm run check:circular-deps && ./clear.sh",
+		"postbuild": "cp -r ./dist/* ./",
+		"build": "tsc -p tsconfig.lib.json",
+		"prepublish": "npm run build",
+		"postpublish": "./clear.sh",
+		"check:circular-deps": "madge --circular --extensions ts ./lib"
+	},
+	"version": "0.0.1.beta.0",
+	"description": "This package provide a skd for audit and manager logs in nodejs",
+	"main": "index.js",
+	"types": "index.d.ts",
+	"author": "Alessandro Dev",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/4lessandrodev/logs.git"
+	},
+	"bugs": {
+		"url": "https://github.com/4lessandrodev/logs/issues"
+	},
+	"homepage": "https://github.com/4lessandrodev/logs",
+	"license": "MIT",
+	"engines": {
+		"node": ">=14.x <19"
+	},
+	"keywords": [
+		"Logs",
+		"Logging",
+		"Audit Log",
+		"Log File",
+		"Debug",
+		"Persist Log"
+	],
+	"files": [
+		"core/*",
+		"utils/*",
+		"index.js",
+		"index.d.ts",
+		"types.d.ts",
+		"types.js",
+		"package.json",
+		"index.d.ts.map",
+		"index.js.map",
+		"types.d.ts.map",
+		"types.js.map"
+	]
+}
