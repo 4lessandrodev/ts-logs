@@ -1,5 +1,5 @@
 {
-	"name": "logs",
+	"name": "@logs",
 	"devDependencies": {
 		"@types/jest": "^29.4.0",
 		"@types/node": "^18.11.18",
