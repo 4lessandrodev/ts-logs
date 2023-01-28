@@ -1,7 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { writeFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { Logs, LProps, Steps } from "../types";
+import WriteDefaultLocal from "../utils/write-default-local.util";
 
 export class Log implements Logs {
     uid!: string;
@@ -24,6 +23,18 @@ export class Log implements Logs {
         return new Log(props);
     }
 
+    setIp(ip: string): Log {
+        return new Log({ ...this, ip });
+    }
+
+    setOrigin(url: string): Logs {
+        return new Log({ ...this, origin: url });
+    }
+
+    setName(name: string): Logs {
+        return new Log({ ...this, name });
+    }
+
     addStep(step: Steps): Log {
         return new Log({ ...this, steps: [...this.steps, step ]});
     }
@@ -33,10 +44,21 @@ export class Log implements Logs {
         return new Log({ ...this, steps });
     }
 
+    /**
+     * @description Save logs locally where the app is running
+     * @param path absolute path of the folder where the file will be saved.
+     * @returns 
+     * @emits fileName: Omit the file name as the file name is defined based on the log name plus creation date
+     * @example path: "/home/user/my-app/logs"
+     * @default path: "/[app-folder]/logs/[log-name]-[year]-[month]-[day].txt".
+     * @throws If an error occurs in the local saving process, the logs will be displayed on the standard output (terminal)
+     */
     async writeLocal(path?: string): Promise<void> {
-        const local = process.cwd();
-        const lcl = resolve(path ?? local, 'log.json');
-        writeFileSync(lcl, JSON.stringify(this, null, 2), 'utf8');
+        try {
+            return WriteDefaultLocal(this, path);
+        } catch (error) {
+            return this.print();
+        }
     }
 
     print(): void {
