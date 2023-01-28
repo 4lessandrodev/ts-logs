@@ -35,6 +35,9 @@ export interface Steps extends SProps {
 }
 
 export interface Logs extends LProps {
+    setName(name: string): Logs;
+    setIp(ip: string): Logs;
+    setOrigin(url: string): Logs;
     addStep(step: Steps): Logs;
     removeStep(uid: string): Logs;
     writeLocal(path?: string): Promise<void>;
