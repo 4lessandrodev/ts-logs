@@ -1,6 +1,6 @@
-import { Color } from "../utils/color.util";
 import { randomUUID } from "node:crypto";
-import { SProps, Steps, Type } from "../types";
+import { Locale, LocalOpt, SProps, Steps, Type } from "../types";
+import { Messages } from "../utils";
 
 export class Step implements Steps {
     readonly uid!: string;
@@ -45,7 +45,7 @@ export class Step implements Steps {
      */
     public static stack(props: Partial<SProps> & { name: string; message: string; stack: string; }): Readonly<Step> {
         const statusCode = props.statusCode ?? 500;
-        return new Step({ ...props, type: 'error', statusCode });
+        return new Step({ ...props, type: 'stack', statusCode });
     }
 
     /**
@@ -53,7 +53,7 @@ export class Step implements Steps {
      * @param props as Object with SProps params
      * @returns an instance of Step
      */
-    public static debug(props: Omit<SProps, 'type'>): Readonly<Step> {
+    public static debug(props: Omit<SProps, 'type'|'createdAt'>): Readonly<Step> {
         return new Step({ ...props, type: 'debug' });
     }
 
@@ -62,7 +62,7 @@ export class Step implements Steps {
      * @param props as Object with SProps params
      * @returns an instance of Step
      */
-    public static fatal(props: Omit<SProps, 'type'>): Readonly<Step> {
+    public static fatal(props: Omit<SProps, 'type'|'createdAt'>): Readonly<Step> {
         return new Step({ ...props, type: 'fatal' });
     }
 
@@ -179,7 +179,7 @@ export class Step implements Steps {
      * @param locales as LocalesArgument to format date.
      * @param options as DateTimeFormatOptions to format date.
      */
-    print(locales?: Intl.LocalesArgument, options?: Intl.DateTimeFormatOptions | undefined): void {
+    print(locales?: Locale, options?: LocalOpt): void {
         const message = this.getPrintableMsg(locales, options);
         console.log(message);
     }
@@ -190,19 +190,10 @@ export class Step implements Steps {
      * @param options as DateTimeFormatOptions to format date. 
      * @returns formatted message string based on unix code to print on terminal.
      */
-    getPrintableMsg(locales?: Intl.LocalesArgument, options?: Intl.DateTimeFormatOptions | undefined): string {
-        const { message, createdAt, name, type, stack } = this;
-        const time = createdAt.toLocaleTimeString(locales ?? 'pt-BR', options);
-        if (type === 'error') {
-            const msg = ` Time: ${time} - ${name} - ${message} `;
-            const italic = Color.style().italic(stack);
-            const title = Color.style().reset(msg);
-            const result = `${title} \n ${italic}`;
-            const resultReset = Color.style().reset(result);
-            return Color.red(resultReset, 'white');
-        }
-        const msg = ` Time: ${time} - ${name} - ${message} `;
-        return Color.black(msg, 'white');
+    getPrintableMsg(locales?: Locale, options?: LocalOpt): string {
+        const builder = Messages[this.type];
+        if(!builder) return Messages['default'](this, locales, options);
+        return builder(this, locales, options);
     }
 }
 

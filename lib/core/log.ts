@@ -1,7 +1,7 @@
-import { Color } from "../utils/color.util";
 import { randomUUID } from "node:crypto";
-import { Logs, LProps, Steps } from "../types";
+import { Locale, LocalOpt, Logs, LProps, Steps } from "../types";
 import WriteDefaultLocal from "../utils/write-default-local.util";
+import BuildLogMessage from "../utils/build-log-message.util";
 
 export class Log implements Logs {
     readonly uid!: string;
@@ -102,16 +102,9 @@ export class Log implements Logs {
      * @param locales as LocalesArgument to format date.
      * @param options as DateTimeFormatOptions to format date.
      */
-    print(locales?: Intl.LocalesArgument, options?: Intl.DateTimeFormatOptions | undefined): void {
-        const { name, createdAt, steps, origin, ip } = this;
-        const time = createdAt.toLocaleString(locales ?? 'pt-BR', options);
-        const title = ` Date: ${time} - Log: ${name} - Origin: ${origin} - IP: ${ip} `;
-        const titleBg = Color.white(title, 'magenta');
-        const titleFont = Color.style().bold(titleBg);
-        const header = Color.style().reset(titleFont);
-        const stepsMsg = steps.map((step) => step.getPrintableMsg(locales, options));
-        const logs = stepsMsg.map((step) => `${step}\n`).toString().replace(/,/g, '');
-        console.log(`${header}\n${logs}`);
+    print(locales?: Locale, options?: LocalOpt): void {
+        const message = BuildLogMessage(this, locales, options);
+        console.log(message);
     }
 
     /**

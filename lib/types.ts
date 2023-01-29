@@ -1,5 +1,6 @@
-export type Type = "error" | "info" | "warn" | "debug" | "fatal";
-
+export type Type = "error" | "info" | "warn" | "debug" | "fatal" | "stack";
+export type Locale = Intl.LocalesArgument;
+export type LocalOpt = Intl.DateTimeFormatOptions | undefined;
 export interface SProps {
     readonly uid: string;
     readonly name: string;
@@ -32,8 +33,8 @@ export interface Steps extends SProps {
     setData(data: string): Readonly<Steps>;
     setUid(uid: string): Readonly<Steps>;
     setURL(url: string): Readonly<Steps>;
-    print(locales?: Intl.LocalesArgument, options?: Intl.DateTimeFormatOptions | undefined): void;
-    getPrintableMsg(locales?: Intl.LocalesArgument, options?: Intl.DateTimeFormatOptions | undefined): string;
+    print(locales?: Locale, options?: LocalOpt): void;
+    getPrintableMsg(locales?: Locale, options?: LocalOpt): string;
 }
 
 export interface Logs extends LProps {
@@ -44,6 +45,11 @@ export interface Logs extends LProps {
     addSteps(steps: Readonly<Steps[]>): Readonly<Logs>;
     removeStep(uid: string): Readonly<Logs>;
     writeLocal(path?: string): Promise<void>;
-    print(locales?: Intl.LocalesArgument, options?: Intl.DateTimeFormatOptions | undefined): void;
+    print(locales?: Locale, options?: LocalOpt): void;
     publish(): Promise<void>;
 }
+
+export type BuildStepMessages = (step: Steps, locales?: Locale, options?: LocalOpt) => string;
+export type BuildLogMessages = (log: Logs, locales?: Locale, options?: LocalOpt) => string;
+type keys = Type | 'default';
+export type FnTypes = { [k in keys ]: BuildStepMessages };
