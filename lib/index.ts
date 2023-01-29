@@ -6,3 +6,4 @@ export * from './utils/ensure-local-folder.util';
 export * from './utils/get-folder-name.util';
 export * from './utils/get-file-name.util';
 export * from './utils/get-file-name.util';
+export * from './types';

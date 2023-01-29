@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { Locale, LocalOpt, Logs, LProps, Steps } from "../types";
 import WriteDefaultLocal from "../utils/write-default-local.util";
 import BuildLogMessage from "../utils/build-log-message.util";
+import TerminalLog from "../utils/log.utils";
 
 export class Log implements Logs {
     readonly uid!: string;
@@ -104,7 +105,7 @@ export class Log implements Logs {
      */
     print(locales?: Locale, options?: LocalOpt): void {
         const message = BuildLogMessage(this, locales, options);
-        console.log(message);
+        TerminalLog(message);
     }
 
     /**
@@ -116,7 +117,7 @@ export class Log implements Logs {
      * @external redis
      */
     async publish(): Promise<void> {
-        console.log("publishing...");
+        TerminalLog("publishing...");
     }
 }
 

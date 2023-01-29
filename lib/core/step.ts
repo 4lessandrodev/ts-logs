@@ -1,3 +1,4 @@
+import TerminalLog from "../utils/log.utils";
 import { randomUUID } from "node:crypto";
 import { Locale, LocalOpt, SProps, Steps, Type } from "../types";
 import { Messages } from "../utils";
@@ -181,7 +182,7 @@ export class Step implements Steps {
      */
     print(locales?: Locale, options?: LocalOpt): void {
         const message = this.getPrintableMsg(locales, options);
-        console.log(message);
+        TerminalLog(message);
     }
 
     /**

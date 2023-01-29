@@ -1,7 +1,7 @@
 {
 	"name": "ts-logs",
 	"description": "This package provide a skd for audit and manager logs in nodejs",
-	"version": "0.0.1-beta.1",
+	"version": "0.0.1-beta.2",
 	"main": "index.js",
 	"types": "index.d.ts",
 	"author": "Alessandro Dev",
@@ -57,5 +57,6 @@
 		"index.js.map",
 		"types.d.ts.map",
 		"types.js.map"
-	]
+	],
+	"dependencies": {}
 }
