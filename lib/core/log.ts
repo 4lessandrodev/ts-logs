@@ -1,7 +1,8 @@
-import { Color } from "../utils/color.util";
 import { randomUUID } from "node:crypto";
-import { Logs, LProps, Steps } from "../types";
+import { Locale, LocalOpt, Logs, LProps, Steps } from "../types";
 import WriteDefaultLocal from "../utils/write-default-local.util";
+import BuildLogMessage from "../utils/build-log-message.util";
+import TerminalLog from "../utils/log.utils";
 
 export class Log implements Logs {
     readonly uid!: string;
@@ -97,19 +98,18 @@ export class Log implements Logs {
         }
     }
 
-    print(): void {
-        const { name, createdAt, steps, origin } = this;
-        const time = createdAt.toLocaleString('pt');
-        const message = ` Date: ${time} - ${name} - Origin: ${origin} `;
-        const mainMsg = Color.white(message, 'magenta');
-        const boldMain = Color.style().bold(mainMsg);
-        const title = Color.style().reset(boldMain);
-        const msgs = steps.map((step) => step.getPrintableMsg());
-        const subMsg = msgs.map((msg) => `${msg}\n`).toString().replace(/,/g, '');
-        console.log(`${title}\n${subMsg}`);
+    /**
+     * @description Print log and all steps on terminal.
+     * @param locales as LocalesArgument to format date.
+     * @param options as DateTimeFormatOptions to format date.
+     */
+    print(locales?: Locale, options?: LocalOpt): void {
+        const message = BuildLogMessage(this, locales, options);
+        TerminalLog(message);
     }
 
     /**
+     * @requires provider
      * @todo implement provider to publish on
      * @external firebase
      * @external aws-s3
@@ -117,7 +117,7 @@ export class Log implements Logs {
      * @external redis
      */
     async publish(): Promise<void> {
-        console.log("publishing...");
+        TerminalLog("publishing...");
     }
 }
 
