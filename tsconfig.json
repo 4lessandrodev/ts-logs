@@ -14,7 +14,6 @@
 		"strict": true,
 		"lib": ["ES2020"],
 		"outDir": "./dist",
-	},
-	"include": ["lib/*", "lib/**/*"],
-	"exclude": ["/**/*.spec.ts", "/*.spec.ts", "tests", "*/tests"]
+		"baseUrl":"."
+	}
 }

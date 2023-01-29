@@ -1,3 +1,4 @@
+import { Color } from "../utils/color.util";
 import { randomUUID } from "node:crypto";
 import { SProps, Steps, Type } from "../types";
 
@@ -74,6 +75,26 @@ export class Step implements Steps {
 
     setURL(url: string): Readonly<Step> {
         return new Step({ ...this, url });
+    }
+
+    print(): void {
+        const message = this.getPrintableMsg();
+        console.log(message);
+    }
+
+    getPrintableMsg(): string {
+        const { message, createdAt, name, type, stack } = this;
+        const time = createdAt.toLocaleTimeString('pt');
+        if(type === 'error') {
+            const msg = ` Time: ${time} - ${name} - ${message} `;
+            const italic = Color.style().italic(stack);
+            const title = Color.style().reset(msg);
+            const result = `${title} \n ${italic}`;
+            const resultReset = Color.style().reset(result);
+            return Color.red(resultReset, 'white');
+        }
+        const msg = ` Time: ${time} - ${name} - ${message} `;
+        return Color.black(msg, 'white');
     }
 }
 

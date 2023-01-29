@@ -14,6 +14,6 @@ export const EnsureLocalFolder = async (path: string): Promise<boolean> => {
             return (false);
         }
     }
-    return (true);
+    return (existsDir);
 }
 export default EnsureLocalFolder;

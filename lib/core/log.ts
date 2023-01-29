@@ -1,3 +1,4 @@
+import { Color } from "../utils/color.util";
 import { randomUUID } from "node:crypto";
 import { Logs, LProps, Steps } from "../types";
 import WriteDefaultLocal from "../utils/write-default-local.util";
@@ -97,14 +98,15 @@ export class Log implements Logs {
     }
 
     print(): void {
-        const { name, uid, ip, origin, createdAt } = this;
-        console.info(JSON.stringify({ name, uid, ip, origin, createdAt }));
-        let i = 0;
-        while (this.steps[i]) {
-            const step = this.steps[i];
-            console.info(JSON.stringify(step));
-            i++;
-        }
+        const { name, createdAt, steps, origin } = this;
+        const time = createdAt.toLocaleString('pt');
+        const message = ` Date: ${time} - ${name} - Origin: ${origin} `;
+        const mainMsg = Color.white(message, 'magenta');
+        const boldMain = Color.style().bold(mainMsg);
+        const title = Color.style().reset(boldMain);
+        const msgs = steps.map((step) => step.getPrintableMsg());
+        const subMsg = msgs.map((msg) => `${msg}\n`).toString().replace(/,/g, '');
+        console.log(`${title}\n${subMsg}`);
     }
 
     /**
