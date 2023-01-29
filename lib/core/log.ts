@@ -56,7 +56,7 @@ export class Log implements Logs {
      * @param step as instance of Step.
      * @returns instance of Log with added step.
      */
-    addStep(step: Steps): Readonly<Logs> {
+    addStep(step: Readonly<Steps>): Readonly<Logs> {
         return new Log({ ...this, steps: [...this.steps, step] });
     }
 
@@ -65,7 +65,7 @@ export class Log implements Logs {
      * @param step as instance of Step.
      * @returns instance of Log with added step.
      */
-    addSteps(steps: Steps[]): Readonly<Logs> {
+    addSteps(steps: Readonly<Steps[]>): Readonly<Logs> {
         return new Log({ ...this, steps: [...this.steps, ...steps] });
     }
 
