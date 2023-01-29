@@ -1,4 +1,4 @@
-export type Type = "error" | "info" | "warn" | "debug" | "fatal" | "trace";
+export type Type = "error" | "info" | "warn" | "debug" | "fatal";
 
 export interface SProps {
     readonly uid: string;
@@ -32,8 +32,8 @@ export interface Steps extends SProps {
     setData(data: string): Readonly<Steps>;
     setUid(uid: string): Readonly<Steps>;
     setURL(url: string): Readonly<Steps>;
-    print(): void;
-    getPrintableMsg(): string;
+    print(locales?: Intl.LocalesArgument, options?: Intl.DateTimeFormatOptions | undefined): void;
+    getPrintableMsg(locales?: Intl.LocalesArgument, options?: Intl.DateTimeFormatOptions | undefined): string;
 }
 
 export interface Logs extends LProps {
@@ -44,6 +44,6 @@ export interface Logs extends LProps {
     addSteps(steps: Readonly<Steps[]>): Readonly<Logs>;
     removeStep(uid: string): Readonly<Logs>;
     writeLocal(path?: string): Promise<void>;
-    print(): void;
+    print(locales?: Intl.LocalesArgument, options?: Intl.DateTimeFormatOptions | undefined): void;
     publish(): Promise<void>;
 }

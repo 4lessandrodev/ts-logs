@@ -97,19 +97,25 @@ export class Log implements Logs {
         }
     }
 
-    print(): void {
-        const { name, createdAt, steps, origin } = this;
-        const time = createdAt.toLocaleString('pt');
-        const message = ` Date: ${time} - ${name} - Origin: ${origin} `;
-        const mainMsg = Color.white(message, 'magenta');
-        const boldMain = Color.style().bold(mainMsg);
-        const title = Color.style().reset(boldMain);
-        const msgs = steps.map((step) => step.getPrintableMsg());
-        const subMsg = msgs.map((msg) => `${msg}\n`).toString().replace(/,/g, '');
-        console.log(`${title}\n${subMsg}`);
+    /**
+     * @description Print log and all steps on terminal.
+     * @param locales as LocalesArgument to format date.
+     * @param options as DateTimeFormatOptions to format date.
+     */
+    print(locales?: Intl.LocalesArgument, options?: Intl.DateTimeFormatOptions | undefined): void {
+        const { name, createdAt, steps, origin, ip } = this;
+        const time = createdAt.toLocaleString(locales ?? 'pt-BR', options);
+        const title = ` Date: ${time} - Log: ${name} - Origin: ${origin} - IP: ${ip} `;
+        const titleBg = Color.white(title, 'magenta');
+        const titleFont = Color.style().bold(titleBg);
+        const header = Color.style().reset(titleFont);
+        const stepsMsg = steps.map((step) => step.getPrintableMsg(locales, options));
+        const logs = stepsMsg.map((step) => `${step}\n`).toString().replace(/,/g, '');
+        console.log(`${header}\n${logs}`);
     }
 
     /**
+     * @requires provider
      * @todo implement provider to publish on
      * @external firebase
      * @external aws-s3
