@@ -2,16 +2,16 @@ import { randomUUID } from "node:crypto";
 import { SProps, Steps, Type } from "../types";
 
 export class Step implements Steps {
-    public uid!: string;
-    public name!: string;
-    public tags!: string[];
-    public url!: string;
-    public stack!: string;
-    public data!: string;
-    public statusCode!: number;
-    public message!: string;
-    public type!: Type;
-    public createdAt!: Date;
+    readonly uid!: string;
+    readonly name!: string;
+    readonly tags!: Readonly<string[]>;
+    readonly url!: string;
+    readonly stack!: string;
+    readonly data!: string;
+    readonly statusCode!: number;
+    readonly message!: string;
+    readonly type!: Type;
+    readonly createdAt!: Date;
 
     private constructor(props: Partial<SProps>){
         this.uid = props.uid ?? randomUUID();
@@ -24,26 +24,27 @@ export class Step implements Steps {
         this.message = props.message ?? 'none';
         this.type = props.type ?? 'info';
         this.createdAt = new Date();
+        Object.freeze(this);
     }
 
-    public static error(props: Partial<SProps> & { name: string; stack: string; message: string; }): Step {
+    public static error(props: Partial<SProps> & { name: string; stack: string; message: string; }): Readonly<Step> {
         const statusCode = props.statusCode ?? 400;
         return new Step({ ...props, type: 'error', statusCode });
     }
 
-    public static info(props: Partial<SProps> & { name: string; message: string }): Step {
+    public static info(props: Partial<SProps> & { name: string; message: string }): Readonly<Step> {
         return new Step({ ...props, type: 'info' })
     }
 
-    public static create(props: Partial<SProps>): Step {
+    public static create(props: Partial<SProps>): Readonly<Step> {
         return new Step({ ...props })
     }
 
-    addTags(tags: string[]): Step {
+    addTags(tags: string[]): Readonly<Step> {
         return new Step({ ...this, tags: [...this.tags, ...tags ] });
     };
 
-    addTag(tag: string): Step {
+    addTag(tag: string): Readonly<Step> {
         return new Step({ ...this, tags: [...this.tags, tag] });
     }
 
@@ -51,27 +52,27 @@ export class Step implements Steps {
         return new Step({ ...this, name });
     }
 
-    setStack(stack: string): Step {
+    setStack(stack: string): Readonly<Step> {
         return new Step({ ...this, stack });
     }
 
-    setMessage(message: string): Step {
+    setMessage(message: string): Readonly<Step> {
         return new Step({ ...this, message });
     }
 
-    setStatusCode(code: number): Step {
+    setStatusCode(code: number): Readonly<Step> {
         return new Step({ ...this, statusCode: code });
     }
 
-    setData(data: string): Step {
+    setData(data: string): Readonly<Step> {
         return new Step({ ...this, data });
     }
 
-    setUid(uid: string): Step {
+    setUid(uid: string): Readonly<Step> {
         return new Step({ ...this, uid });
     }
 
-    setURL(url: string): Step {
+    setURL(url: string): Readonly<Step> {
         return new Step({ ...this, url });
     }
 }
