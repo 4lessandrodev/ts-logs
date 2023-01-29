@@ -57,3 +57,28 @@ This package provide a sdk to manage logs.
 ## Documentation
 
 Application in beta version.
+
+Example
+
+```ts
+import { randomUUID } from 'node:crypto';
+import { Log, Step } from 'ts-logs';
+
+// any id or unique string value
+const uid = randomUUID();
+
+// create a global log
+const global = Log.init({ name: 'First Log', uid, origin: 'https://global.com' });
+
+// create steps
+const info = Step.info({ message: 'Fetching api...', name: 'Request Login' });
+const error = Step.error({ message: 'Timeout', name: 'Login', stack: GetStack() });
+
+// add steps to global log
+const err = global.addSteps([ info, error ]);
+
+// print or save logs
+err.print();
+err.writeLocal();
+
+```
