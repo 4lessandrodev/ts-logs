@@ -32,14 +32,16 @@ export interface Steps extends SProps {
     setData(data: string): Readonly<Steps>;
     setUid(uid: string): Readonly<Steps>;
     setURL(url: string): Readonly<Steps>;
+    print(): void;
+    getPrintableMsg(): string;
 }
 
 export interface Logs extends LProps {
     setName(name: string): Readonly<Logs>;
     setIp(ip: string): Readonly<Logs>;
     setOrigin(url: string): Readonly<Logs>;
-    addStep(step: Steps): Readonly<Logs>;
-    addSteps(steps: Steps[]): Readonly<Logs>;
+    addStep(step: Readonly<Steps>): Readonly<Logs>;
+    addSteps(steps: Readonly<Steps[]>): Readonly<Logs>;
     removeStep(uid: string): Readonly<Logs>;
     writeLocal(path?: string): Promise<void>;
     print(): void;
