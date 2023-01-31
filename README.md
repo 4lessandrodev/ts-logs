@@ -82,3 +82,26 @@ err.print();
 err.writeLocal();
 
 ```
+
+---
+### Use as middleware
+
+Express middleware **beta** option.
+
+```ts
+
+import express from 'express';
+import { LOGMiddleware } from 'ts-logs';
+
+const app = express();
+app.use(express.json());
+
+// ...
+
+// on last middleware on the place to handle errors use it
+
+app.user(LOGMiddleware({ writeLocal: true }));
+
+app.liste(3000);
+
+```
