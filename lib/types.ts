@@ -2,21 +2,63 @@ export type Type = "error" | "info" | "warn" | "debug" | "fatal" | "stack";
 export type Locale = Intl.LocalesArgument;
 export type LocalOpt = Intl.DateTimeFormatOptions | undefined;
 export type Method = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT' | 'OPTIONS' | 'HEAD' | 'LINK' | 'PURGE' | 'UNLINK' | 'NONE';
+export type Encryption = 'cypher' | 'base64';
 
 export interface EncryptOption {
-    level: 'cypher' | 'encode';
-    key: string;
+    level: Encryption;
+    secretKey?: string;
 }
 
 export interface MiddlewareOptions {
+    /**
+     * @description function to be called after create log.
+     * @param err Error
+     * @param req Request
+     * @param res Response
+     * @param next NextFunction
+     * @param log Log
+     * @returns void | Promise<void>
+     */
     callback?: (err: Error, req: any, res: any, next: any, log: Logs) => void | Promise<void>;
+    /**
+     * @description Print log on terminal.
+     */
     print?: boolean;
+    /**
+     * @description Publish as external provider.
+     * @requires provider
+     */
     publish?: boolean;
+    /**
+     * @description Send log to client on response.
+     */
     sendAsResponse?: boolean;
-    keysToRemoveFromBody?: string[];
+    /**
+     * @description Remove some data by key from log.
+     * @example ["card", "password", "token"]
+     */
+    remove?: string[];
+    /**
+     * @description Encrypt or encode data.
+     * @default encode base64
+     */
     encrypt?: boolean;
+    /**
+     * @description Define encryption strategy.
+     * @default base64
+     */
     encryptOption?: EncryptOption;
+    /**
+     * @description External provider to publish logs.
+     * @param s3
+     * @param mongo
+     * @param firebase
+     * @param redis
+     */
     provider?: any;
+    /**
+     * @description Write a local file on root folder "log" with log data as .log extension
+     */
     writeLocal?: boolean;
 }
 

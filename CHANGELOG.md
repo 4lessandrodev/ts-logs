@@ -6,6 +6,20 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.3] - 2022-01-31
+
+### Fix
+
+- fix: added step on write local log
+- fix: change step from `info` to `stack`
+
+### Changed
+### Breaking change
+
+- rename: from `LOGMiddleware` to `stackLog`
+
+---
+
 ### [0.0.2-beta.0] - 2022-01-31
 
 ### Changed

@@ -71,8 +71,8 @@ const uid = randomUUID();
 const global = Log.init({ name: 'First Log', uid, origin: 'https://global.com' });
 
 // create steps
-const info = Step.info({ message: 'Fetching api...', name: 'Request Login' });
-const error = Step.error({ message: 'Timeout', name: 'Login', stack: GetStack() });
+const info = Step.info({ message: 'Fetching api...', name: 'Request Login', method: 'POST' });
+const error = Step.error({ message: 'Timeout', name: 'Login', stack: 'Error stack' });
 
 // add steps to global log
 const err = global.addSteps([ info, error ]);
@@ -86,21 +86,21 @@ err.writeLocal();
 ---
 ### Use as middleware
 
-Express middleware **beta** option.
+Express middleware on **beta** option.
 
 ```ts
 
 import express from 'express';
-import { LOGMiddleware } from 'ts-logs';
+import { stackLog } from 'ts-logs';
 
 const app = express();
 app.use(express.json());
 
 // ...
 
-// on last middleware on the place to handle errors use it
+// on last middleware on the place to handle errors use `stackLog`
 
-app.user(LOGMiddleware({ writeLocal: true }));
+app.user(stackLog({ writeLocal: true }));
 
 app.liste(3000);
 
