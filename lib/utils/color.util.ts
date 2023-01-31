@@ -1,4 +1,4 @@
-const BgColors = {
+export const BgColors = {
     black: 40,
     red: 41,
     green: 42,
@@ -11,7 +11,7 @@ const BgColors = {
     gray: 100,
 }
 
-const FtSizes = {
+export const FtSizes = {
     fontDefault: 10,
     font2: 11,
     font3: 12,
@@ -20,7 +20,7 @@ const FtSizes = {
     font6: 15,
 }
 
-const StyleTypes = {
+export const StyleTypes = {
     bold: 1,
     italic: 3,
     underline: 4,

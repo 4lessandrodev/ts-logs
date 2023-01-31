@@ -1,4 +1,4 @@
-import Color from '../lib/utils/color.util';
+import Color, { BgColors, FtSizes, StyleTypes } from '../lib/utils/color.util';
 
 describe('colors', () => {
     it('should print font color red and background color blue', () => {
@@ -55,4 +55,10 @@ describe('colors', () => {
         const result = Color.style().italic(Color.white("Font White & Background Black & Italic", 'black'));
         expect(result).toBe('\u001b[10m\u001b[3m\u001b[37m\u001b[40mFont White & Background Black & Italic\u001b[39m\u001b[49m\u001b[39m\u001b[49m');
     });
+
+    it("colors", () => {
+        expect(BgColors).toMatchSnapshot();
+        expect(FtSizes).toMatchSnapshot();
+        expect(StyleTypes).toMatchSnapshot();
+    })
 });

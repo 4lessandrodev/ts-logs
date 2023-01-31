@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`colors colors 1`] = `
+{
+  "black": 40,
+  "blue": 44,
+  "cyan": 46,
+  "gray": 100,
+  "green": 42,
+  "grey": 100,
+  "magenta": 45,
+  "red": 41,
+  "white": 47,
+  "yellow": 43,
+}
+`;
+
+exports[`colors colors 2`] = `
+{
+  "font2": 11,
+  "font3": 12,
+  "font4": 13,
+  "font5": 14,
+  "font6": 15,
+  "fontDefault": 10,
+}
+`;
+
+exports[`colors colors 3`] = `
+{
+  "bold": 1,
+  "italic": 3,
+  "reset": 0,
+  "underline": 4,
+}
+`;
