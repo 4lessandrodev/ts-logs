@@ -86,7 +86,7 @@ err.writeLocal();
 ---
 ### Use as middleware
 
-Express middleware on **beta** version.
+Express middleware in **beta** version.
 
 ```ts
 
