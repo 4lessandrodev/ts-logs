@@ -2,11 +2,16 @@ import { Log } from "./log";
 import { Middleware, MiddlewareOptions } from "../types";
 import Step from "./step";
 
-export const LOGMiddleware = (options: MiddlewareOptions): Middleware => {
-    const { print, keysToRemoveFromBody, callback, writeLocal, encrypt, sendAsResponse = true } = options;
+/**
+ * @description Create a middleware to handle stack error on express
+ * @param options Object as MiddlewareOptions
+ * @returns Middleware
+ */
+export const stackLog = (options: MiddlewareOptions): Middleware => {
+    const { print, remove: keysToRemoveFromBody, callback, writeLocal, encrypt, sendAsResponse = true, encryptOption } = options;
 
-    if(sendAsResponse && callback) throw new Error('LOGMiddleware: could not sendAsResponse and callback');
-    if(!sendAsResponse && !callback && !print && !writeLocal) throw new Error('LOGMiddleware: invalid options');
+    if(sendAsResponse && callback) throw new Error('[stackLog]: could not sendAsResponse and callback');
+    if(!sendAsResponse && !callback && !print && !writeLocal) throw new Error('[stackLog]: invalid options');
 
     return async (err: Error, req: any, res: any, next: any): Promise<any> => {
 
@@ -19,12 +24,7 @@ export const LOGMiddleware = (options: MiddlewareOptions): Middleware => {
 
         const log = Log.init({ name: route, uid, ip, origin });
 
-        if(encrypt) {
-            /** @todo encrypt data on body */
-            console.log('[LOGMiddleware]: Encryption is not implemented yet')
-        }
-
-        const message = err.message;
+        const message = err?.message ?? 'Internal Server Error';
         const stack = err.stack ?? '';
         const statusCode = 500;
         const url = origin;
@@ -42,16 +42,27 @@ export const LOGMiddleware = (options: MiddlewareOptions): Middleware => {
             }
         }
 
-        const data = hasData ? JSON.stringify(body) : '{}';
-        const tags = hasData ? Object.keys(body) : [];
+        let data = hasData ? JSON.stringify(body) : '{}';
 
-        const step = Step.create({ message, stack, statusCode, data, url, method }).addTags(tags.slice(0, 5));
+        if(encrypt || encryptOption) {
+            if(encryptOption?.level === 'cypher'){
+                /** @todo encrypt data on body */
+                console.log('[encryptOption]: cypher is not implemented yet');
+            }
+            const payload = hasData ? JSON.stringify(body) : '{}';
+            data = Buffer.from(payload).toString('base64');
+        }
+
+        const tags = hasData ? Object.keys(body) : [];
+        const name = route;
+
+        const step = Step.stack({ message, stack, statusCode, data, url, method, name }).addTags(tags.slice(0, 5));
 
         const result = log.addStep(step);
 
         if(print) result.print();
 
-        if(writeLocal) await log.writeLocal();
+        if(writeLocal) await result.writeLocal();
 
         if(sendAsResponse) return res.status(statusCode).json(result);
 
@@ -59,4 +70,4 @@ export const LOGMiddleware = (options: MiddlewareOptions): Middleware => {
     };
 }
 
-export default LOGMiddleware;
+export default stackLog;

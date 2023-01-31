@@ -1,6 +1,6 @@
 export * from './core/log';
 export * from './core/step';
-export * from './core/middleware.builder';
+export * from './core/stack-log.builder';
 export * from './utils/color.util';
 export * from './utils/write-default-local.util';
 export * from './utils/ensure-local-folder.util';
