@@ -3,6 +3,23 @@ export type Locale = Intl.LocalesArgument;
 export type LocalOpt = Intl.DateTimeFormatOptions | undefined;
 export type Method = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT' | 'OPTIONS' | 'HEAD' | 'LINK' | 'PURGE' | 'UNLINK' | 'NONE';
 
+export interface EncryptOption {
+    level: 'cypher' | 'encode';
+    key: string;
+}
+
+export interface MiddlewareOptions {
+    callback?: (err: Error, req: any, res: any, next: any, log: Logs) => void | Promise<void>;
+    print?: boolean;
+    publish?: boolean;
+    sendAsResponse?: boolean;
+    keysToRemoveFromBody?: string[];
+    encrypt?: boolean;
+    encryptOption?: EncryptOption;
+    provider?: any;
+    writeLocal?: boolean;
+}
+
 export interface SProps {
     readonly uid: string;
     readonly name: string;
@@ -57,3 +74,4 @@ export type BuildStepMessages = (step: Steps, locales?: Locale, options?: LocalO
 export type BuildLogMessages = (log: Logs, locales?: Locale, options?: LocalOpt) => string;
 type keys = Type | 'default';
 export type FnTypes = { [k in keys ]: BuildStepMessages };
+export type Middleware = (err: Error, req: any, res: any, next: any) => Promise<any>;

@@ -6,6 +6,19 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.2-beta.0] - 2022-01-31
+
+### Changed
+
+- log: change generated file name to .log
+
+### Added
+
+- log: added middleware builder
+- log: added "method" attribute to step as "GET", "POST" ... option
+
+---
+
 ### [0.0.1-beta.2] - 2022-01-29
 
 ### Added
