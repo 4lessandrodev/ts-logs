@@ -1,6 +1,6 @@
 import TerminalLog from "../utils/log.utils";
 import { randomUUID } from "node:crypto";
-import { Locale, LocalOpt, SProps, Steps, Type } from "../types";
+import { Locale, LocalOpt, Method, SProps, Steps, Type } from "../types";
 import { Messages } from "../utils";
 
 export class Step implements Steps {
@@ -13,6 +13,7 @@ export class Step implements Steps {
     readonly statusCode!: number;
     readonly message!: string;
     readonly type!: Type;
+    readonly method!: Method;
     readonly createdAt!: Date;
 
     private constructor(props: Partial<SProps>) {
@@ -25,6 +26,7 @@ export class Step implements Steps {
         this.statusCode = props.statusCode ?? 200;
         this.message = props.message ?? 'none';
         this.type = props.type ?? 'info';
+        this.method = props.method ?? 'NONE';
         this.createdAt = new Date();
         Object.freeze(this);
     }
@@ -121,6 +123,15 @@ export class Step implements Steps {
         return new Step({ ...this, name });
     }
 
+    /**
+     * @description Create a new instance of Step with provided method.
+     * @param method as Method.
+     * @returns new instance of Step with provided method.
+     */
+    setMethod(method: Method): Steps {
+        return new Step({ ...this, method });
+    }
+        
     /**
      * @description Create a new instance of Step with provided stack.
      * @param stack as Error stack as string.
