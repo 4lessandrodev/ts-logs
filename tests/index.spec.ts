@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { SProps } from '../lib/types';
 import Log from '../lib/core/log';
 import Step from '../lib/core/step';
 
@@ -26,7 +27,7 @@ describe('log', () => {
         const message = "Internal Error";
 
         // full props for debug step
-        const debugProps = { data, message, name: 'Signup', stack: GetStack(), statusCode: 500, tags, uid, url };
+        const debugProps: Omit<SProps, 'type' | 'createdAt'> = { data, message, name: 'Signup', stack: GetStack(), statusCode: 500, tags, uid, url, method: 'GET' };
 
         // create a global log
         const global = Log.init({ name: 'First Log', uid, origin });
