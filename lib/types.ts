@@ -1,6 +1,8 @@
 export type Type = "error" | "info" | "warn" | "debug" | "fatal" | "stack";
 export type Locale = Intl.LocalesArgument;
 export type LocalOpt = Intl.DateTimeFormatOptions | undefined;
+export type Method = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT' | 'OPTIONS' | 'HEAD' | 'LINK' | 'PURGE' | 'UNLINK' | 'NONE';
+
 export interface SProps {
     readonly uid: string;
     readonly name: string;
@@ -10,6 +12,7 @@ export interface SProps {
     readonly data: string;
     readonly statusCode: number;
     readonly message: string;
+    readonly method: Method;
     readonly type: Type;
     readonly createdAt: Date;
 }
@@ -27,6 +30,7 @@ export interface Steps extends SProps {
     addTag(tag: string): Readonly<Steps>;
     addTags(tags: string[]): Readonly<Steps>;
     setName(name: string): Readonly<Steps>;
+    setMethod(method: Method): Readonly<Steps>;
     setStack(stack: string): Readonly<Steps>;
     setMessage(message: string): Readonly<Steps>;
     setStatusCode(code: number): Readonly<Steps>;

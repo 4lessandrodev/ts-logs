@@ -22,7 +22,7 @@ export class Log implements Logs {
         Object.freeze(this);
     }
 
-    public static init(props: Partial<LProps> & { name: string; uid: string }): Readonly<Logs> {
+    public static init(props: Partial<LProps> & { name: string; }): Readonly<Logs> {
         return new Log(props);
     }
 
