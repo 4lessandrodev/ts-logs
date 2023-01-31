@@ -18,3 +18,4 @@ types.js.map
 !tests/*
 !lib/*
 logs/
+**/*.log

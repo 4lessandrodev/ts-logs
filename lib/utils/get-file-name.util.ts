@@ -9,7 +9,7 @@ export const GetFileName = (date: Date): string => {
     const monthNumber = time.getUTCMonth() + 1;
     const month = monthNumber >= 10 ? monthNumber : '0' + monthNumber;
     const day = time.getUTCDate();
-    return `log-${year}-${month}-${day}.txt`;
+    return `log-${year}-${month}-${day}.log`;
 }
 
 export default GetFileName;

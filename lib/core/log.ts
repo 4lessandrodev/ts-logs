@@ -87,7 +87,7 @@ export class Log implements Logs {
      * @returns 
      * @emits fileName: Omit the file name as the file name is defined based on the log name plus creation date
      * @example path: "/home/user/my-app/logs"
-     * @default path: "/[app-folder]/logs/[log-name]-[year]-[month]-[day].txt".
+     * @default path: "/[app-folder]/logs/[log-name]-[year]-[month]-[day].log".
      * @throws If an error occurs in the local saving process, the logs will be displayed on the standard output (terminal)
      */
     async writeLocal(path?: string): Promise<void> {
