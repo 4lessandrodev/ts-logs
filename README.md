@@ -86,7 +86,7 @@ err.writeLocal();
 ---
 ### Use as middleware
 
-Express middleware on **beta** option.
+Express middleware in **beta** version.
 
 ```ts
 
@@ -99,8 +99,8 @@ app.use(express.json());
 // ...
 app.use(routes);
 
-// on last middleware on the place to handle errors use `stackLog`
-app.user(stackLog({ writeLocal: true }));
+// last middleware to handle errors using `stackLog`
+app.use(stackLog({ writeLocal: true }));
 
 app.liste(3000);
 
