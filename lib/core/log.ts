@@ -22,6 +22,11 @@ export class Log implements Logs {
         Object.freeze(this);
     }
 
+    /**
+     * @description Create a new global log.
+     * @param props as Partial LProps
+     * @returns instance of Log
+     */
     public static init(props: Partial<LProps> & { name: string; }): Readonly<Logs> {
         return new Log(props);
     }
@@ -109,6 +114,7 @@ export class Log implements Logs {
     }
 
     /**
+     * @description Publish log using a provider.
      * @requires provider
      * @todo implement provider to publish on
      * @external firebase
@@ -116,8 +122,8 @@ export class Log implements Logs {
      * @external mongodb
      * @external redis
      */
-    async publish(): Promise<void> {
-        TerminalLog("publishing...");
+    async publish(provider: any): Promise<void> {
+        TerminalLog(`publishing...${provider}\n`);
     }
 }
 

@@ -1,6 +1,7 @@
 export * from './core/log';
 export * from './core/step';
 export * from './core/stack-log.builder';
+export * from './core/bind-log.builder';
 export * from './utils/color.util';
 export * from './utils/write-default-local.util';
 export * from './utils/ensure-local-folder.util';

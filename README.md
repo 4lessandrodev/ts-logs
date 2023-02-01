@@ -97,10 +97,41 @@ const app = express();
 app.use(express.json());
 
 // ...
+app.use(routes);
 
 // last middleware to handle errors using `stackLog`
 app.use(stackLog({ writeLocal: true }));
 
 app.liste(3000);
+
+```
+
+### Bind
+
+You also may use bind middleware to apply a log instance to request
+
+```ts
+
+import express from 'express';
+import { bindLog } from 'ts-logs';
+
+const app = express();
+app.use(express.json());
+
+// on top of routes you can bind a log instance
+app.use(bindLog());
+
+app.get("/log", (req: Request, res: Response) => {
+
+    // you can do any with log instance
+    req.log.addStep( /* any step */ );
+    req.log.print(); // show steps on terminal
+
+    res.status(200).json(req.log);
+});
+
+// ...
+
+app.use(routes);
 
 ```

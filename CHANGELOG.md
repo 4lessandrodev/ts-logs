@@ -6,7 +6,15 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### [0.0.3] - 2022-01-31
+### [0.0.4] - 2023-02-01
+
+### Added
+
+- added: implement `bindLog` to bind a log instance to request.
+
+---
+
+### [0.0.3] - 2023-01-31
 
 ### Fix
 
@@ -20,7 +28,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### [0.0.2-beta.0] - 2022-01-31
+### [0.0.2-beta.0] - 2023-01-31
 
 ### Changed
 
@@ -33,7 +41,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### [0.0.1-beta.2] - 2022-01-29
+### [0.0.1-beta.2] - 2023-01-29
 
 ### Added
 
@@ -53,7 +61,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### [0.0.1-beta.1] - 2022-01-29
+### [0.0.1-beta.1] - 2023-01-29
 
 ### Added
 
@@ -64,7 +72,7 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### [0.0.1-beta.0] - 2022-01-27
+### [0.0.1-beta.0] - 2023-01-27
 
 ### Added
 
