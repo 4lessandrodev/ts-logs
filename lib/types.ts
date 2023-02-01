@@ -109,7 +109,7 @@ export interface Logs extends LProps {
     removeStep(uid: string): Readonly<Logs>;
     writeLocal(path?: string): Promise<void>;
     print(locales?: Locale, options?: LocalOpt): void;
-    publish(): Promise<void>;
+    publish(provider: any): Promise<void>;
 }
 
 export type BuildStepMessages = (step: Steps, locales?: Locale, options?: LocalOpt) => string;
@@ -117,3 +117,5 @@ export type BuildLogMessages = (log: Logs, locales?: Locale, options?: LocalOpt)
 type keys = Type | 'default';
 export type FnTypes = { [k in keys ]: BuildStepMessages };
 export type Middleware = (err: Error, req: any, res: any, next: any) => Promise<any>;
+export type Binder = (req: any, res: any, next: any) => void;
+export interface EncryptParam { data: string; encrypt?: boolean; encryptOption?: EncryptOption };
