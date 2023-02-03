@@ -1,7 +1,6 @@
 import { Log } from "./log";
-import { Binder } from "../types";
+import { Binder, NextFunctions, Requests, Responses } from "../types";
 import getLogDataFromRequest from "../utils/get-log-data-from-request.util";
-import { NextFunction, Request, Response } from "express";
 
 /**
  * @description Bind log instance to request.
@@ -10,7 +9,7 @@ import { NextFunction, Request, Response } from "express";
  * @example req.log
  */
 export const bindLog = (): Binder => {
-    return (req: Request, _: Response, next: NextFunction): void => {
+    return (req: Requests, _: Responses, next: NextFunctions): void => {
         const { name, ip, origin, uid } = getLogDataFromRequest(req);
         req.log = Log.init({ name, ip, origin, uid })
         next();

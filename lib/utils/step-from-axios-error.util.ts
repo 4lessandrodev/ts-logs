@@ -1,6 +1,5 @@
-import { AxiosError } from 'axios';
 import { Step } from '../core/step';
-import { Method, Steps, Type } from '../types';
+import { CatchError, Method, Steps, Type } from '../types';
 import deleteObjectKey from './delete-object-key.util';
 import reference from './get-function-name.util';
 
@@ -10,7 +9,7 @@ import reference from './get-function-name.util';
  * @param rmKeys array of string as key to remove from data.
  * @returns instance of Step.
  */
-export const stepFromAxiosError = (error: AxiosError & Error, rmKeys: string[] = []): Steps => {
+export const stepFromAxiosError = (error: CatchError, rmKeys: string[] = []): Steps => {
     const hasResponse = !!error?.response?.data;
     const resData = hasResponse ? error?.response?.data : {};
     const name = reference.fromError(error);

@@ -1,7 +1,6 @@
-import { Request } from "express";
-import { LogDataFromRequest } from "../types";
+import { LogDataFromRequest, Requests } from "../types";
 
-export const getLogDataFromRequest = (req: Request): LogDataFromRequest => {
+export const getLogDataFromRequest = (req: Requests): LogDataFromRequest => {
     const uid = req?.headers['uid'] as string ?? req?.headers?.['id'] ?? req.body?.['id'] ?? req?.params?.['id'];
     const name = req?.originalUrl?.replace(/\//, '') ?? 'index';
     const origin = req?.protocol + '://' + req?.headers['host'] + req?.originalUrl;
