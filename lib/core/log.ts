@@ -99,6 +99,7 @@ export class Log implements Logs {
         try {
             return WriteDefaultLocal(this, path);
         } catch (error) {
+            TerminalLog((error as Error).message + '\n');
             return this.print();
         }
     }
