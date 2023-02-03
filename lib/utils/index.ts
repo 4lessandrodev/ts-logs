@@ -15,3 +15,5 @@ export * from './messages.util';
 export * from './write-default-local.util';
 export * from './delete-object-key.util';
 export * from './get-step-data-from-request.util';
+export * from './get-function-name.util';
+export * from './step-from-axios-error.util';
