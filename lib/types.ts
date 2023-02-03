@@ -1,3 +1,6 @@
+import { AxiosError } from "axios";
+import { NextFunction, Request, Response } from "express";
+
 export type Type = "error" | "info" | "warn" | "debug" | "fatal" | "stack";
 export type Locale = Intl.LocalesArgument;
 export type LocalOpt = Intl.DateTimeFormatOptions | undefined;
@@ -135,6 +138,16 @@ export interface LogDataFromRequest {
     origin: string;
     uid: string;
 }
+
+export interface CatchProps {
+    remove?: string[];
+}
+
+export type CatchError = AxiosError & Error;
+
+export type Requests = Request;
+export type Responses = Response;
+export type NextFunctions = NextFunction;
 
 export {}
 
