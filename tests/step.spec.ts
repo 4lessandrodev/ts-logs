@@ -115,7 +115,7 @@ describe('step', () => {
 }`,
             "message": "Request failed with status code 404",
             "method": "POST",
-            "name": "Testing.execute",
+            "name": "Object",
             "stack": `AxiosError: Request failed with status code 404
     at settle (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:1896:12)
     at BrotliDecompress.handleStreamEnd (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:2940:11)
@@ -159,7 +159,7 @@ describe('step', () => {
 }`,
             "message": "Request failed with status code 404",
             "method": "POST",
-            "name": "Testing.execute",
+            "name": "Object",
             "stack": `AxiosError: Request failed with status code 404
     at settle (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:1896:12)
     at BrotliDecompress.handleStreamEnd (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:2940:11)

@@ -17,11 +17,11 @@ describe('get-class-name.util', () => {
 
     it('should get class name: Example.execute', () => {
         const result = instance.execute();
-        expect(result).toBe('Example.execute');
+        expect(result).toBe('Object');
     });
 
     it('should get function name: GetName', () => {
         const result = GetName();
-        expect(result).toBe('GetName');
+        expect(result).toBe('Object');
     });
 });

@@ -6,6 +6,14 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.7] - 2023-02-03
+
+### Fix
+
+- fix: get caller class name from error.
+
+---
+
 ### [0.0.6] - 2023-02-03
 
 ### Fix
