@@ -1,9 +1,8 @@
 import TerminalLog from "../utils/log.utils";
 import { randomUUID } from "node:crypto";
-import stepFromAxiosError from "../utils/step-from-axios-error.util";
 import { CatchError, CatchProps, Locale, LocalOpt } from "../types";
 import { Method, SProps, Steps, Type } from "../types";
-import { Messages } from "../utils";
+import { Messages, stepPropsFromAxiosError } from "../utils";
 
 export class Step implements Steps {
     readonly uid!: string;
@@ -105,8 +104,8 @@ export class Step implements Steps {
      */
     public static catch(error: Error | CatchError, props?: CatchProps): Readonly<Step> {
         const rmKeys = (props && props.remove) ? props.remove : [];
-        const step = stepFromAxiosError(error as CatchError, rmKeys);
-        return step;
+        const params = stepPropsFromAxiosError(error as CatchError, rmKeys);
+        return Step.create(params);
     }
 
     /**
