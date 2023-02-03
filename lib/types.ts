@@ -115,7 +115,33 @@ export interface Logs extends LProps {
 export type BuildStepMessages = (step: Steps, locales?: Locale, options?: LocalOpt) => string;
 export type BuildLogMessages = (log: Logs, locales?: Locale, options?: LocalOpt) => string;
 type keys = Type | 'default';
-export type FnTypes = { [k in keys ]: BuildStepMessages };
+export type FnTypes = { [k in keys]: BuildStepMessages };
 export type Middleware = (err: Error, req: any, res: any, next: any) => Promise<any>;
 export type Binder = (req: any, res: any, next: any) => void;
 export interface EncryptParam { data: string; encrypt?: boolean; encryptOption?: EncryptOption };
+export interface StepDataFromRequest {
+    message: string;
+    stack: string;
+    statusCode: number;
+    method: Method;
+    tags: string[];
+    data: string;
+    body: {}
+}
+
+export interface LogDataFromRequest {
+    name: string;
+    ip: string;
+    origin: string;
+    uid: string;
+}
+
+export {}
+
+declare global {
+  namespace Express {
+    export interface Request {
+      log?: Logs;
+    }
+  }
+}

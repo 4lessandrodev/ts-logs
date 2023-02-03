@@ -2,6 +2,7 @@ import { Middleware, MiddlewareOptions } from "../types";
 import getLogDataFromRequest from "../utils/get-log-data-from-request.util";
 import getStepDataFromRequest from "../utils/get-step-data-from-request.util";
 import encryptString from "../utils/encrypt-string.util";
+import { NextFunction, Request, Response } from "express";
 import { deleteObjectKey } from "../utils";
 import Step from "./step";
 import { Log } from "./log";
@@ -17,7 +18,7 @@ export const stackLog = (options: MiddlewareOptions): Middleware => {
     if(sendAsResponse && callback) throw new Error('[stackLog]: could not sendAsResponse and callback');
     if(!sendAsResponse && !callback && !print && !writeLocal) throw new Error('[stackLog]: invalid options');
 
-    return async (err: Error, req: any, res: any, next: any): Promise<any> => {
+    return async (err: Error, req: Request, res: Response, next: NextFunction): Promise<any> => {
 
         const { name, uid, ip, origin } = getLogDataFromRequest(req);
 
