@@ -1,6 +1,8 @@
 import TerminalLog from "../utils/log.utils";
 import { randomUUID } from "node:crypto";
-import { Locale, LocalOpt, Method, SProps, Steps, Type } from "../types";
+import stepFromAxiosError from "../utils/step-from-axios-error.util";
+import { CatchError, CatchProps, Locale, LocalOpt } from "../types";
+import { Method, SProps, Steps, Type } from "../types";
 import { Messages } from "../utils";
 
 export class Step implements Steps {
@@ -94,6 +96,17 @@ export class Step implements Steps {
      */
     public static create(props: Partial<SProps>): Readonly<Step> {
         return new Step({ ...props })
+    }
+
+    /**
+     * @description Create an step instance from error: Error from a try catch block.
+     * @param error as instance of Error from catch block.
+     * @param props object with CatchProps.
+     */
+    public static catch(error: Error | CatchError, props?: CatchProps): Readonly<Step> {
+        const rmKeys = (props && props.remove) ? props.remove : [];
+        const step = stepFromAxiosError(error as CatchError, rmKeys);
+        return step;
     }
 
     /**
