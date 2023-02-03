@@ -6,6 +6,14 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.6] - 2023-02-03
+
+### Fix
+
+- fix: get tags from catch error and format data on error.
+
+---
+
 ### [0.0.5] - 2023-02-03
 
 ### Added

@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`step should generate full log from axios 1`] = `
+{
+  "createdAt": Any<Date>,
+  "data": "{
+  "requestData": {
+    "email": "test@domain.com",
+    "password": "123456"
+  },
+  "responseData": {}
+}",
+  "message": "Request failed with status code 404",
+  "method": "POST",
+  "name": "Testing.execute",
+  "stack": "AxiosError: Request failed with status code 404
+    at settle (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:1896:12)
+    at BrotliDecompress.handleStreamEnd (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:2940:11)
+    at BrotliDecompress.emit (node:events:525:35)
+    at endReadableNT (node:internal/streams/readable:1359:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)",
+  "statusCode": 500,
+  "tags": [
+    "email",
+    "password",
+  ],
+  "type": "fatal",
+  "uid": "508791f9-9063-463d-a54b-cb6a777870af",
+  "url": "https://postback-4dev.onrender.com/inv/not-found",
+}
+`;
+
+exports[`step should generate full log from axios and remove password 1`] = `
+{
+  "createdAt": Any<Date>,
+  "data": "{
+  "requestData": {
+    "email": "test@domain.com"
+  },
+  "responseData": {}
+}",
+  "message": "Request failed with status code 404",
+  "method": "POST",
+  "name": "Testing.execute",
+  "stack": "AxiosError: Request failed with status code 404
+    at settle (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:1896:12)
+    at BrotliDecompress.handleStreamEnd (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:2940:11)
+    at BrotliDecompress.emit (node:events:525:35)
+    at endReadableNT (node:internal/streams/readable:1359:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)",
+  "statusCode": 500,
+  "tags": [
+    "email",
+  ],
+  "type": "fatal",
+  "uid": "508791f9-9063-463d-a54b-cb6a777870af",
+  "url": "https://postback-4dev.onrender.com/inv/not-found",
+}
+`;

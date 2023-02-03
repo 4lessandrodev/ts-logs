@@ -6,12 +6,12 @@
  */
 export const deleteObjectKey = <T>(body: T, keys: string[]): Partial<T> => {
     if(!Array.isArray(keys)) return body;
-    
+
     if (Array.isArray(body)) {
         return body.map((val): Partial<T> => deleteObjectKey(val, keys)) as T;
     }
     
-    if (body && typeof body === 'object' && !(body instanceof Date)) {        
+    if (body && typeof body === 'object' && !(body instanceof Date) && keys.length > 0) {        
         let result = {};
         const objectKeys = Object.keys(body);
         let currentObjectKeyIndex = 0;

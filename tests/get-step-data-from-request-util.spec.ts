@@ -14,6 +14,7 @@ describe('get-step-data-from-request.util', () => {
             "statusCode": 500,
             "tags": [],
         });
+        expect(result).toMatchSnapshot();
     });
 
     it('should get step data with success', () => {
@@ -26,9 +27,13 @@ describe('get-step-data-from-request.util', () => {
             statusCode: 500,
             method: 'POST',
             tags: ["email", "id"],
-            data: JSON.stringify({ email: "some@mail.com", id: "1" }),
+            data: `{
+  \"email\": \"some@mail.com\",
+  \"id\": \"1\"
+}`,
             body: { email: "some@mail.com", id: "1" }
         });
+        expect(result).toMatchSnapshot();
     });
 
     it('should get all default', () => {
@@ -44,5 +49,6 @@ describe('get-step-data-from-request.util', () => {
             data: "{}",
             body: {}
         });
+        expect(result).toMatchSnapshot();
     });
 })

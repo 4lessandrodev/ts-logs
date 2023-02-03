@@ -7,7 +7,7 @@ export const getStepDataFromRequest = (err: Error, req: Requests): StepDataFromR
     const method = req?.method as Method ?? 'NONE' as Method;
     const hasData = typeof req?.body === 'object' && (Object.keys(req?.body ?? {}).length > 0);
     const body = req?.body ?? {};
-    const data = hasData ? JSON.stringify(body) : '{}';
+    const data = hasData ? JSON.stringify(body, null, 2) : '{}';
     const tags = hasData ? Object.keys(body) : [];
     return { message, stack, statusCode, method, tags, data, body  };
 }
