@@ -84,6 +84,31 @@ err.writeLocal();
 ```
 
 ---
+
+### Create step from try block
+
+Create a step instance from error.
+
+```ts
+
+class DoSomething {
+    async execute(data: Data): Promise<void> {
+        try {
+            
+            // try do something ...
+
+        } catch(error) {
+
+            // create step instance from error
+            return Step.catch(error);
+        }
+    }
+}
+
+```
+
+---
+
 ### Use as middleware
 
 Express middleware in **beta** version.
