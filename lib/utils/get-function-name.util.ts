@@ -16,11 +16,8 @@ export const reference = ({
         return name ?? 'Default';
     },
     new(): string {
-        try {
-            throw new Error('[error-token@b7292691-6693-4ab9-9da8-aa72e9e19817]');
-        } catch (error) {
-            return this.fromError(error as Error);
-        }
+            const error = new Error('[error-token@b7292691-6693-4ab9-9da8-aa72e9e19817]');
+            return this.fromError(error);
     }
 })
 
