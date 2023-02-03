@@ -19,7 +19,7 @@ export const WriteDefaultLocal = async (log: Log, path?: string): Promise<void> 
     const exists = await EnsureLocalFolder(dir);
     if(!exists) return;
     const filePath = resolve(dir, fileName);
-    await appendFile(filePath, JSON.stringify(log) + '\n', 'utf8');
+    await appendFile(filePath, JSON.stringify(log, null, 2) + '\n', 'utf8');
 };
 
 export default WriteDefaultLocal;

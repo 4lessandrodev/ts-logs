@@ -90,4 +90,90 @@ describe('step', () => {
         const step = Step.catch(err);
         expect(step).toBeDefined();
     });
+
+    it('should generate full log from axios', () => {
+
+        class Testing {
+            execute() {
+                const axiosErr = { "message": "Request failed with status code 404", "name": "AxiosError", "stack": "AxiosError: Request failed with status code 404\n    at settle (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:1896:12)\n    at BrotliDecompress.handleStreamEnd (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:2940:11)\n    at BrotliDecompress.emit (node:events:525:35)\n    at endReadableNT (node:internal/streams/readable:1359:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)", "config": { "transitional": { "silentJSONParsing": true, "forcedJSONParsing": true, "clarifyTimeoutError": false }, "adapter": ["xhr", "http"], "transformRequest": [null], "transformResponse": [null], "timeout": 0, "xsrfCookieName": "XSRF-TOKEN", "xsrfHeaderName": "X-XSRF-TOKEN", "maxContentLength": -1, "maxBodyLength": -1, "env": {}, "headers": { "Accept": "application/json, text/plain, */*", "Content-Type": "application/json", "User-Agent": "axios/1.3.2", "Content-Length": "47", "Accept-Encoding": "gzip, compress, deflate, br", "uid": "508791f9-9063-463d-a54b-cb6a777870af" }, "method": "post", "url": "https://postback-4dev.onrender.com/inv/not-found", "data": "{\"email\":\"test@domain.com\",\"password\":\"123456\"}" }, "code": "ERR_BAD_REQUEST", "status": 404 };
+                const result = Step.catch(axiosErr);
+                return result;
+            }
+        }
+
+        const instance = new Testing();
+        const result = instance.execute();
+
+        expect(result).toEqual({
+            "createdAt": expect.any(Date),
+            "data": `{
+  \"requestData\": {
+    \"email\": \"test@domain.com\",
+    \"password\": \"123456\"
+  },
+  \"responseData\": {}
+}`,
+            "message": "Request failed with status code 404",
+            "method": "POST",
+            "name": "Testing.execute",
+            "stack": `AxiosError: Request failed with status code 404
+    at settle (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:1896:12)
+    at BrotliDecompress.handleStreamEnd (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:2940:11)
+    at BrotliDecompress.emit (node:events:525:35)
+    at endReadableNT (node:internal/streams/readable:1359:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)`,
+            "statusCode": 500,
+            "tags": [
+                "email",
+                "password",
+            ],
+            "type": "fatal",
+            "uid": "508791f9-9063-463d-a54b-cb6a777870af",
+            "url": "https://postback-4dev.onrender.com/inv/not-found"
+        });
+
+        expect(result).toMatchSnapshot({ createdAt: expect.any(Date) });
+
+    });
+
+    it('should generate full log from axios and remove password', () => {
+
+        class Testing {
+            execute() {
+                const axiosErr = { "message": "Request failed with status code 404", "name": "AxiosError", "stack": "AxiosError: Request failed with status code 404\n    at settle (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:1896:12)\n    at BrotliDecompress.handleStreamEnd (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:2940:11)\n    at BrotliDecompress.emit (node:events:525:35)\n    at endReadableNT (node:internal/streams/readable:1359:12)\n    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)", "config": { "transitional": { "silentJSONParsing": true, "forcedJSONParsing": true, "clarifyTimeoutError": false }, "adapter": ["xhr", "http"], "transformRequest": [null], "transformResponse": [null], "timeout": 0, "xsrfCookieName": "XSRF-TOKEN", "xsrfHeaderName": "X-XSRF-TOKEN", "maxContentLength": -1, "maxBodyLength": -1, "env": {}, "headers": { "Accept": "application/json, text/plain, */*", "Content-Type": "application/json", "User-Agent": "axios/1.3.2", "Content-Length": "47", "Accept-Encoding": "gzip, compress, deflate, br", "uid": "508791f9-9063-463d-a54b-cb6a777870af" }, "method": "post", "url": "https://postback-4dev.onrender.com/inv/not-found", "data": "{\"email\":\"test@domain.com\",\"password\":\"123456\"}" }, "code": "ERR_BAD_REQUEST", "status": 404 };
+                const result = Step.catch(axiosErr, { remove: ['password'] });
+                return result;
+            }
+        }
+
+        const instance = new Testing();
+        const result = instance.execute();
+
+        expect(result).toEqual({
+            "createdAt": expect.any(Date),
+            "data": `{
+  \"requestData\": {
+    \"email\": \"test@domain.com\"
+  },
+  \"responseData\": {}
+}`,
+            "message": "Request failed with status code 404",
+            "method": "POST",
+            "name": "Testing.execute",
+            "stack": `AxiosError: Request failed with status code 404
+    at settle (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:1896:12)
+    at BrotliDecompress.handleStreamEnd (/home/alessandro/Workspace/logs-app/node_modules/axios/dist/node/axios.cjs:2940:11)
+    at BrotliDecompress.emit (node:events:525:35)
+    at endReadableNT (node:internal/streams/readable:1359:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21)`,
+            "statusCode": 500,
+            "tags": [
+                "email"
+            ],
+            "type": "fatal",
+            "uid": "508791f9-9063-463d-a54b-cb6a777870af",
+            "url": "https://postback-4dev.onrender.com/inv/not-found"
+        });
+        expect(result).toMatchSnapshot({ createdAt: expect.any(Date) });
+    })
 });
