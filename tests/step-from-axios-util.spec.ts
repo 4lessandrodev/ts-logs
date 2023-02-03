@@ -1,4 +1,5 @@
-import { Log } from "../lib/core/log";;
+import { Step } from "../lib/core/step";
+import { Log } from "../lib/core/log";
 import { CatchError } from "../lib/types";
 import { stepPropsFromAxiosError } from "../lib/utils/step-from-axios-error.util";;
 
@@ -21,8 +22,8 @@ describe('step-from-axios-error', () => {
     it('should get step with success', async () => {
         const log = Log.init({ name: 'Test' });
         const error = instance.execute();
-        const step = stepPropsFromAxiosError(error as CatchError);
-
+        const props = stepPropsFromAxiosError(error as CatchError);
+        const step = Step.create(props);
         const result = log.addStep(step);
         await result.writeLocal();
         expect(result.steps).toHaveLength(1);
