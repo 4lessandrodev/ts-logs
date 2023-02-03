@@ -10,10 +10,11 @@ export const EnsureLocalFolder = async (path: string): Promise<boolean> => {
     if (!existsDir) {
         try {
             mkdirSync(path, { recursive: true });
+            return true;
         } catch (error) {
             return (false);
         }
     }
-    return (existsDir);
+    return (true);
 }
 export default EnsureLocalFolder;

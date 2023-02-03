@@ -6,6 +6,19 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.5] - 2023-02-03
+
+### Added
+
+- added: implement `Step.catch(err)` to create a step from Error.
+
+### Fix
+
+- fix: write local file
+- fix: remove keys from sub object in body or data using `remove: []` option
+
+---
+
 ### [0.0.4] - 2023-02-01
 
 ### Added

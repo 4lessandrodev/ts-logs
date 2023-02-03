@@ -1,7 +1,6 @@
-import { Request } from "express";
-import { StepDataFromRequest, Method } from "../types";
+import { StepDataFromRequest, Method, Requests } from "../types";
 
-export const getStepDataFromRequest = (err: Error, req: Request): StepDataFromRequest => {
+export const getStepDataFromRequest = (err: Error, req: Requests): StepDataFromRequest => {
     const message = err?.message ?? 'Internal Server Error';
     const stack = err?.stack ?? '';
     const statusCode = 500;
