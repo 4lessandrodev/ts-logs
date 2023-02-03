@@ -4,14 +4,15 @@ describe('get-class-name.util', () => {
 
     class Example {
         execute(): string{
-            return reference();
+            const err = new Error('Simulation');
+            return reference.fromError(err);
         }
     }
 
     const instance = new Example();
 
     const GetName = (): string => {
-        return reference();
+        return reference.new();
     }
 
     it('should get class name: Example.execute', () => {
