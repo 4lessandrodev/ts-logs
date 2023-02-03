@@ -1,5 +1,5 @@
 import { SProps } from "../lib/types";
-import { Log, Step } from "../lib/core";
+import { Step } from "../lib/core";
 
 describe('step', () => {
     it('should create a step with success', () => {
