@@ -1,4 +1,4 @@
-import { GetFileName } from "../lib";
+import { GetFileName } from "../lib/utils/get-file-name.util";
 
 describe('get-file-name.util', () => {
     it('should get file name with date', () => {

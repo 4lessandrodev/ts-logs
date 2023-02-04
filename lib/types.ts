@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import { AxiosError, RawAxiosRequestHeaders, Axios } from "axios";
 import { NextFunction, Request, Response } from "express";
 
 export type Type = "error" | "info" | "warn" | "debug" | "fatal" | "stack";
@@ -6,6 +6,12 @@ export type Locale = Intl.LocalesArgument;
 export type LocalOpt = Intl.DateTimeFormatOptions | undefined;
 export type Method = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT' | 'OPTIONS' | 'HEAD' | 'LINK' | 'PURGE' | 'UNLINK' | 'NONE';
 export type Encryption = 'cypher' | 'base64';
+export type Http = Axios;
+
+/**
+ * @description Defines the behavior of the add step method. Whether to change state or return a new instance without changing original state.
+ */
+export type StepStateType = 'stateful' | 'stateless';
 
 export interface EncryptOption {
     level: Encryption;
@@ -22,7 +28,7 @@ export interface MiddlewareOptions {
      * @param log Log
      * @returns void | Promise<void>
      */
-    callback?: (err: Error, req: any, res: any, next: any, log: Logs) => void | Promise<void>;
+    callback?: (err: Error, req: any, res: any, next: any, log: Readonly<Logs>) => void | Promise<void>;
     /**
      * @description Print log on terminal.
      */
@@ -85,7 +91,8 @@ export interface LProps {
     readonly ip: string;
     readonly origin: string;
     readonly createdAt: Date;
-    readonly steps: Readonly<Steps[]>;
+    steps: Readonly<Steps[]> | Steps[];
+    readonly addBehavior: StepStateType;
 }
 
 export interface Steps extends SProps {
@@ -112,7 +119,7 @@ export interface Logs extends LProps {
     removeStep(uid: string): Readonly<Logs>;
     writeLocal(path?: string): Promise<void>;
     print(locales?: Locale, options?: LocalOpt): void;
-    publish(provider: any): Promise<void>;
+    publish(config: S3Config | HttpConfig): Promise<SavePayload | null>;
 }
 
 export type BuildStepMessages = (step: Steps, locales?: Locale, options?: LocalOpt) => string;
@@ -149,12 +156,70 @@ export type Requests = Request;
 export type Responses = Response;
 export type NextFunctions = NextFunction;
 
-export {}
+export type VProviders = 'S3' | 'Http';
+
+export interface SavePayload {
+    url: string | null;
+    statusCode: number;
+}
+
+export abstract class Provider<T> {
+    abstract save(config: T, log: Readonly<Logs>): Promise<SavePayload>;
+}
+
+export interface HttpConfig { 
+    url: string;
+    headers?: RawAxiosRequestHeaders;
+};
+
+export interface S3Credentials {
+    accessKeyId: string;
+    secretAccessKey: string;
+}
+
+type AWSRegions = 'us-east-2' |
+    'us-east-1' |
+    'us-west-1' |
+    'us-west-2' |
+    'af-south-1' |
+    'ap-east-1' |
+    'ap-southeast-3' |
+    'ap-south-1' |
+    'ap-northeast-3' |
+    'ap-northeast-2' |
+    'ap-southeast-1' |
+    'ap-southeast-2' |
+    'ap-northeast-1' |
+    'ca-central-1' |
+    'eu-central-1' |
+    'eu-west-1' |
+    'eu-west-2' |
+    'eu-south-1' |
+    'eu-west-3' |
+    'eu-north-1' |
+    'me-south-1' |
+    'sa-east-1';
+
+export interface S3Config {
+    region: AWSRegions;
+    credentials: S3Credentials;
+    bucketName: string;
+};
+
+export interface S3Data {
+    Bucket: string;
+    Key: string;
+    Body: Buffer;
+    ContentType: string;
+}
+
+
+export { }
 
 declare global {
-  namespace Express {
-    export interface Request {
-      log?: Logs;
+    namespace Express {
+        export interface Request {
+            log?: Logs;
+        }
     }
-  }
 }
