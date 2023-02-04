@@ -6,6 +6,15 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.8] - 2023-02-04
+
+### Feat
+
+- feat: added provider to publish to aws S3
+- feat: added provider to publish to an endpoint by http request.
+
+---
+
 ### [0.0.7] - 2023-02-03
 
 ### Fix
