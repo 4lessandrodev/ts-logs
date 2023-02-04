@@ -4,6 +4,6 @@ export default {
   coverageDirectory: "coverage",
   coverageProvider: "v8",
   preset: "ts-jest",
-  displayName: "unit",
-  testMatch: ["**/*.spec.ts"],
+  displayName: "e2e",
+  testMatch: ["**/*.e2e.ts"],
 };

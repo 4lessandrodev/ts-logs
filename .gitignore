@@ -19,3 +19,4 @@ types.js.map
 !lib/*
 logs/
 **/*.log
+.env
