@@ -10,3 +10,6 @@ export * from './utils/get-file-name.util';
 export * from './utils/get-file-name.util';
 export * from './utils/step-from-axios-error.util';
 export * from './types';
+export * from './core/providers';
+export * from './core/http-provider';
+export * from './core/s3-provider';

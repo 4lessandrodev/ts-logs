@@ -13,6 +13,7 @@ describe('log', () => {
             "ip",
             "origin",
             "createdAt",
+            "addBehavior",
             "steps"
         ];
         const log = Log.init({ name: 'sample' });
@@ -60,5 +61,44 @@ describe('log', () => {
         const res = log.removeStep(step1.uid);
         expect(res.steps).toHaveLength(1);
     });
+
+    it('should default state type for log to be stateful', () => {
+        const global = Log.init({ name: 'Teste' });
+        const step = Step.info({ name: 'Info', message: 'Teste 1' });
+        global.addStep(step);
+        expect(Object.isFrozen(global.steps)).toBeFalsy();
+        expect(global.steps).toHaveLength(1);
+    });
+
+    it('should default state type for log to be stateful on create', () => {
+        const step = Step.info({ name: 'Info', message: 'Teste 1' });
+        const global = Log.init({ name: 'Teste', steps: [step] });
+        expect(global.steps).toHaveLength(1);
+        expect(Object.isFrozen(global.steps)).toBeFalsy();
+
+        global.removeStep(step.uid);
+        expect(global.steps).toHaveLength(0);
+    });
+
+    it('should do not change original state', () => {
+        const log = Log.init({ name: 'Teste', addBehavior: 'stateless' });
+        const step = Step.info({ name: 'Info', message: 'Teste 1' });
+        const newLog = log.addStep(step);
+        expect(Object.isFrozen(log.steps)).toBeTruthy();
+        expect(log.steps).toHaveLength(0);
+        expect(newLog.steps).toHaveLength(1);
+    });
+
+    it('should do not change original state on create', () => {
+        const step = Step.info({ name: 'Info', message: 'Teste 1' });
+        const log = Log.init({ name: 'Teste', steps: [step], addBehavior: 'stateless' });
+        expect(log.steps).toHaveLength(1);
+        expect(Object.isFrozen(log.steps)).toBeTruthy();
+
+        const newLog = log.removeStep(step.uid);
+        expect(log.steps).toHaveLength(1);
+        expect(newLog.steps).toHaveLength(0);
+    });
+
 
 });

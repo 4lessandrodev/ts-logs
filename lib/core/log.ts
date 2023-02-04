@@ -1,25 +1,40 @@
 import { randomUUID } from "node:crypto";
-import { Locale, LocalOpt, Logs, LProps, Steps } from "../types";
+import { HttpConfig, Locale, LocalOpt, Logs, LProps, S3Config, Steps, StepStateType } from "../types";
 import WriteDefaultLocal from "../utils/write-default-local.util";
 import BuildLogMessage from "../utils/build-log-message.util";
 import TerminalLog from "../utils/log.utils";
+import S3Provider from "./s3-provider";
+import { SavePayload } from "../types";
+import HttProvider from "./http-provider";
 
+/**
+ * @description Global log to manage steps and behavior.
+ * @summary Create a global log and added steps, print or publish result.
+ */
 export class Log implements Logs {
     readonly uid!: string;
     readonly name!: string;
     readonly ip!: string;
     readonly origin!: string;
     readonly createdAt!: Date;
-    readonly steps!: Readonly<Steps[]>;
+    steps!: Readonly<Steps[]> | Steps[];
+    /**
+     * @description Defines the behavior of the add step method. Whether to change state or return a new instance without changing original state.
+     */
+    readonly addBehavior!: StepStateType;
 
-    private constructor(props: Partial<LProps>) {
+    private constructor({ addBehavior, ...props }: Partial<LProps>) {
         this.uid = props.uid ?? randomUUID();
         this.name = props.name ?? 'default';
         this.ip = props.ip ?? 'none';
         this.origin = props.origin ?? 'none';
         this.createdAt = new Date();
-        this.steps = props.steps ?? [];
-        Object.freeze(this);
+        this.addBehavior = addBehavior ?? 'stateful';
+        const statefulArr = props.steps ? [...props.steps] : [];
+        const statelessArr = Object.freeze(props.steps ?? []);
+        const isStateful = typeof addBehavior === 'undefined' || addBehavior === 'stateful';
+        this.steps = isStateful ? statefulArr : statelessArr;
+        !isStateful && Object.freeze(this);
     }
 
     /**
@@ -62,8 +77,17 @@ export class Log implements Logs {
      * @description Add a log step to instance.
      * @param step as instance of Step.
      * @returns instance of Log with added step.
+     * @summary Check `addBehavior` option.
+     * It defines the behavior of the add step method. Whether to change state or return a new instance without changing original state.
+     * If `addBehavior` is defined as `stateful` the original state of log will be changed. If `addBehavior` is defined as `stateless`
+     * a new instance of Log will be created and returned without change the original state.
+     * @default `addBehavior` is `stateful`
      */
     addStep(step: Readonly<Steps>): Readonly<Logs> {
+        if (this.addBehavior === 'stateful') {
+            this.steps = [...this.steps, step];
+            return this;
+        }
         return new Log({ ...this, steps: [...this.steps, step] });
     }
 
@@ -71,8 +95,17 @@ export class Log implements Logs {
      * @description Add a log step to instance.
      * @param step as instance of Step.
      * @returns instance of Log with added step.
+     * @summary Check `addBehavior` option.
+     * It defines the behavior of the add step method. Whether to change state or return a new instance without changing original state.
+     * If `addBehavior` is defined as `stateful` the original state of log will be changed. If `addBehavior` is defined as `stateless`
+     * a new instance of Log will be created and returned without change the original state.
+     * @default `addBehavior` is `stateful`
      */
     addSteps(steps: Readonly<Steps[]>): Readonly<Logs> {
+        if (this.addBehavior === 'stateful') {
+            this.steps = [...this.steps, ...steps];
+            return this;
+        }
         return new Log({ ...this, steps: [...this.steps, ...steps] });
     }
 
@@ -80,9 +113,18 @@ export class Log implements Logs {
      * @description Remove a log step from instance.
      * @param uid as step uid to identify what step to remove.
      * @returns instance of Log without removed step.
+     * @summary Check `addBehavior` option.
+     * It defines the behavior of the add step method. Whether to change state or return a new instance without changing original state.
+     * If `addBehavior` is defined as `stateful` the original state of log will be changed. If `addBehavior` is defined as `stateless`
+     * a new instance of Log will be created and returned without change the original state.
+     * @default `addBehavior` is `stateful`
      */
     removeStep(uid: string): Readonly<Logs> {
-        const steps = this.steps.filter((step) => step.uid !== uid);
+        const steps = this.steps.filter((step): boolean => step.uid !== uid);
+        if (this.addBehavior === 'stateful') {
+            this.steps = steps;
+            return this;
+        }
         return new Log({ ...this, steps });
     }
 
@@ -116,15 +158,38 @@ export class Log implements Logs {
 
     /**
      * @description Publish log using a provider.
-     * @requires provider
+     * @requires provider as `S3Config` or `HttpConfig` you can provide it using CONFIG @see example below.
      * @todo implement provider to publish on
-     * @external firebase
      * @external aws-s3
-     * @external mongodb
-     * @external redis
+     * @external http
+     * @example
+     * 
+     * import { Config, Log } from 'ts-logs';
+     * 
+     * const httpConfig = Config.Http({ url: "https://domain.com/logs" });
+     * 
+     * const log = Log.init({ name: "test..." });
+     * 
+     * const result = await log.publish(httpConfig);
+     * 
+     * console.log(result.statusCode);
+     * 
+     * > 200
+     * 
      */
-    async publish(provider: any): Promise<void> {
-        TerminalLog(`publishing...${provider}\n`);
+    async publish(config: S3Config | HttpConfig): Promise<SavePayload | null> {
+        try {
+            if((config as S3Config)?.bucketName && (config as S3Config)?.region && (config as S3Config)?.credentials){
+                return S3Provider.save(config as S3Config, this);
+            }
+            if((config as HttpConfig)?.url){
+                return HttProvider.save(config as HttpConfig, this);
+            }
+            return null;
+        } catch (error) {
+            TerminalLog(`error on publish...${(error as Error).message}\n`);
+            return null;
+        }
     }
 }
 

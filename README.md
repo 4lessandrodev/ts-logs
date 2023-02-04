@@ -75,11 +75,11 @@ const info = Step.info({ message: 'Fetching api...', name: 'Request Login', meth
 const error = Step.error({ message: 'Timeout', name: 'Login', stack: 'Error stack' });
 
 // add steps to global log
-const err = global.addSteps([ info, error ]);
+global.addSteps([ info, error ]);
 
 // print or save logs
-err.print();
-err.writeLocal();
+global.print();
+global.writeLocal();
 
 ```
 
@@ -124,7 +124,7 @@ app.use(express.json());
 // ...
 app.use(routes);
 
-// last middleware to handle errors using `stackLog`
+// last middleware to handle errors using `stackLog` all errors will be intercepted.
 app.use(stackLog({ writeLocal: true }));
 
 app.liste(3000);
@@ -143,15 +143,65 @@ import { bindLog } from 'ts-logs';
 const app = express();
 app.use(express.json());
 
-// on top of routes you can bind a log instance
+// on top of routes you can bind a log instance to request
 app.use(bindLog());
 
-app.get("/log", (req: Request, res: Response) => {
+app.get("/log", async (req: Request, res: Response) => {
 
-    // you can do any with log instance
+    // you can do anything with log instance
     req.log.addStep( /* any step */ );
     req.log.print(); // show steps on terminal
+    await req.log.publish(Config.S3(/* ... */)) // publish to s3
 
+    res.status(200).json(req.log);
+});
+
+// ...
+
+app.use(routes);
+
+```
+
+---
+
+### Use as middleware step
+
+if you use many steps as middleware you can use global log
+
+```ts
+
+import express from 'express';
+import { bindLog } from 'ts-logs';
+
+const app = express();
+app.use(express.json());
+
+// on top of routes you can bind a log instance to request
+app.use(bindLog());
+
+app.get("/process", (req: Request, res: Response, next: NextFunction) => {
+
+    // you can do any with log instance
+    req.log.addStep( /* info step */ );
+
+    // call next step
+    next();
+}, (req: Request, res: Response, next: NextFunction) => {
+
+    // you can do any with log instance
+    req.log.addStep( /* error step */ );
+
+    // call next step
+    next();
+}, async (req: Request, res: Response, next: NextFunction) => {
+
+    // you can do any with log instance
+    req.log.addStep( /* stack step */ );
+
+    // publish log with steps on aws s3
+    await req.log.publish(Config.S3(/* ... */));
+
+    // send log to client
     res.status(200).json(req.log);
 });
 
