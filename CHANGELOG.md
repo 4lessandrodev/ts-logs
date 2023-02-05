@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+---
+
+### [0.0.10] - 2023-02-05
+
+### Feat
+
+- feat: added `remove` method to remove keys from body on step instance
+
+### Fix
+
+- fix: ensure get id from body if exists and apply to step instance
 
 ---
 

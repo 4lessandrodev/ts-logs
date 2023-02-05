@@ -110,6 +110,7 @@ export interface Steps extends SProps {
     setURL(url: string): Readonly<Steps>;
     print(locales?: Locale, options?: LocalOpt): void;
     getPrintableMsg(locales?: Locale, options?: LocalOpt): string;
+    remove(keys: string[]): Readonly<Steps>;
 }
 
 export interface Logs extends LProps {
@@ -141,6 +142,7 @@ export interface StepDataFromRequest {
     method: Method;
     tags: string[];
     data: string;
+    uid?: string;
     body: {}
 }
 

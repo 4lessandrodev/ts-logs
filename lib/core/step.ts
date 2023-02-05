@@ -2,7 +2,8 @@ import TerminalLog from "../utils/log.utils";
 import { randomUUID } from "node:crypto";
 import { CatchError, CatchProps, Locale, LocalOpt } from "../types";
 import { Method, SProps, Steps, Type } from "../types";
-import { Messages, reference, stepPropsFromAxiosError } from "../utils";
+import { deleteObjectKey, Messages, reference, stepPropsFromAxiosError } from "../utils";
+import extractBodyAsObject from "../utils/extract-body.util";
 
 export class Step implements Steps {
     readonly uid!: string;
@@ -18,7 +19,6 @@ export class Step implements Steps {
     readonly createdAt!: Date;
 
     private constructor(props: Partial<SProps>) {
-        this.uid = props.uid ?? randomUUID();
         this.name = props.name ?? 'default';
         this.tags = props.tags ?? [];
         this.url = props.url ?? 'none';
@@ -29,6 +29,8 @@ export class Step implements Steps {
         this.type = props.type ?? 'info';
         this.method = props.method ?? 'NONE';
         this.createdAt = new Date();
+        const uid = props.uid ?? Step.extractId(props.data);
+        this.uid = uid;
         Object.freeze(this);
     }
 
@@ -76,7 +78,7 @@ export class Step implements Steps {
      * @returns an instance of Step
      */
     public static info(props: Partial<SProps> & { name: string; message: string }): Readonly<Step> {
-        return new Step({ ...props, type: 'info' })
+        return new Step({ ...props, type: 'info' });
     }
 
     /**
@@ -89,12 +91,23 @@ export class Step implements Steps {
     }
 
     /**
+     * @description Extract id from request body if exists.
+     * @param body as string or object
+     * @returns id or undefined
+     */
+    private static extractId(body: string | Object = {}): string {
+        const data = extractBodyAsObject<{}>(body);
+        const id = data?.['id'] ?? randomUUID();
+        return id;
+    }
+
+    /**
      * @description Create an instance of Step
      * @param props as Object with SProps params
      * @returns an instance of Step
      */
     public static create(props: Partial<SProps>): Readonly<Step> {
-        return new Step({ ...props })
+        return new Step({ ...props });
     }
 
     /**
@@ -136,6 +149,19 @@ export class Step implements Steps {
      */
     setName(name: string): Steps {
         return new Step({ ...this, name });
+    }
+
+    /**
+     * @description Remove keys from body matching provided param.
+     * @param keys as array of string.
+     * @returns new instance of Step.
+     */
+    remove(keys: string[]): Readonly<Step> {
+        const body = this.data;
+        const result = extractBodyAsObject(body);
+        const updated = deleteObjectKey(result, keys) as Partial<SProps>;
+        const data = JSON.stringify(updated);
+        return new Step({ ...this, data });
     }
 
     /**
