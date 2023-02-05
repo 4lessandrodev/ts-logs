@@ -1,4 +1,4 @@
-# ts-logs - under development
+# ts-logs - beta
 Understand what happens in your application. Manage your logs and audit the steps of each request.
 
 <a href="https://www.npmjs.com/package/ts-logs" rel="nofollow" class="keychainify-checked">
@@ -56,7 +56,7 @@ This package provide a sdk to manage logs.
 ---
 ## Documentation
 
-Application in beta version.
+sdk in beta version.
 
 Example
 
