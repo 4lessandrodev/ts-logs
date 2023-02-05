@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+
+---
+
+### [0.0.9] - 2023-02-05
+
+### Feat
+
+- feat: added `autoPublishLog` middleware
+
 ---
 
 ### [0.0.8] - 2023-02-04

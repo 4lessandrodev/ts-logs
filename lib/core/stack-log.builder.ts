@@ -1,18 +1,18 @@
-import { Middleware, MiddlewareOptions, NextFunctions, Requests, Responses } from "../types";
+import { StackMiddleware, MiddlewareOptions, NextFunctions, Requests, Responses } from "../types";
 import getLogDataFromRequest from "../utils/get-log-data-from-request.util";
 import getStepDataFromRequest from "../utils/get-step-data-from-request.util";
 import encryptString from "../utils/encrypt-string.util";
-import { deleteObjectKey } from "../utils";
+import deleteObjectKey from "../utils/delete-object-key.util";
 import Step from "./step";
-import { Log } from "./log";
+import Log from "./log";
 
 /**
  * @description Create a middleware to handle stack error on express
  * @param options Object as MiddlewareOptions
  * @returns Middleware
  */
-export const stackLog = (options: MiddlewareOptions): Middleware => {
-    const { print, remove: keysToRemoveFromBody = [], callback, writeLocal, encrypt, sendAsResponse = true, encryptOption } = options;
+export const stackLog = (options: MiddlewareOptions): StackMiddleware => {
+    const { print, remove: keysToRemoveFromBody = [], callback, writeLocal, encrypt, sendAsResponse = true, encryptOption, ...opt } = options;
 
     if(sendAsResponse && callback) throw new Error('[stackLog]: could not sendAsResponse and callback');
     if(!sendAsResponse && !callback && !print && !writeLocal) throw new Error('[stackLog]: invalid options');
@@ -31,15 +31,21 @@ export const stackLog = (options: MiddlewareOptions): Middleware => {
 
         const step = Step.stack({ message, stack, statusCode, data, url: origin, method, name }).addTags(tags.slice(0, 5));
 
-        const result = log.addStep(step);
+        log.addStep(step);
 
-        if(print) result.print();
+        if(print) log.print();
 
-        if(writeLocal) await result.writeLocal();
+        if(writeLocal) await log.writeLocal();
 
-        if(sendAsResponse) return res.status(statusCode).json(result);
+        if(opt.publish && opt.provider){
+            await log.publish(opt.provider);
+        }
 
-        if(callback && typeof callback === 'function') return callback(err, req, res, next, result);
+        if(sendAsResponse) return res.status(statusCode).json(log);
+
+        if(callback && typeof callback === 'function') return callback(err, req, res, next, log);
+
+        return next();
     };
 }
 

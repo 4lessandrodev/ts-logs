@@ -7,6 +7,10 @@ export type LocalOpt = Intl.DateTimeFormatOptions | undefined;
 export type Method = 'GET' | 'POST' | 'DELETE' | 'PATCH' | 'PUT' | 'OPTIONS' | 'HEAD' | 'LINK' | 'PURGE' | 'UNLINK' | 'NONE';
 export type Encryption = 'cypher' | 'base64';
 export type Http = Axios;
+export type Requests = Request;
+export type Responses = Response;
+export type NextFunctions = NextFunction;
+export type PublishConfig = S3Config | HttpConfig;
 
 /**
  * @description Defines the behavior of the add step method. Whether to change state or return a new instance without changing original state.
@@ -28,14 +32,14 @@ export interface MiddlewareOptions {
      * @param log Log
      * @returns void | Promise<void>
      */
-    callback?: (err: Error, req: any, res: any, next: any, log: Readonly<Logs>) => void | Promise<void>;
+    callback?: (err: Error, req: Requests, res: Responses, next: NextFunctions, log: Readonly<Logs>) => void | Promise<void>;
     /**
      * @description Print log on terminal.
      */
     print?: boolean;
     /**
      * @description Publish as external provider.
-     * @requires provider
+     * @requires provider as config.
      */
     publish?: boolean;
     /**
@@ -60,11 +64,9 @@ export interface MiddlewareOptions {
     /**
      * @description External provider to publish logs.
      * @param s3
-     * @param mongo
-     * @param firebase
-     * @param redis
+     * @param http
      */
-    provider?: any;
+    provider?: PublishConfig;
     /**
      * @description Write a local file on root folder "log" with log data as .log extension
      */
@@ -119,16 +121,19 @@ export interface Logs extends LProps {
     removeStep(uid: string): Readonly<Logs>;
     writeLocal(path?: string): Promise<void>;
     print(locales?: Locale, options?: LocalOpt): void;
-    publish(config: S3Config | HttpConfig): Promise<SavePayload | null>;
+    publish(config: PublishConfig): Promise<SavePayload | null>;
+    hasSteps(): boolean;
 }
 
 export type BuildStepMessages = (step: Steps, locales?: Locale, options?: LocalOpt) => string;
 export type BuildLogMessages = (log: Logs, locales?: Locale, options?: LocalOpt) => string;
 type keys = Type | 'default';
 export type FnTypes = { [k in keys]: BuildStepMessages };
-export type Middleware = (err: Error, req: any, res: any, next: any) => Promise<any>;
-export type Binder = (req: any, res: any, next: any) => void;
+export type StackMiddleware = (err: Error, req: Requests, res: Responses, next: NextFunctions) => Promise<any>;
+export type BinderMiddleware = (req: Requests, res: Responses, next: NextFunctions) => void;
+export type PublisherMiddleware = (req: Requests, res: Responses, next: NextFunctions) => Promise<void>;
 export interface EncryptParam { data: string; encrypt?: boolean; encryptOption?: EncryptOption };
+
 export interface StepDataFromRequest {
     message: string;
     stack: string;
@@ -152,10 +157,6 @@ export interface CatchProps {
 
 export type CatchError = AxiosError & Error;
 
-export type Requests = Request;
-export type Responses = Response;
-export type NextFunctions = NextFunction;
-
 export type VProviders = 'S3' | 'Http';
 
 export interface SavePayload {
@@ -177,7 +178,7 @@ export interface S3Credentials {
     secretAccessKey: string;
 }
 
-type AWSRegions = 'us-east-2' |
+export type AWSRegions = 'us-east-2' |
     'us-east-1' |
     'us-west-1' |
     'us-west-2' |
@@ -213,6 +214,11 @@ export interface S3Data {
     ContentType: string;
 }
 
+export interface AutoPublishOptions {
+    publishWhenStatus: (status: number) => boolean;
+};
+
+export type AutoPublish = (config: PublishConfig, options: AutoPublishOptions) => PublisherMiddleware;
 
 export { }
 

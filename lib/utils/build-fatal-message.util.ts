@@ -4,7 +4,7 @@ import Color from "./color.util";
 export const BuildFatalMessage: BuildStepMessages = (step: Steps, locales?: Locale, options?: LocalOpt): string => {
     const { message, createdAt, name, stack, data, uid, url, statusCode } = step;
     const time = createdAt.toLocaleTimeString(locales ?? 'pt-BR', options);
-    const msg = ` [ FATAL ] > Time: ${time} | Log: ${name} | Message: ${message} | Uid: ${uid} | Code: ${statusCode} `;
+    const msg = ` [ FATAL ] Time: ${time} | Step: ${name} | Message: ${message} | Uid: ${uid} | Code: ${statusCode} `;
 
     const italicData = Color.style().italic(`${step.method}: ${url}\n${data}`);
     const titleData = Color.style().reset(msg);

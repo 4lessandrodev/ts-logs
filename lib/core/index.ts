@@ -5,3 +5,4 @@ export * from './bind-log.builder';
 export * from './s3-provider';
 export * from './http-provider';
 export * from './providers';
+export * from './auto-publish-log.builder';

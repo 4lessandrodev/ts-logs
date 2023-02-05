@@ -64,11 +64,8 @@ Example
 import { randomUUID } from 'node:crypto';
 import { Log, Step } from 'ts-logs';
 
-// any id or unique string value
-const uid = randomUUID();
-
 // create a global log
-const global = Log.init({ name: 'First Log', uid, origin: 'https://global.com' });
+const global = Log.init({ name: 'First Log', origin: 'https://global.com' });
 
 // create steps
 const info = Step.info({ message: 'Fetching api...', name: 'Request Login', method: 'POST' });
@@ -85,9 +82,9 @@ global.writeLocal();
 
 ---
 
-### Create step from try block
+### Create step from catch block
 
-Create a step instance from error.
+Create a step instance from error. This method get many important information from axios error.
 
 ```ts
 
@@ -96,6 +93,7 @@ class DoSomething {
         try {
             
             // try do something ...
+            await axios.post(url, data);
 
         } catch(error) {
 
@@ -111,7 +109,7 @@ class DoSomething {
 
 ### Use as middleware
 
-Express middleware in **beta** version.
+Express middleware to capture app errors.
 
 ```ts
 
@@ -125,7 +123,7 @@ app.use(express.json());
 app.use(routes);
 
 // last middleware to handle errors using `stackLog` all errors will be intercepted.
-app.use(stackLog({ writeLocal: true }));
+app.use(stackLog({ writeLocal: true })); // <------ middleware
 
 app.liste(3000);
 
@@ -144,11 +142,11 @@ const app = express();
 app.use(express.json());
 
 // on top of routes you can bind a log instance to request
-app.use(bindLog());
+app.use(bindLog()); // <------ middleware
 
 app.get("/log", async (req: Request, res: Response) => {
 
-    // you can do anything with log instance
+    // you can do anything with log instance from request.
     req.log.addStep( /* any step */ );
     req.log.print(); // show steps on terminal
     await req.log.publish(Config.S3(/* ... */)) // publish to s3
@@ -177,31 +175,65 @@ const app = express();
 app.use(express.json());
 
 // on top of routes you can bind a log instance to request
-app.use(bindLog());
+app.use(bindLog()); // <------ middleware
 
 app.get("/process", (req: Request, res: Response, next: NextFunction) => {
 
-    // you can do any with log instance
-    req.log.addStep( /* info step */ );
+    // you can do anything with log instance
+    req.log.addStep( /* info step */ ); // <------ add step to global log state.
 
     // call next step
     next();
 }, (req: Request, res: Response, next: NextFunction) => {
 
-    // you can do any with log instance
-    req.log.addStep( /* error step */ );
+    // you can do anything with log instance
+    req.log.addStep( /* error step */ ); // <------ add step to global log state.
 
     // call next step
     next();
 }, async (req: Request, res: Response, next: NextFunction) => {
 
-    // you can do any with log instance
-    req.log.addStep( /* stack step */ );
+    // you can do anything with log instance
+    req.log.addStep( /* stack step */ ); // <------ add step to global log state.
 
-    // publish log with steps on aws s3
+    // publish log with steps to aws s3
     await req.log.publish(Config.S3(/* ... */));
 
     // send log to client
+    res.status(200).json(req.log);
+});
+
+// ...
+
+app.use(routes);
+
+```
+
+---
+
+### Publish log automatically
+
+you can use in conjunction with binding middleware other middleware to automatically publish logs to your preferred provider.
+
+```ts
+
+import express from 'express';
+import { bindLog } from 'ts-logs';
+
+const app = express();
+app.use(express.json());
+
+// on top of routes you can bind a log instance to request
+app.use(bindLog()); // <------ middleware
+
+// after `bindLog` add `autoPublishLog` to automatically publish logs
+app.use(autoPublishLog(config)); // <------ middleware
+
+app.get("/log", async (req: Request, res: Response) => {
+
+    // you can do anything with log instance from request.
+    req.log.addStep( /* any step */ ); // <------ add step to publish
+
     res.status(200).json(req.log);
 });
 

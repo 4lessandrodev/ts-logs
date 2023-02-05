@@ -4,7 +4,7 @@ import Color from "./color.util";
 export const BuildWarnMessage: BuildStepMessages = (step: Steps, locales?: Locale, options?: LocalOpt): string => {
     const { message, createdAt, name } = step;
     const time = createdAt.toLocaleTimeString(locales ?? 'pt-BR', options);
-    const msg = ` [ WARN  ] > Time: ${time} | Log: ${name} | Message: ${message} `;
+    const msg = ` [ WARN  ] Time: ${time} | Step: ${name} | Message: ${message} `;
     return Color.magenta(msg, 'white');
 };
 

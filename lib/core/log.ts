@@ -47,6 +47,14 @@ export class Log implements Logs {
     }
 
     /**
+     * @description Check if exist some step for log.
+     * @returns true if exist some step and return false if step is empty.
+     */
+    hasSteps(): boolean {
+        return this.steps.length > 0;
+    }
+
+    /**
      * @description Create a new instance of Log with ip attribute. This is an immutable instance, the method does not change state, it returns a new one.
      * @param ip as request origin address
      * @returns instance of Log with ip address set
