@@ -1,3 +1,4 @@
+export * from './types';
 export * from './core/log';
 export * from './core/step';
 export * from './core/stack-log.builder';
@@ -9,7 +10,7 @@ export * from './utils/get-folder-name.util';
 export * from './utils/get-file-name.util';
 export * from './utils/get-file-name.util';
 export * from './utils/step-from-axios-error.util';
-export * from './types';
 export * from './core/providers';
 export * from './core/http-provider';
 export * from './core/s3-provider';
+export * from './core/auto-publish-log.builder';

@@ -1,5 +1,5 @@
 import { Log } from "./log";
-import { Binder, NextFunctions, Requests, Responses } from "../types";
+import { BinderMiddleware, NextFunctions, Requests, Responses } from "../types";
 import getLogDataFromRequest from "../utils/get-log-data-from-request.util";
 
 /**
@@ -8,7 +8,7 @@ import getLogDataFromRequest from "../utils/get-log-data-from-request.util";
  * @summary you can access log from request like example:
  * @example req.log
  */
-export const bindLog = (): Binder => {
+export const bindLog = (): BinderMiddleware => {
     return (req: Requests, _: Responses, next: NextFunctions): void => {
         const { name, ip, origin, uid } = getLogDataFromRequest(req);
         req.log = Log.init({ name, ip, origin, uid })
