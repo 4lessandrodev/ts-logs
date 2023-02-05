@@ -1,4 +1,4 @@
-export const bodyFromError = <T>(body: string | object): T => {
+export const extractBodyAsObject = <T>(body: string | object): T => {
     try {
         if (body && typeof body === 'object' && !(body instanceof Date)) {
             return body as T;
@@ -18,4 +18,4 @@ export const bodyFromError = <T>(body: string | object): T => {
     }
 }
 
-export default bodyFromError;
+export default extractBodyAsObject;

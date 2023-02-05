@@ -13,6 +13,7 @@ describe('get-step-data-from-request.util', () => {
             "stack": "Error Stack",
             "statusCode": 500,
             "tags": [],
+            "uid": undefined
         });
         expect(result).toMatchSnapshot();
     });
@@ -22,6 +23,7 @@ describe('get-step-data-from-request.util', () => {
         const request: any = { method: "POST", body: { email: "some@mail.com", id: "1" } };
         const result = getStepDataFromRequest(error, request);
         expect(result).toEqual({
+            uid: "1",
             message: 'Error Message',
             stack: 'Error Stack',
             statusCode: 500,

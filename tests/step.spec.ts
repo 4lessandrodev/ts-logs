@@ -4,7 +4,6 @@ import { Step } from "../lib/core";
 describe('step', () => {
     it('should create a step with success', () => {
         const keys: Array<keyof SProps> = [
-            "uid",
             "name",
             "tags",
             "url",
@@ -14,7 +13,8 @@ describe('step', () => {
             "message",
             "type",
             "method",
-            "createdAt"
+            "createdAt",
+            "uid",
         ];
         const step = Step.create({});
         expect.assertions(keys.length + 1);
@@ -175,5 +175,43 @@ describe('step', () => {
             "url": "https://postback-4dev.onrender.com/inv/not-found"
         });
         expect(result).toMatchSnapshot({ createdAt: expect.any(Date) });
-    })
+    });
+
+    it('should create step using data id as uid', () => {
+        const param = { uid: 'my-custom-request-id', name: 'teste' } as Partial<SProps>;
+        const step = Step.create(param);
+        expect(step.uid).toBe('my-custom-request-id');
+    });
+
+    it('should return empty object as string if do not provide data in param', () => {
+        const param = { uid: 'my-custom-request-id', name: 'teste' } as Partial<SProps>;
+        const step = Step.create(param);
+        expect(step.data).toBe('none');
+
+        const updated = step.remove(['card']);
+        expect(updated.data).toBe('{}');
+        expect(step.uid).toBe('my-custom-request-id');
+    });
+
+    it('should remove existing card in data', () => {
+        const data = JSON.stringify({ card: { n: '2000' }, name: 'Alex', id: "other-id" });
+        const param = { uid: 'my-custom-request-id', name: 'teste', data } as Partial<SProps>;
+        const step = Step.create(param);
+
+        expect(step.data).toBe(data);
+        const updated = step.remove(['card']);
+        expect(updated.data).toEqual(JSON.stringify({ name: 'Alex', id: "other-id" }));
+        expect(step.uid).toBe('my-custom-request-id');
+    });
+
+    it('should use id in data as uid if do not provide uid param', () => {
+        const data = JSON.stringify({ card: { n: '2000' }, name: 'Alex', id: "other-id" });
+        const param = { name: 'teste', data } as Partial<SProps>;
+        const step = Step.create(param);
+
+        expect(step.data).toBe(data);
+        const updated = step.remove(['card']);
+        expect(updated.data).toEqual(JSON.stringify({ name: 'Alex', id: "other-id" }));
+        expect(step.uid).toBe('other-id');
+    });
 });
