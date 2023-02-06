@@ -108,7 +108,7 @@ class DoSomething {
 
 ### Log object
 
-Example generated log. The log is a json object with arrays of step object 
+Example generated log. The log is a json object with array of step object 
 
 ```json
 
