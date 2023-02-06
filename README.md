@@ -61,7 +61,6 @@ sdk in beta version.
 Example
 
 ```ts
-import { randomUUID } from 'node:crypto';
 import { Log, Step } from 'ts-logs';
 
 // create a global log
@@ -136,7 +135,7 @@ You also may use bind middleware to apply a log instance to request
 ```ts
 
 import express from 'express';
-import { bindLog } from 'ts-logs';
+import { bindLog, Config } from 'ts-logs';
 
 const app = express();
 app.use(express.json());
@@ -169,7 +168,7 @@ if you use many steps as middleware you can use global log
 ```ts
 
 import express from 'express';
-import { bindLog } from 'ts-logs';
+import { bindLog, Config } from 'ts-logs';
 
 const app = express();
 app.use(express.json());
@@ -218,7 +217,7 @@ you can use in conjunction with binding middleware other middleware to automatic
 ```ts
 
 import express from 'express';
-import { bindLog } from 'ts-logs';
+import { bindLog, autoPublishLog, Config } from 'ts-logs';
 
 const app = express();
 app.use(express.json());
@@ -227,7 +226,7 @@ app.use(express.json());
 app.use(bindLog()); // <------ middleware
 
 // after `bindLog` add `autoPublishLog` to automatically publish logs
-app.use(autoPublishLog(config)); // <------ middleware
+app.use(autoPublishLog(Config.S3())); // <------ middleware
 
 app.get("/log", async (req: Request, res: Response) => {
 
