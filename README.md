@@ -79,9 +79,36 @@ global.writeLocal();
 
 ```
 
+---
+
+### Create step from catch block
+
+Create a step instance from error. This method get many important information from axios error.
+
+```ts
+
+class DoSomething {
+    async execute(data: Data): Promise<void> {
+        try {
+            
+            // try do something ...
+            await axios.post(url, data);
+
+        } catch(error) {
+
+            // create step instance from error
+            return Step.catch(error);
+        }
+    }
+}
+
+```
+
+---
+
 ### Log object
 
-Example generated log
+Example generated log. The log is a json object with arrays of step object 
 
 ```json
 
@@ -137,31 +164,6 @@ Example generated log
       "uid": "1c7e5aca-c9f4-4e33-a5e7-d8a9cfe94053"
     }
   ]
-}
-
-```
-
----
-
-### Create step from catch block
-
-Create a step instance from error. This method get many important information from axios error.
-
-```ts
-
-class DoSomething {
-    async execute(data: Data): Promise<void> {
-        try {
-            
-            // try do something ...
-            await axios.post(url, data);
-
-        } catch(error) {
-
-            // create step instance from error
-            return Step.catch(error);
-        }
-    }
 }
 
 ```
