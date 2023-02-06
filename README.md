@@ -79,6 +79,75 @@ global.writeLocal();
 
 ```
 
+### Log object
+
+Example generated log
+
+```json
+
+{
+  "uid": "1c7e5aca-c9f4-4e33-a5e7-d8a9cfe94053",
+  "name": "Log Example",
+  "ip": "127.0.0.1",
+  "origin": "http://127.0.0.1:3000",
+  "createdAt": "2023-02-05T23:00:40.481Z",
+  "addBehavior": "stateful",
+  "steps": [
+    {
+      "name": "Find Item",
+      "tags": ["item", "product", "cart"],
+      "url": "https://my-app.com/products/1",
+      "stack": "none",
+      "data": "none",
+      "statusCode": 200,
+      "message": "Fetching api...",
+      "type": "info",
+      "method": "GET",
+      "createdAt": "2023-02-05T23:00:40.481Z",
+      "uid": "673e17fb-55aa-4ea9-8668-e34b94bfd22c"
+    },
+    {
+      "name": "Login",
+      "tags": [],
+      "url": "https://my-app.com/login",
+      "stack": "Error: Connection Refused - Forbidden\n
+      at GetStack (/home/user/logs/tests/index.spec.ts:11:19)\n
+      at Object.<anonymous> (/home/user/logs/tests/index.spec.ts:38:86)\n
+      at Promise.then.completed (/home/user/logs/build/utils.js:290:28)\n
+      at new Promise (<anonymous>)\n
+      at callAsyncCircusF",
+      "data": "{ \"email\": \"test@mail.com\" }",
+      "statusCode": 401,
+      "message": "Forbidden",
+      "type": "stack",
+      "method": "POST",
+      "createdAt": "2023-02-05T23:00:40.481Z",
+      "uid": "2df15a5a-9c5a-4686-8811-c4ed1fd9bedd"
+    },
+    {
+      "name": "Signup",
+      "tags": [
+        "register",
+        "user",
+        "app"
+      ],
+      "url": "https://my-app.com/signup",
+      "stack": "Error: Connection Refused - Timeout\n
+      at GetStack (/home/user/logs/tests/index.spec.ts:11:19)\n
+      at Object.<anonymous> (/home/user/logs/tests/index.spec.ts:30:104)\n",
+      "data": "{\"name\":\"Jane Doe\"}",
+      "statusCode": 502,
+      "message": "Internal Error",
+      "type": "debug",
+      "method": "POST",
+      "createdAt": "2023-02-05T23:00:40.481Z",
+      "uid": "1c7e5aca-c9f4-4e33-a5e7-d8a9cfe94053"
+    }
+  ]
+}
+
+```
+
 ---
 
 ### Create step from catch block
@@ -241,3 +310,17 @@ app.get("/log", async (req: Request, res: Response) => {
 app.use(routes);
 
 ```
+
+---
+
+### Flows
+
+Flows using middleware
+
+Using `bindLog` combined with `autoPublishLog` middleware
+
+![flow](docs/flow-01.png)
+
+Using `bindLog` combined with `stackLog` middleware
+
+![flow](docs/flow-02.png)
