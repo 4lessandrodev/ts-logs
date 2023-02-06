@@ -110,7 +110,7 @@ Example generated log
       "name": "Login",
       "tags": [],
       "url": "https://my-app.com/login",
-      "stack": "Error: Connection Refused - Forbidden \\n at GetStack (/home/user/logs/tests/index.spec.ts:11:19)\\n ...",
+      "stack": "Error: Connection Refused - Forbidden \\n at GetStack (/home/user/...)",
       "data": "{ \"email\": \"test@mail.com\" }",
       "statusCode": 401,
       "message": "Forbidden",
@@ -127,7 +127,7 @@ Example generated log
         "app"
       ],
       "url": "https://my-app.com/signup",
-      "stack": "Error: Connection Refused - Timeout\\n at GetStack (/home/user/logs/tests/index.spec.ts:11:19)\\n ...",
+      "stack": "Error: Connection Refused - Timeout\\n at GetStack (/home/user/logs/...)",
       "data": "{\"name\":\"Jane Doe\"}",
       "statusCode": 502,
       "message": "Internal Error",
