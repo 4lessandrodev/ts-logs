@@ -148,11 +148,7 @@ Example generated log. The log is a json object with array of step object
     },
     {
       "name": "Signup",
-      "tags": [
-        "register",
-        "user",
-        "app"
-      ],
+      "tags": ["register", "user", "app"],
       "url": "https://my-app.com/signup",
       "stack": "Error: Connection Refused - Timeout\\n at GetStack (/home/user/logs/...)",
       "data": "{\"name\":\"Jane Doe\"}",
