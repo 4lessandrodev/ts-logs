@@ -17,6 +17,7 @@ export class Step implements Steps {
     readonly type!: Type;
     readonly method!: Method;
     readonly createdAt!: Date;
+    readonly additionalInfo!: string | null;
 
     private constructor(props: Partial<SProps>) {
         this.name = props.name ?? 'default';
@@ -31,6 +32,7 @@ export class Step implements Steps {
         this.createdAt = new Date();
         const uid = props.uid ?? Step.extractId(props.data);
         this.uid = uid;
+        this.additionalInfo = props.additionalInfo ?? null;
         Object.freeze(this);
     }
 
@@ -42,6 +44,15 @@ export class Step implements Steps {
     public static error(props: Partial<SProps> & { name: string; message: string; }): Readonly<Step> {
         const statusCode = props.statusCode ?? 400;
         return new Step({ ...props, type: 'error', statusCode });
+    }
+
+    /**
+     * @description Create an instance of Step adding additional info.
+     * @param info as string.
+     * @returns an instance of Step
+     */
+    public setAdditionalInfo(info: string | null): Readonly<Steps> {
+        return new Step({ ...this, info });
     }
 
     /**
@@ -59,7 +70,7 @@ export class Step implements Steps {
      * @param props as Object with SProps params
      * @returns an instance of Step
      */
-    public static debug(props: Omit<SProps, 'type'|'createdAt'>): Readonly<Step> {
+    public static debug(props: Omit<SProps, 'type'|'createdAt'|'additionalInfo'>): Readonly<Step> {
         return new Step({ ...props, type: 'debug' });
     }
 
@@ -68,7 +79,7 @@ export class Step implements Steps {
      * @param props as Object with SProps params
      * @returns an instance of Step
      */
-    public static fatal(props: Omit<SProps, 'type'|'createdAt'>): Readonly<Step> {
+    public static fatal(props: Omit<SProps, 'type'|'createdAt'|'additionalInfo'>): Readonly<Step> {
         return new Step({ ...props, type: 'fatal' });
     }
 

@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { HttpConfig, Locale, LocalOpt, Logs, LProps, S3Config, Steps, StepStateType } from "../types";
+import { HttpConfig, Locale, LocalOpt, Logs, LProps, S3Config, Steps, LogStateType } from "../types";
 import WriteDefaultLocal from "../utils/write-default-local.util";
 import BuildLogMessage from "../utils/build-log-message.util";
 import TerminalLog from "../utils/log.utils";
@@ -10,29 +10,34 @@ import HttProvider from "./http-provider";
 /**
  * @description Global log to manage steps and behavior.
  * @summary Create a global log and added steps, print or publish result.
- */
+ * @summary Check `stateType` option.
+ * It defines the behavior of the state. Whether to change state or return a new instance without changing original state.
+ * If `stateType` is defined as `stateful` the original state of log will be changed. If `stateType` is defined as `stateless`
+ * a new instance of Log will be created and returned without change the original state.
+ * @default `stateType` is `stateful`
+*/
 export class Log implements Logs {
-    readonly uid!: string;
-    readonly name!: string;
-    readonly ip!: string;
-    readonly origin!: string;
-    readonly createdAt!: Date;
+    uid!: string | Readonly<string>;
+    name!: string | Readonly<string>;
+    ip!: string | Readonly<string>;
+    origin!: string | Readonly<string>;
+    createdAt!: Date | Readonly<Date>;
     steps!: Readonly<Steps[]> | Steps[];
     /**
-     * @description Defines the behavior of the add step method. Whether to change state or return a new instance without changing original state.
+     * @description Defines the behavior of the state. Whether to change state or return a new instance without changing original state.
      */
-    readonly addBehavior!: StepStateType;
+    readonly stateType!: LogStateType;
 
-    private constructor({ addBehavior, ...props }: Partial<LProps>) {
+    private constructor({ stateType, ...props }: Partial<LProps>) {
         this.uid = props.uid ?? randomUUID();
         this.name = props.name ?? 'default';
         this.ip = props.ip ?? 'none';
         this.origin = props.origin ?? 'none';
         this.createdAt = new Date();
-        this.addBehavior = addBehavior ?? 'stateful';
+        this.stateType = stateType ?? 'stateful';
         const statefulArr = props.steps ? [...props.steps] : [];
         const statelessArr = Object.freeze(props.steps ?? []);
-        const isStateful = typeof addBehavior === 'undefined' || addBehavior === 'stateful';
+        const isStateful = typeof stateType === 'undefined' || stateType === 'stateful';
         this.steps = isStateful ? statefulArr : statelessArr;
         !isStateful && Object.freeze(this);
     }
@@ -42,9 +47,19 @@ export class Log implements Logs {
      * @param props as Partial LProps
      * @returns instance of Log
      */
-    public static init(props: Partial<LProps> & { name: string; }): Readonly<Logs> {
+    public static init(props: Partial<LProps> & { name: string; }): Readonly<Logs> | Logs {
         return new Log(props);
     }
+
+    /**
+     * @description Create a new global log changing stateType.
+     * @param stateType as LogStateType
+     * @returns instance of Log
+     */
+    public clone(stateType: LogStateType): Readonly<Logs> | Logs {
+        return new Log({ ...this, stateType });
+    }
+
 
     /**
      * @description Check if exist some step for log.
@@ -58,8 +73,17 @@ export class Log implements Logs {
      * @description Create a new instance of Log with ip attribute. This is an immutable instance, the method does not change state, it returns a new one.
      * @param ip as request origin address
      * @returns instance of Log with ip address set
+     * @summary Check `stateType` option.
+     * It defines the behavior of the state. Whether to change state or return a new instance without changing original state.
+     * If `stateType` is defined as `stateful` the original state of log will be changed. If `stateType` is defined as `stateless`
+     * a new instance of Log will be created and returned without change the original state.
+     * @default `stateType` is `stateful`
      */
-    setIp(ip: string): Readonly<Logs> {
+    setIp(ip: string): Readonly<Logs> | Logs {
+        if (this.stateType === 'stateful') {
+            this.ip = ip;
+            return this;
+        }
         return new Log({ ...this, ip });
     }
 
@@ -67,8 +91,17 @@ export class Log implements Logs {
      * @description Create a new instance of Log with url attribute. This is an immutable instance, the method does not change state, it returns a new one.
      * @param url as request origin url address
      * @returns instance of Log with url address set
+     * @summary Check `stateType` option.
+     * It defines the behavior of the state. Whether to change state or return a new instance without changing original state.
+     * If `stateType` is defined as `stateful` the original state of log will be changed. If `stateType` is defined as `stateless`
+     * a new instance of Log will be created and returned without change the original state.
+     * @default `stateType` is `stateful`
      */
-    setOrigin(url: string): Readonly<Logs> {
+    setOrigin(url: string): Readonly<Logs> | Logs {
+        if (this.stateType === 'stateful') {
+            this.origin = url;
+            return this;
+        }
         return new Log({ ...this, origin: url });
     }
 
@@ -76,8 +109,17 @@ export class Log implements Logs {
      * @description Define log name. This attribute is used to create a folder name on store local.
      * @param name log name as string
      * @returns instance of Log with log name set
+     * @summary Check `stateType` option.
+     * It defines the behavior of the state. Whether to change state or return a new instance without changing original state.
+     * If `stateType` is defined as `stateful` the original state of log will be changed. If `stateType` is defined as `stateless`
+     * a new instance of Log will be created and returned without change the original state.
+     * @default `stateType` is `stateful`
      */
-    setName(name: string): Readonly<Logs> {
+    setName(name: string): Readonly<Logs> | Logs {
+        if (this.stateType === 'stateful') {
+            this.name = name
+            return this;
+        }
         return new Log({ ...this, name });
     }
 
@@ -85,14 +127,14 @@ export class Log implements Logs {
      * @description Add a log step to instance.
      * @param step as instance of Step.
      * @returns instance of Log with added step.
-     * @summary Check `addBehavior` option.
-     * It defines the behavior of the add step method. Whether to change state or return a new instance without changing original state.
-     * If `addBehavior` is defined as `stateful` the original state of log will be changed. If `addBehavior` is defined as `stateless`
+     * @summary Check `stateType` option.
+     * It defines the behavior of the state. Whether to change state or return a new instance without changing original state.
+     * If `stateType` is defined as `stateful` the original state of log will be changed. If `stateType` is defined as `stateless`
      * a new instance of Log will be created and returned without change the original state.
-     * @default `addBehavior` is `stateful`
+     * @default `stateType` is `stateful`
      */
-    addStep(step: Readonly<Steps>): Readonly<Logs> {
-        if (this.addBehavior === 'stateful') {
+    addStep(step: Readonly<Steps>): Readonly<Logs> | Logs {
+        if (this.stateType === 'stateful') {
             this.steps = [...this.steps, step];
             return this;
         }
@@ -103,14 +145,14 @@ export class Log implements Logs {
      * @description Add a log step to instance.
      * @param step as instance of Step.
      * @returns instance of Log with added step.
-     * @summary Check `addBehavior` option.
-     * It defines the behavior of the add step method. Whether to change state or return a new instance without changing original state.
-     * If `addBehavior` is defined as `stateful` the original state of log will be changed. If `addBehavior` is defined as `stateless`
+     * @summary Check `stateType` option.
+     * It defines the behavior of the state. Whether to change state or return a new instance without changing original state.
+     * If `stateType` is defined as `stateful` the original state of log will be changed. If `stateType` is defined as `stateless`
      * a new instance of Log will be created and returned without change the original state.
-     * @default `addBehavior` is `stateful`
+     * @default `stateType` is `stateful`
      */
-    addSteps(steps: Readonly<Steps[]>): Readonly<Logs> {
-        if (this.addBehavior === 'stateful') {
+    addSteps(steps: Readonly<Steps[]>): Readonly<Logs> | Logs {
+        if (this.stateType === 'stateful') {
             this.steps = [...this.steps, ...steps];
             return this;
         }
@@ -121,15 +163,15 @@ export class Log implements Logs {
      * @description Remove a log step from instance.
      * @param uid as step uid to identify what step to remove.
      * @returns instance of Log without removed step.
-     * @summary Check `addBehavior` option.
-     * It defines the behavior of the add step method. Whether to change state or return a new instance without changing original state.
-     * If `addBehavior` is defined as `stateful` the original state of log will be changed. If `addBehavior` is defined as `stateless`
+     * @summary Check `stateType` option.
+     * It defines the behavior of the state. Whether to change state or return a new instance without changing original state.
+     * If `stateType` is defined as `stateful` the original state of log will be changed. If `stateType` is defined as `stateless`
      * a new instance of Log will be created and returned without change the original state.
-     * @default `addBehavior` is `stateful`
+     * @default `stateType` is `stateful`
      */
-    removeStep(uid: string): Readonly<Logs> {
+    removeStep(uid: string): Readonly<Logs> | Logs {
         const steps = this.steps.filter((step): boolean => step.uid !== uid);
-        if (this.addBehavior === 'stateful') {
+        if (this.stateType === 'stateful') {
             this.steps = steps;
             return this;
         }

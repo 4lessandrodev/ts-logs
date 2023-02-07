@@ -15,6 +15,7 @@ describe('step', () => {
             "method",
             "createdAt",
             "uid",
+            "additionalInfo"
         ];
         const step = Step.create({});
         expect.assertions(keys.length + 1);
@@ -105,6 +106,7 @@ describe('step', () => {
         const result = instance.execute();
 
         expect(result).toEqual({
+            "additionalInfo": null,
             "createdAt": expect.any(Date),
             "data": `{
   \"requestData\": {
@@ -150,6 +152,7 @@ describe('step', () => {
         const result = instance.execute();
 
         expect(result).toEqual({
+            "additionalInfo": null,
             "createdAt": expect.any(Date),
             "data": `{
   \"requestData\": {
@@ -213,5 +216,15 @@ describe('step', () => {
         const updated = step.remove(['card']);
         expect(updated.data).toEqual(JSON.stringify({ name: 'Alex', id: "other-id" }));
         expect(step.uid).toBe('other-id');
+    });
+
+    it('should create a step without additional info', () => {
+        const step = Step.create({ name: 'test' });
+        expect(step.additionalInfo).toBeNull();
+    });
+
+    it('should create a step with additional info', () => {
+        const step = Step.create({ name: 'test', additionalInfo: 'hello world' });
+        expect(step.additionalInfo).toBe('hello world');
     });
 });

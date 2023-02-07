@@ -13,7 +13,7 @@ describe('log', () => {
             "ip",
             "origin",
             "createdAt",
-            "addBehavior",
+            "stateType",
             "steps"
         ];
         const log = Log.init({ name: 'sample' });
@@ -34,6 +34,7 @@ describe('log', () => {
 
     it('should create setIp', () => {
         const log = Log.init({ name: 'sample' });
+        expect(log.ip).toBe('none');
         const res = log.setIp('127.0.0.1');
         expect(res.ip).toBe('127.0.0.1');
     });
@@ -81,7 +82,7 @@ describe('log', () => {
     });
 
     it('should do not change original state', () => {
-        const log = Log.init({ name: 'Teste', addBehavior: 'stateless' });
+        const log = Log.init({ name: 'Teste', stateType: 'stateless' });
         const step = Step.info({ name: 'Info', message: 'Teste 1' });
         const newLog = log.addStep(step);
         expect(Object.isFrozen(log.steps)).toBeTruthy();
@@ -91,7 +92,7 @@ describe('log', () => {
 
     it('should do not change original state on create', () => {
         const step = Step.info({ name: 'Info', message: 'Teste 1' });
-        const log = Log.init({ name: 'Teste', steps: [step], addBehavior: 'stateless' });
+        const log = Log.init({ name: 'Teste', steps: [step], stateType: 'stateless' });
         expect(log.steps).toHaveLength(1);
         expect(Object.isFrozen(log.steps)).toBeTruthy();
 
@@ -100,5 +101,49 @@ describe('log', () => {
         expect(newLog.steps).toHaveLength(0);
     });
 
+    it('should change ip with success if stateful', () => {
+        const log = Log.init({ name: 'sample' });
+        expect(log.ip).toBe('none');
+        log.setIp('127.0.0.1');
+        expect(log.ip).toBe('127.0.0.1');
+    });
 
+    it('should change name with success if stateful', () => {
+        const log = Log.init({ name: 'sample' });
+        expect(log.name).toBe('sample');
+        log.setName('change');
+        expect(log.name).toBe('change');
+    });
+
+    it('should change origin with success if stateful', () => {
+        const log = Log.init({ name: 'sample' });
+        expect(log.origin).toBe('none');
+        log.setOrigin('http://localhost');
+        expect(log.origin).toBe('http://localhost')
+    });
+
+    it('should can not change ip if stateless', () => {
+        const log = Log.init({ name: 'sample', stateType: 'stateless' });
+        log.setIp('0.0.0.0')
+        expect(log.ip).toBe('none');
+    });
+
+    it('should can not change change name if stateless', () => {
+        const log = Log.init({ name: 'sample', stateType: 'stateless' });
+        log.setName('change');
+        expect(log.name).toBe('sample');
+    });
+
+    it('should can not change change origin if stateless', () => {
+        const log = Log.init({ name: 'sample', stateType: 'stateless' });
+        log.setOrigin('http://localhost')
+        expect(log.ip).toBe('none');
+    });
+
+    it('should clone changing state type with success', () => {
+        const log = Log.init({ name: 'sample' });
+        expect(log.stateType).toBe('stateful');
+        const clone = log.clone('stateless');
+        expect(clone.stateType).toBe('stateless');
+    });
 });

@@ -13,9 +13,9 @@ export type NextFunctions = NextFunction;
 export type PublishConfig = S3Config | HttpConfig;
 
 /**
- * @description Defines the behavior of the add step method. Whether to change state or return a new instance without changing original state.
+ * @description Defines the behavior of the state. Whether to change state or return a new instance without changing original state.
  */
-export type StepStateType = 'stateful' | 'stateless';
+export type LogStateType = 'stateful' | 'stateless';
 
 export interface EncryptOption {
     level: Encryption;
@@ -85,16 +85,17 @@ export interface SProps {
     readonly method: Method;
     readonly type: Type;
     readonly createdAt: Date;
+    readonly additionalInfo: string | null;
 }
 
 export interface LProps {
-    readonly uid: string;
-    readonly name: string;
-    readonly ip: string;
-    readonly origin: string;
-    readonly createdAt: Date;
+    uid: string | Readonly<string>;
+    name: string | Readonly<string>;
+    ip: string | Readonly<string>;
+    origin: string | Readonly<string>;
+    createdAt: Date | Readonly<Date>;
     steps: Readonly<Steps[]> | Steps[];
-    readonly addBehavior: StepStateType;
+    readonly stateType: LogStateType;
 }
 
 export interface Steps extends SProps {
@@ -111,19 +112,21 @@ export interface Steps extends SProps {
     print(locales?: Locale, options?: LocalOpt): void;
     getPrintableMsg(locales?: Locale, options?: LocalOpt): string;
     remove(keys: string[]): Readonly<Steps>;
+    setAdditionalInfo(info: string | null): Readonly<Steps>;
 }
 
 export interface Logs extends LProps {
-    setName(name: string): Readonly<Logs>;
-    setIp(ip: string): Readonly<Logs>;
-    setOrigin(url: string): Readonly<Logs>;
-    addStep(step: Readonly<Steps>): Readonly<Logs>;
-    addSteps(steps: Readonly<Steps[]>): Readonly<Logs>;
-    removeStep(uid: string): Readonly<Logs>;
-    writeLocal(path?: string): Promise<void>;
+    setName(name: string): Readonly<Logs> | Logs;
+    setIp(ip: string): Readonly<Logs> | Logs;
+    setOrigin(url: string): Readonly<Logs> | Logs;
+    addStep(step: Readonly<Steps>): Readonly<Logs> | Logs;
+    addSteps(steps: Readonly<Steps[]>): Readonly<Logs> | Logs;
+    removeStep(uid: string): Readonly<Logs> | Logs;
+    writeLocal(path?: string): Promise<void> | Logs;
     print(locales?: Locale, options?: LocalOpt): void;
     publish(config: PublishConfig): Promise<SavePayload | null>;
     hasSteps(): boolean;
+    clone(stateType: LogStateType): Readonly<Logs> | Logs;
 }
 
 export type BuildStepMessages = (step: Steps, locales?: Locale, options?: LocalOpt) => string;
@@ -170,7 +173,7 @@ export abstract class Provider<T> {
     abstract save(config: T, log: Readonly<Logs>): Promise<SavePayload>;
 }
 
-export interface HttpConfig { 
+export interface HttpConfig {
     url: string;
     headers?: RawAxiosRequestHeaders;
 };
