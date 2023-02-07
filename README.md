@@ -118,7 +118,7 @@ Example generated log. The log is a json object with array of step object
   "ip": "127.0.0.1",
   "origin": "http://127.0.0.1:3000",
   "createdAt": "2023-02-05T23:00:40.481Z",
-  "addBehavior": "stateful",
+  "stateType": "stateful",
   "steps": [
     {
       "name": "Find Item",
@@ -131,7 +131,8 @@ Example generated log. The log is a json object with array of step object
       "type": "info",
       "method": "GET",
       "createdAt": "2023-02-05T23:00:40.481Z",
-      "uid": "673e17fb-55aa-4ea9-8668-e34b94bfd22c"
+      "uid": "673e17fb-55aa-4ea9-8668-e34b94bfd22c",
+      "additionalInfo": "a complementary information"
     },
     {
       "name": "Login",
@@ -144,7 +145,8 @@ Example generated log. The log is a json object with array of step object
       "type": "stack",
       "method": "POST",
       "createdAt": "2023-02-05T23:00:40.481Z",
-      "uid": "2df15a5a-9c5a-4686-8811-c4ed1fd9bedd"
+      "uid": "2df15a5a-9c5a-4686-8811-c4ed1fd9bedd",
+      "additionalInfo": null
     },
     {
       "name": "Signup",
@@ -157,7 +159,8 @@ Example generated log. The log is a json object with array of step object
       "type": "debug",
       "method": "POST",
       "createdAt": "2023-02-05T23:00:40.481Z",
-      "uid": "1c7e5aca-c9f4-4e33-a5e7-d8a9cfe94053"
+      "uid": "1c7e5aca-c9f4-4e33-a5e7-d8a9cfe94053",
+      "additionalInfo": null
     }
   ]
 }
@@ -299,6 +302,53 @@ app.get("/log", async (req: Request, res: Response) => {
 // ...
 
 app.use(routes);
+
+```
+
+---
+
+### Secure logs
+
+It is possible to remove any key from body (data) or encrypt some sensitive information
+
+#### Removing data
+
+```ts
+
+const name = "Step Test";
+const data = JSON.stringify({ password: "123456", name: "Jane" });
+
+const step = Step.create({ name, data });
+
+const updated = step.remove(["password"]);
+
+console.log(updated.data);
+
+> "{ \"name\": \"Jane\" }"
+
+```
+
+#### Encrypt data
+
+Encryption is only available for stackLog and as base64.
+
+> Do not use "base64" for sensitive information. Any simple system can display the information. The purpose of this is to make the information hidden.
+
+- [] Todo: Implement strong cryptograph.
+- [] Todo: Implement cryptography for specific atributes.
+- [] Todo: Use provided secret key to encrypt data.
+
+```ts
+
+app.use(
+  stackLog({ 
+    writeLocal: true, 
+    encrypt: true, 
+    encryptOption: { 
+      level: "base64" 
+    } 
+  })
+);
 
 ```
 

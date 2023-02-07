@@ -6,6 +6,23 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.11] - 2023-02-07
+
+### Fix
+
+- fix: use "index" as default when stackLog from main route.
+- fix: changing any log state if it is set as "stateful" stateType.
+
+### Feat
+
+- feat: added "additionalInfo" attribute to step.
+
+### Change
+
+- change: rename attribute "addBehavior" to "stateType" on log.
+
+---
+
 ### [0.0.10] - 2023-02-05
 
 ### Feat

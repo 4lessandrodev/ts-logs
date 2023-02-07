@@ -2,6 +2,7 @@
 
 exports[`step should generate full log from axios 1`] = `
 {
+  "additionalInfo": null,
   "createdAt": Any<Date>,
   "data": "{
   "requestData": {
@@ -32,6 +33,7 @@ exports[`step should generate full log from axios 1`] = `
 
 exports[`step should generate full log from axios and remove password 1`] = `
 {
+  "additionalInfo": null,
   "createdAt": Any<Date>,
   "data": "{
   "requestData": {

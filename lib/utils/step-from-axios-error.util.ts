@@ -38,7 +38,8 @@ export const stepPropsFromAxiosError = (error: CatchError, rmKeys: string[] = []
         tags,
         type,
         url,
-        createdAt
+        createdAt,
+        additionalInfo: null
     } satisfies SProps;
 
     return props;

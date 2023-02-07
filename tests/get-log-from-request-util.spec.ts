@@ -10,6 +10,22 @@ describe('get-log-data-from-request.util', () => {
         expect(data).toEqual({ name: 'route-06', ip: '127.0.0.1', origin, uid: '1' });
     });
 
+    it('should get index name if route is /', () => {
+        const req: any = { originalUrl: '/', protocol: 'http', headers: { host: 'localhost' }, ip: '::1', body: { id: '1' } };
+        const origin = 'http://localhost/';
+
+        const data = getLogDataFromRequest(req);
+        expect(data).toEqual({ name: 'index', ip: '127.0.0.1', origin, uid: '1' });
+    });
+
+    it('should get index name if route is empty', () => {
+        const req: any = { originalUrl: '', protocol: 'http', headers: { host: 'localhost' }, ip: '::1', body: { id: '1' } };
+        const origin = 'http://localhost';
+
+        const data = getLogDataFromRequest(req);
+        expect(data).toEqual({ name: 'index', ip: '127.0.0.1', origin, uid: '1' });
+    });
+
     it('should get log data and id from param', () => {
         const req: any = { originalUrl: '/route-06', protocol: 'http', headers: { host: 'localhost' }, ip: '::1', body: {}, params: { id: '200' } };
         const origin = 'http://localhost/route-06';
