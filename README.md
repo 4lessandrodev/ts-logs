@@ -334,9 +334,9 @@ Encryption is only available for stackLog and as base64.
 
 > Do not use "base64" for sensitive information. Any simple system can display the information. The purpose of this is to make the information hidden.
 
-- [] Todo: Implement strong cryptograph.
-- [] Todo: Implement cryptography for specific atributes.
-- [] Todo: Use provided secret key to encrypt data.
+- [ ] Todo: Implement strong cryptograph.
+- [ ] Todo: Implement cryptography for specific atributes.
+- [ ] Todo: Use provided secret key to encrypt data.
 
 ```ts
 
