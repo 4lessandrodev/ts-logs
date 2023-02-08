@@ -133,34 +133,6 @@ Example generated log. The log is a json object with array of step object
       "createdAt": "2023-02-05T23:00:40.481Z",
       "uid": "673e17fb-55aa-4ea9-8668-e34b94bfd22c",
       "additionalInfo": "a complementary information"
-    },
-    {
-      "name": "Login",
-      "tags": [],
-      "url": "https://my-app.com/login",
-      "stack": "Error: Connection Refused - Forbidden \\n at GetStack (/home/user/...)",
-      "data": "{ \"email\": \"test@mail.com\" }",
-      "statusCode": 401,
-      "message": "Forbidden",
-      "type": "stack",
-      "method": "POST",
-      "createdAt": "2023-02-05T23:00:40.481Z",
-      "uid": "2df15a5a-9c5a-4686-8811-c4ed1fd9bedd",
-      "additionalInfo": null
-    },
-    {
-      "name": "Signup",
-      "tags": ["register", "user", "app"],
-      "url": "https://my-app.com/signup",
-      "stack": "Error: Connection Refused - Timeout\\n at GetStack (/home/user/logs/...)",
-      "data": "{\"name\":\"Jane Doe\"}",
-      "statusCode": 502,
-      "message": "Internal Error",
-      "type": "debug",
-      "method": "POST",
-      "createdAt": "2023-02-05T23:00:40.481Z",
-      "uid": "1c7e5aca-c9f4-4e33-a5e7-d8a9cfe94053",
-      "additionalInfo": null
     }
   ]
 }
