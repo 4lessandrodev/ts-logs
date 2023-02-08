@@ -122,7 +122,7 @@ Example generated log. The log is a json object with array of step object
   "steps": [
     {
       "name": "Find Item",
-      "tags": ["item", "product", "cart"],
+      "tags": ["item", "product", "card"],
       "url": "https://my-app.com/products/1",
       "stack": "none",
       "data": "none",
