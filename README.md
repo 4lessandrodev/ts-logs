@@ -76,6 +76,7 @@ global.addSteps([ info, error ]);
 // print or save logs
 global.print();
 global.writeLocal();
+global.publish(config);
 
 ```
 
