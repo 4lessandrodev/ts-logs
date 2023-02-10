@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.12] - 2023-02-10
+### Feat
+
+- feat: added "encrypt" function to step.
+
+---
+
 ### [0.0.11] - 2023-02-07
 
 ### Fix
