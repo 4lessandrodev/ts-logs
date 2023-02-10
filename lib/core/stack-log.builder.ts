@@ -15,8 +15,8 @@ export const stackLog = (options: MiddlewareOptions): StackMiddleware => {
     const { print, remove: keysToRemoveFromBody = [], callback, writeLocal, encrypt, sendAsResponse = true, encryptOption, ...opt } = options;
 
     const publish = !!opt?.publish;
-    if(sendAsResponse && callback) throw new Error('[stackLog]: could not sendAsResponse and callback');
-    if(!sendAsResponse && !callback && !print && !writeLocal && !publish) throw new Error('[stackLog]: invalid options');
+    if (sendAsResponse && callback) throw new Error('[stackLog]: could not sendAsResponse and callback');
+    if (!sendAsResponse && !callback && !print && !writeLocal && !publish) throw new Error('[stackLog]: invalid options');
 
     return async (err: Error, req: Requests, res: Responses, next: NextFunctions): Promise<any> => {
 
@@ -24,10 +24,10 @@ export const stackLog = (options: MiddlewareOptions): StackMiddleware => {
 
         const log = req?.log ?? Log.init({ name, uid, ip, origin });
 
-        const { message, method, stack, statusCode, tags,...param } = getStepDataFromRequest(err, req);
+        const { message, method, stack, statusCode, tags, ...param } = getStepDataFromRequest(err, req);
 
         const body = deleteObjectKey<{}>(param.body, keysToRemoveFromBody);
-        const encrypted = encryptString({ data: param.data, encryptOption, encrypt});
+        const encrypted = await encryptString({ data: param.data, encryptOption, encrypt });
         const data = encrypt ? encrypted : JSON.stringify(body);
 
         const stepId = param.uid;
@@ -36,24 +36,24 @@ export const stackLog = (options: MiddlewareOptions): StackMiddleware => {
 
         log.addStep(step);
 
-        if(print) log.print();
+        if (print) log.print();
 
-        if(writeLocal) await log.writeLocal();
+        if (writeLocal) await log.writeLocal();
 
-        if(opt.publish && !opt.provider){
+        if (opt.publish && !opt.provider) {
             throw new Error('[stackLog]: could not publish log missing provider settings');
         }
 
-        if(opt.publish && opt.provider){
+        if (opt.publish && opt.provider) {
             await log.publish(opt.provider);
         }
 
-        if(sendAsResponse) return res.status(statusCode).json(log);
+        if (sendAsResponse) return res.status(statusCode).json(log);
 
-        if(callback && typeof callback === 'function') return callback(err, req, res, next, log);
+        if (callback && typeof callback === 'function') return callback(err, req, res, next, log);
 
         return next();
     };
-}
+};
 
 export default stackLog;
