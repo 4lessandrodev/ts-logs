@@ -29,33 +29,33 @@ describe('step', () => {
 
     it('should execute addTag', () => {
         const step = Step.create({});
-        const result = step.addTag('testing')
+        const result = step.addTag('testing');
         expect(result.tags).toHaveLength(1);
     });
     it('should execute addTags', () => {
         const step = Step.create({});
-        const result = step.addTags(['1', '2'])
+        const result = step.addTags(['1', '2']);
         expect(result.tags).toHaveLength(2);
     });
     it('should execute setName', () => {
         const step = Step.create({});
-        const result = step.setName("changed")
-        expect(result.name).toBe('changed')
+        const result = step.setName("changed");
+        expect(result.name).toBe('changed');
     });
     it('should execute setMethod', () => {
         const step = Step.create({});
-        const result = step.setMethod('GET')
-        expect(result.method).toBe('GET')
+        const result = step.setMethod('GET');
+        expect(result.method).toBe('GET');
     });
     it('should execute setStack', () => {
         const step = Step.create({});
         const result = step.setStack('internal server error line 10');
-        expect(result.stack).toBe('internal server error line 10')
+        expect(result.stack).toBe('internal server error line 10');
     });
     it('should execute setMessage', () => {
         const step = Step.create({});
-        const result = step.setMessage('Timeout')
-        expect(result.message).toBe('Timeout')
+        const result = step.setMessage('Timeout');
+        expect(result.message).toBe('Timeout');
     });
     it('should execute setStatusCode', () => {
         const step = Step.create({});
@@ -69,13 +69,13 @@ describe('step', () => {
     });
     it('should execute setUid', () => {
         const step = Step.create({});
-        const result = step.setUid('000001')
+        const result = step.setUid('000001');
         expect(result.uid).toBe('000001');
     });
     it('should execute setURL', () => {
         const step = Step.create({});
-        const result = step.setURL('https://test.com.br')
-        expect(result.url).toBe('https://test.com.br')
+        const result = step.setURL('https://test.com.br');
+        expect(result.url).toBe('https://test.com.br');
     });
     it('should create a step from error', () => {
         class ErrorUseCase {
@@ -226,5 +226,55 @@ describe('step', () => {
     it('should create a step with additional info', () => {
         const step = Step.create({ name: 'test', additionalInfo: 'hello world' });
         expect(step.additionalInfo).toBe('hello world');
+    });
+
+    it('should encrypt password', async () => {
+        const data = JSON.stringify({ password: '123456', name: 'Jane' });
+        const step = await Step.error({ name: 'Example', message: 'Encrypt test', data, uid: 'my-uuid' }).encrypt({
+            attributes: ['password'],
+            secretKey: 'My-secret-key'
+        });
+
+        expect(step.data).toEqual("{\"password\":\"fb49e66ef647\",\"name\":\"Jane\"}");
+    });
+
+    it('should encrypt card object', async () => {
+        const data = JSON.stringify({ age: 23, name: 'Jane', card: { numb: 21312312343, cvv: 343 } });
+        const step = await Step.error({ name: 'Example', message: 'Encrypt test', data, uid: 'my-uuid' }).encrypt({
+            attributes: ['card'],
+            secretKey: 'My-secret-key'
+        });
+
+        expect(step.data).toEqual("{\"age\":23,\"name\":\"Jane\",\"card\":\"b159bb2fae13b16a0007b09007b8093806f410261ceba9449534b2720f49\"}");
+    });
+
+    it('should ignore if attribute does not exists', async () => {
+        const data = JSON.stringify({ age: 23, name: 'Jane' });
+        const step = await Step.error({ name: 'Example', message: 'Encrypt test', data, uid: 'my-uuid' }).encrypt({
+            attributes: ['card'],
+            secretKey: 'My-secret-key'
+        });
+
+        expect(step.data).toEqual("{\"age\":23,\"name\":\"Jane\"}");
+    });
+
+    it('should decrypt card object', async () => {
+        const data = JSON.stringify({ age: 23, name: 'Jane', card: 'b159bb2fae13b16a0007b09007b8093806f410261ceba9449534b2720f49' });
+        const step = await Step.error({ name: 'Example', message: 'Encrypt test', data, uid: 'my-uuid' }).decrypt({
+            attributes: ['card'],
+            secretKey: 'My-secret-key'
+        });
+
+        expect(step.data).toEqual("{\"age\":23,\"name\":\"Jane\",\"card\":{\"numb\":21312312343,\"cvv\":343}}");
+    });
+
+    it('should decrypt password', async () => {
+        const data = JSON.stringify({ password: 'fb49e66ef647', name: 'Jane' });
+        const step = await Step.error({ name: 'Example', message: 'Encrypt test', data, uid: 'my-uuid' }).decrypt({
+            attributes: ['password'],
+            secretKey: 'My-secret-key'
+        });
+
+        expect(step.data).toEqual("{\"password\":123456,\"name\":\"Jane\"}");
     });
 });

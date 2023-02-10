@@ -14,3 +14,8 @@ export * from './core/providers';
 export * from './core/http-provider';
 export * from './core/s3-provider';
 export * from './core/auto-publish-log.builder';
+export * from './utils/decrypt-keys.util';
+export * from './utils/decrypt.util';
+export * from './utils/encrypt-keys.util';
+export * from './utils/encrypt-string.util';
+export * from './utils/encrypt.util';

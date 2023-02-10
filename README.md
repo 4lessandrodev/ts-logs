@@ -303,13 +303,8 @@ console.log(updated.data);
 
 #### Encrypt data
 
-Encryption is only available for `stackLog` and as base64 encode.
+Encryption is only available for `stackLog` and as cypher.
 
-> Do not use "base64" for sensitive information. Any simple system can decode the information. The purpose of this is to make the information hidden as encoded.
-
-- [ ] Todo: Implement strong cryptograph.
-- [ ] Todo: Implement cryptography for specific atributes in step data.
-- [ ] Todo: Use provided secret key to encrypt data.
 
 ```ts
 
@@ -318,7 +313,8 @@ app.use(
     writeLocal: true, 
     encrypt: true, 
     encryptOption: { 
-      level: "base64" 
+      level: "cypher",
+      secretKey: "my-secret-key"
     } 
   })
 );

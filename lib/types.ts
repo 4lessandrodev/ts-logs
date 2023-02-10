@@ -98,6 +98,10 @@ export interface LProps {
     readonly stateType: LogStateType;
 }
 
+export interface EncryptStepOption extends Omit<EncryptOption, 'level'> {
+    attributes: string[];
+}
+
 export interface Steps extends SProps {
     addTag(tag: string): Readonly<Steps>;
     addTags(tags: string[]): Readonly<Steps>;
@@ -113,6 +117,8 @@ export interface Steps extends SProps {
     getPrintableMsg(locales?: Locale, options?: LocalOpt): string;
     remove(keys: string[]): Readonly<Steps>;
     setAdditionalInfo(info: string | null): Readonly<Steps>;
+    encrypt(options: EncryptStepOption): Promise<Readonly<Steps>>;
+    decrypt(options: EncryptStepOption): Promise<Readonly<Steps>>;
 }
 
 export interface Logs extends LProps {
@@ -136,7 +142,7 @@ export type FnTypes = { [k in keys]: BuildStepMessages };
 export type StackMiddleware = (err: Error, req: Requests, res: Responses, next: NextFunctions) => Promise<any>;
 export type BinderMiddleware = (req: Requests, res: Responses, next: NextFunctions) => void;
 export type PublisherMiddleware = (req: Requests, res: Responses, next: NextFunctions) => Promise<void>;
-export interface EncryptParam { data: string; encrypt?: boolean; encryptOption?: EncryptOption };
+export interface EncryptParam { data: string; encrypt?: boolean; encryptOption?: EncryptOption; };
 
 export interface StepDataFromRequest {
     message: string;
@@ -146,7 +152,7 @@ export interface StepDataFromRequest {
     tags: string[];
     data: string;
     uid?: string;
-    body: {}
+    body: {};
 }
 
 export interface LogDataFromRequest {
@@ -225,7 +231,7 @@ export interface AutoPublishOptions {
 
 export type AutoPublish = (config: PublishConfig, options: AutoPublishOptions) => PublisherMiddleware;
 
-export { }
+export { };
 
 declare global {
     namespace Express {

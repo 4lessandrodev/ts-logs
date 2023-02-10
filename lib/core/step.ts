@@ -1,9 +1,11 @@
 import TerminalLog from "../utils/log.utils";
 import { randomUUID } from "node:crypto";
-import { CatchError, CatchProps, Locale, LocalOpt } from "../types";
+import { CatchError, CatchProps, EncryptStepOption, Locale, LocalOpt } from "../types";
 import { Method, SProps, Steps, Type } from "../types";
 import { deleteObjectKey, Messages, reference, stepPropsFromAxiosError } from "../utils";
 import extractBodyAsObject from "../utils/extract-body.util";
+import encryptKeys from "../utils/encrypt-keys.util";
+import decryptKeys from "../utils/decrypt-keys.util";
 
 export class Step implements Steps {
     readonly uid!: string;
@@ -19,7 +21,7 @@ export class Step implements Steps {
     readonly createdAt!: Date;
     readonly additionalInfo!: string | null;
 
-    private constructor(props: Partial<SProps>) {
+    private constructor (props: Partial<SProps>) {
         this.name = props.name ?? 'default';
         this.tags = props.tags ?? [];
         this.url = props.url ?? 'none';
@@ -34,6 +36,26 @@ export class Step implements Steps {
         this.uid = uid;
         this.additionalInfo = props.additionalInfo ?? null;
         Object.freeze(this);
+    }
+
+    /**
+     * @description Encrypt attributes.
+     * @param options object as EncryptStepOption.
+     * @returns instance of Step.
+     */
+    async encrypt(options: EncryptStepOption): Promise<Readonly<Steps>> {
+        const data = await encryptKeys(this, options);
+        return new Step({ ...this, data });
+    }
+
+    /**
+     * @description Decrypt attributes.
+     * @param options object as EncryptStepOption.
+     * @returns instance of Step.
+     */
+    async decrypt(options: EncryptStepOption): Promise<Readonly<Steps>> {
+        const data = await decryptKeys(this, options);
+        return new Step({ ...this, data });
     }
 
     /**
@@ -70,7 +92,7 @@ export class Step implements Steps {
      * @param props as Object with SProps params
      * @returns an instance of Step
      */
-    public static debug(props: Omit<SProps, 'type'|'createdAt'|'additionalInfo'>): Readonly<Step> {
+    public static debug(props: Omit<SProps, 'type' | 'createdAt' | 'additionalInfo'>): Readonly<Step> {
         return new Step({ ...props, type: 'debug' });
     }
 
@@ -79,7 +101,7 @@ export class Step implements Steps {
      * @param props as Object with SProps params
      * @returns an instance of Step
      */
-    public static fatal(props: Omit<SProps, 'type'|'createdAt'|'additionalInfo'>): Readonly<Step> {
+    public static fatal(props: Omit<SProps, 'type' | 'createdAt' | 'additionalInfo'>): Readonly<Step> {
         return new Step({ ...props, type: 'fatal' });
     }
 
@@ -88,7 +110,7 @@ export class Step implements Steps {
      * @param props as Object with SProps params
      * @returns an instance of Step
      */
-    public static info(props: Partial<SProps> & { name: string; message: string }): Readonly<Step> {
+    public static info(props: Partial<SProps> & { name: string; message: string; }): Readonly<Step> {
         return new Step({ ...props, type: 'info' });
     }
 
@@ -97,8 +119,8 @@ export class Step implements Steps {
      * @param props as Object with SProps params
      * @returns an instance of Step
      */
-    public static warn(props: Partial<SProps> & { name: string; message: string }): Readonly<Step> {
-        return new Step({ ...props, type: 'warn' })
+    public static warn(props: Partial<SProps> & { name: string; message: string; }): Readonly<Step> {
+        return new Step({ ...props, type: 'warn' });
     }
 
     /**
@@ -183,7 +205,7 @@ export class Step implements Steps {
     setMethod(method: Method): Steps {
         return new Step({ ...this, method });
     }
-        
+
     /**
      * @description Create a new instance of Step with provided stack.
      * @param stack as Error stack as string.
@@ -256,7 +278,7 @@ export class Step implements Steps {
      */
     getPrintableMsg(locales?: Locale, options?: LocalOpt): string {
         const builder = Messages[this.type];
-        if(!builder) return Messages['default'](this, locales, options);
+        if (!builder) return Messages['default'](this, locales, options);
         return builder(this, locales, options);
     }
 }
