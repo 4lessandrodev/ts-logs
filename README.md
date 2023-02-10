@@ -307,7 +307,7 @@ step.encrypt({ attributes: ["password"], secretKey: "my-secret-key" });
 
 #### Encrypt data
 
-Encryption is only available for `stackLog` and as cypher.
+Encryption is also available for `stackLog` and as cypher.
 
 
 ```ts
