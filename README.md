@@ -299,6 +299,10 @@ console.log(updated.data);
 
 > "{ \"name\": \"Jane\" }"
 
+// or encrypt attribute
+
+step.encrypt({ attributes: ["password"], secretKey: "my-secret-key" });
+
 ```
 
 #### Encrypt data
