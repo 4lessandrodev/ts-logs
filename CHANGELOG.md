@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.15] - 2023-02-11
+### Fix
+
+- fix: ensure get tags from data as attribute key if do not provide tag value.
+
+---
+
 ### [0.0.14] - 2023-02-11
 ### Fix
 

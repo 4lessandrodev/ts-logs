@@ -277,4 +277,44 @@ describe('step', () => {
 
         expect(step.data).toEqual("{\"password\":123456,\"name\":\"Jane\"}");
     });
+
+    it('should get tags from data', () => {
+        const data = JSON.stringify({ card: { n: '2000' }, name: 'Alex', id: "other-id" });
+        const param = { name: 'teste', data } as Partial<SProps>;
+        const step = Step.create(param);
+        const tags = step.tags;
+        expect(tags).toEqual(['card', 'name', 'id']);
+    })
+
+    it('should get empty tags if data is array', () => {
+        const data = JSON.stringify([1,2,3]);
+        const param = { name: 'teste', data } as Partial<SProps>;
+        const step = Step.create(param);
+        const tags = step.tags;
+        expect(tags).toEqual([]);
+    })
+
+    it('should get only 5 tags from data', () => {
+        const data = JSON.stringify({ item: "Test", name: 'Alex', id: "val", age: 21, time: 22, result: 200 });
+        const param = { name: 'teste', data } as Partial<SProps>;
+        const step = Step.create(param);
+        const tags = step.tags;
+        expect(tags).toEqual(['item', 'name', 'id', 'age', 'time']);
+    })
+
+    it('should get empty tags if provide value', () => {
+        const data = JSON.stringify({ item: "Test", name: 'Alex', id: "val", age: 21, time: 22, result: 200 });
+        const param = { name: 'teste', data, tags: [] } as Partial<SProps>;
+        const step = Step.create(param);
+        const tags = step.tags;
+        expect(tags).toEqual([]);
+    })
+
+    it('should get original tags if provide value', () => {
+        const data = JSON.stringify({ item: "Test", name: 'Alex', id: "val", age: 21, time: 22, result: 200 });
+        const param = { name: 'teste', data, tags: ['payment'] } as Partial<SProps>;
+        const step = Step.create(param);
+        const tags = step.tags;
+        expect(tags).toEqual(['payment']);
+    })
 });
