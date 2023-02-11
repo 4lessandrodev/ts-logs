@@ -13,6 +13,23 @@ exports[`get-step-data-from-request.util should get all default 1`] = `
 }
 `;
 
+exports[`get-step-data-from-request.util should get empty tags if body is array 1`] = `
+{
+  "body": [
+    1,
+    2,
+    3,
+  ],
+  "data": "{}",
+  "message": "Internal Server Error",
+  "method": "NONE",
+  "stack": "",
+  "statusCode": 500,
+  "tags": [],
+  "uid": undefined,
+}
+`;
+
 exports[`get-step-data-from-request.util should get step data with success 1`] = `
 {
   "body": {},

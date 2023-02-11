@@ -53,4 +53,25 @@ describe('get-step-data-from-request.util', () => {
         });
         expect(result).toMatchSnapshot();
     });
+
+    it('should get empty tags if body is array', () => {
+        const error = {};
+        const request: any = { body: [1,2,3] };
+        const result = getStepDataFromRequest(error as any, request);
+        expect(result).toEqual({
+            message: 'Internal Server Error',
+            stack: '',
+            statusCode: 500,
+            method: 'NONE',
+            tags: [],
+            data: "{}",
+            body: [
+                1,
+                2,
+                3
+            ],
+            uid: undefined,
+        });
+        expect(result).toMatchSnapshot();
+    });
 })
