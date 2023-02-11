@@ -8,7 +8,9 @@ export const getStepDataFromRequest = (err: Error, req: Requests): StepDataFromR
     const method = req?.method as Method ?? 'NONE' as Method;
     const body = extractBodyAsObject<{}>(req?.body ?? {});
     const uid = body?.['id'] ?? req?.params?.['id'];
-    const hasData = typeof body === 'object' && (Object.keys(body ?? {}).length > 0);
+    const isNotArr = !(Array.isArray(body));
+    const hasKeys = (Object.keys(body ?? {}).length > 0);
+    const hasData = typeof body === 'object' && isNotArr && hasKeys;
     const data = hasData ? JSON.stringify(body, null, 2) : '{}';
     const tags = hasData ? Object.keys(body) : [];
     return { message, stack, statusCode, method, tags, data, body, uid  };
