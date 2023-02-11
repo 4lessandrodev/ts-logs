@@ -23,7 +23,7 @@ export class Step implements Steps {
 
     private constructor (props: Partial<SProps>) {
         this.name = props.name ?? 'default';
-        this.tags = props.tags ?? [];
+        this.tags = props.tags ?? Step.extractTagsFromData(props.data);
         this.url = props.url ?? 'none';
         this.stack = props.stack ?? 'none';
         this.data = props.data ?? 'none';
@@ -132,6 +132,18 @@ export class Step implements Steps {
         const data = extractBodyAsObject<{}>(body);
         const id = data?.['id'] ?? randomUUID();
         return id;
+    }
+
+    /**
+     * @description Extract tags from body if exists keys.
+     * @param body as string or object
+     * @returns tags as array of string or empty array.
+     */
+    private static extractTagsFromData(body: string | Object = {}): string[] {
+        const data = extractBodyAsObject<{}>(body);
+        const isObject = data && typeof data === 'object';
+        const isNotArray = !(Array.isArray(data));
+        return (isObject && isNotArray) ? Object.keys(data).slice(0,5): [];
     }
 
     /**
