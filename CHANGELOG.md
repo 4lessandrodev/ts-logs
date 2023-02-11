@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.13] - 2023-02-11
+### Fix
+
+- fix: fix `GetFileName` to add 0 when day number is less than 10.
+
+---
+
 ### [0.0.12] - 2023-02-10
 ### Feat
 
