@@ -19,3 +19,4 @@ export * from './utils/decrypt.util';
 export * from './utils/encrypt-keys.util';
 export * from './utils/encrypt-string.util';
 export * from './utils/encrypt.util';
+export * from './utils/encrypt-data.util';
