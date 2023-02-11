@@ -22,3 +22,4 @@ export * from './decrypt.util';
 export * from './encrypt-keys.util';
 export * from './encrypt-string.util';
 export * from './encrypt.util';
+export * from './encrypt-data.util';

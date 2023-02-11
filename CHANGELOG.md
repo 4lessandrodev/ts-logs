@@ -6,24 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### [0.0.15] - 2023-02-11
-### Fix
-
-- fix: ensure get tags from data as attribute key if do not provide tag value.
-
----
-
-### [0.0.14] - 2023-02-11
-### Fix
-
-- fix: fix `getStepDataFromRequest` to ignore tag keys when body data is array.
-
----
-
 ### [0.0.13] - 2023-02-11
 ### Fix
 
 - fix: fix `GetFileName` to add 0 when day number is less than 10.
+- fix: fix `getStepDataFromRequest` to ignore tag keys when body data is array.
+- fix: ensure get tags from data as attribute key if do not provide tag value.
+- fix: ensure encrypt and decrypt sub object key
 
 ---
 
