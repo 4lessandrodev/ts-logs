@@ -54,6 +54,22 @@ Understand what happens in your application. Manage your logs and audit the step
 This package provide a sdk to manage logs.
 
 ---
+
+## Installation
+
+install using yarn or npm
+
+```sh
+
+$ npm install ts-logs
+
+# OR
+
+$ yarn add ts-logs
+
+```
+
+---
 ## Documentation
 
 sdk in beta version.
