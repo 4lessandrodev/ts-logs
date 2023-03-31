@@ -10,7 +10,7 @@ export type Http = Axios;
 export type Requests = Request;
 export type Responses = Response;
 export type NextFunctions = NextFunction;
-export type PublishConfig = S3Config | HttpConfig;
+export type PublishConfig = S3Config | HttpConfig;;
 
 /**
  * @description Defines the behavior of the state. Whether to change state or return a new instance without changing original state.
@@ -79,7 +79,7 @@ export interface SProps {
     readonly tags: Readonly<string[]>;
     readonly url: string;
     readonly stack: string;
-    readonly data: string;
+    readonly data: string | {};
     readonly statusCode: number;
     readonly message: string;
     readonly method: Method;
@@ -110,7 +110,7 @@ export interface Steps extends SProps {
     setStack(stack: string): Readonly<Steps>;
     setMessage(message: string): Readonly<Steps>;
     setStatusCode(code: number): Readonly<Steps>;
-    setData(data: string): Readonly<Steps>;
+    setData(data: string | {}): Readonly<Steps>;
     setUid(uid: string): Readonly<Steps>;
     setURL(url: string): Readonly<Steps>;
     print(locales?: Locale, options?: LocalOpt): void;
@@ -142,7 +142,7 @@ export type FnTypes = { [k in keys]: BuildStepMessages };
 export type StackMiddleware = (err: Error, req: Requests, res: Responses, next: NextFunctions) => Promise<any>;
 export type BinderMiddleware = (req: Requests, res: Responses, next: NextFunctions) => void;
 export type PublisherMiddleware = (req: Requests, res: Responses, next: NextFunctions) => Promise<void>;
-export interface EncryptParam { data: string; encrypt?: boolean; encryptOption?: EncryptOption; };
+export interface EncryptParam { data: string | {}; encrypt?: boolean; encryptOption?: EncryptOption; };
 
 export interface StepDataFromRequest {
     message: string;
@@ -150,7 +150,7 @@ export interface StepDataFromRequest {
     statusCode: number;
     method: Method;
     tags: string[];
-    data: string;
+    data: string | {};
     uid?: string;
     body: {};
 }

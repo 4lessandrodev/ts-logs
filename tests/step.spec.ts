@@ -108,13 +108,13 @@ describe('step', () => {
         expect(result).toEqual({
             "additionalInfo": null,
             "createdAt": expect.any(Date),
-            "data": `{
-  \"requestData\": {
-    \"email\": \"test@domain.com\",
-    \"password\": \"123456\"
-  },
-  \"responseData\": {}
-}`,
+            "data": {
+                "requestData": {
+                    "email": "test@domain.com",
+                    "password": "123456"
+                },
+                "responseData": {}
+            },
             "message": "Request failed with status code 404",
             "method": "POST",
             "name": "Object",
@@ -154,12 +154,12 @@ describe('step', () => {
         expect(result).toEqual({
             "additionalInfo": null,
             "createdAt": expect.any(Date),
-            "data": `{
-  \"requestData\": {
-    \"email\": \"test@domain.com\"
-  },
-  \"responseData\": {}
-}`,
+            "data": {
+                "requestData": {
+                    "email": "test@domain.com"
+                },
+                "responseData": {}
+            },
             "message": "Request failed with status code 404",
             "method": "POST",
             "name": "Object",
@@ -186,10 +186,10 @@ describe('step', () => {
         expect(step.uid).toBe('my-custom-request-id');
     });
 
-    it('should return empty object as string if do not provide data in param', () => {
+    it('should return empty object if do not provide data in param', () => {
         const param = { uid: 'my-custom-request-id', name: 'teste' } as Partial<SProps>;
         const step = Step.create(param);
-        expect(step.data).toBe('none');
+        expect(step.data).toEqual({});
 
         const updated = step.remove(['card']);
         expect(updated.data).toBe('{}');
@@ -259,13 +259,14 @@ describe('step', () => {
     });
 
     it('should decrypt card object', async () => {
-        const data = JSON.stringify({ age: 23, name: 'Jane', card: 'b159bb2fae13b16a0007b09007b8093806f410261ceba9449534b2720f49' });
+        const objData = { age: 23, name: 'Jane', card: 'b159bb2fae13b16a0007b09007b8093806f410261ceba9449534b2720f49' };
+        const data = JSON.stringify(objData);
         const step = await Step.error({ name: 'Example', message: 'Encrypt test', data, uid: 'my-uuid' }).decrypt({
             attributes: ['card'],
             secretKey: 'My-secret-key'
         });
 
-        expect(step.data).toEqual("{\"age\":23,\"name\":\"Jane\",\"card\":{\"numb\":21312312343,\"cvv\":343}}");
+        expect(step.data).toEqual({ ...objData, card: { numb: 21312312343, cvv: 343 } });
     });
 
     it('should decrypt password', async () => {
@@ -275,7 +276,7 @@ describe('step', () => {
             secretKey: 'My-secret-key'
         });
 
-        expect(step.data).toEqual("{\"password\":123456,\"name\":\"Jane\"}");
+        expect(step.data).toEqual({ "password": 123456, "name": "Jane" });
     });
 
     it('should get tags from data', () => {
@@ -287,7 +288,7 @@ describe('step', () => {
     })
 
     it('should get empty tags if data is array', () => {
-        const data = JSON.stringify([1,2,3]);
+        const data = JSON.stringify([1, 2, 3]);
         const param = { name: 'teste', data } as Partial<SProps>;
         const step = Step.create(param);
         const tags = step.tags;
@@ -317,4 +318,66 @@ describe('step', () => {
         const tags = step.tags;
         expect(tags).toEqual(['payment']);
     })
+
+    it('should create data as string if provide string', () => {
+        const step = Step.error({
+            message: 'some message',
+            name: 'some name',
+            data: 'data as string'
+        });
+
+        expect(step.data).toBe('data as string');
+    });
+
+    it('should create data as object if provide object', () => {
+        const step = Step.error({
+            message: 'some message',
+            name: 'some name',
+            data: { echo: 'data' }
+        });
+
+        expect(step.data).toEqual({ echo: 'data' });
+    });
+
+    it('should create data as string if provide string and encrypt and decrypt with success', async () => {
+        const step = Step.error({
+            message: 'some message',
+            name: 'some name',
+            data: 'data as string'
+        });
+
+        expect(step.data).toBe('data as string');
+        const encrypted = await step.encrypt({ attributes: [], secretKey: 'my-secret' });
+        expect(encrypted.data).toBe('51b67dc51fe3a050cf69c5b86ee7');
+        const decrypted = await encrypted.decrypt({ attributes: [], secretKey: 'my-secret' });
+        expect(decrypted.data).toBe('data as string');
+    });
+
+    it('should create data as serialized string and encrypt and decrypt with success', async () => {
+        const step = Step.error({
+            message: 'some message',
+            name: 'some name',
+            data: JSON.stringify({ name: 'Jane' })
+        });
+
+        expect(step.data).toBe(JSON.stringify({ name: 'Jane' }));
+        const encrypted = await step.encrypt({ attributes: ['name'], secretKey: 'my-secret' });
+        expect(encrypted.data).toBe("{\"name\":\"7fb667c1\"}");
+        const decrypted = await encrypted.decrypt({ attributes: ['name'], secretKey: 'my-secret' });
+        expect(decrypted.data).toEqual({ "name": "Jane" });
+    });
+
+    it('should create data as object if provide object encrypt and decrypt', async () => {
+        const step = Step.error({
+            message: 'some message',
+            name: 'some name',
+            data: { echo: 'data' }
+        });
+
+        expect(step.data).toEqual({ echo: 'data' });
+        const encrypted = await step.encrypt({ attributes: ['echo'], secretKey: 'my-secret' });
+        expect(encrypted.data).toEqual("{\"echo\":\"51b67dc5\"}");
+        const decrypted = await encrypted.decrypt({ attributes: ['echo'], secretKey: 'my-secret' });
+        expect(decrypted.data).toEqual({ echo: 'data' });
+    });
 });
