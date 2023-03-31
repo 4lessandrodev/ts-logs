@@ -89,4 +89,5 @@ describe('stack-log', () => {
         expect(log.steps).toHaveLength(1);
         expect(call).toHaveBeenCalled();
     });
+    
 });

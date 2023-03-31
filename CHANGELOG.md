@@ -6,6 +6,14 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+
+### [0.0.14] - 2023-03-31
+### Feat
+
+- step: feat added support to data as object
+
+---
+
 ### [0.0.13] - 2023-02-11
 ### Fix
 

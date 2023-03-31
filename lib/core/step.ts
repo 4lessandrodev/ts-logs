@@ -13,7 +13,7 @@ export class Step implements Steps {
     readonly tags!: Readonly<string[]>;
     readonly url!: string;
     readonly stack!: string;
-    readonly data!: string;
+    readonly data!: string | {};
     readonly statusCode!: number;
     readonly message!: string;
     readonly type!: Type;
@@ -26,7 +26,7 @@ export class Step implements Steps {
         this.tags = props.tags ?? Step.extractTagsFromData(props.data);
         this.url = props.url ?? 'none';
         this.stack = props.stack ?? 'none';
-        this.data = props.data ?? 'none';
+        this.data = props.data ?? {};
         this.statusCode = props.statusCode ?? 200;
         this.message = props.message ?? 'none';
         this.type = props.type ?? 'info';
@@ -247,10 +247,10 @@ export class Step implements Steps {
 
     /**
      * @description Create a new instance of Step with provided data.
-     * @param data params or request body as string.
+     * @param data params or request body as string or object.
      * @returns new instance of Step with provided data.
      */
-    setData(data: string): Readonly<Step> {
+    setData(data: string | {}): Readonly<Step> {
         return new Step({ ...this, data });
     }
 

@@ -1,6 +1,9 @@
 import decryptStepValue from "./decrypt.util";
 
 export const decryptData = async <T>(data: T, keys: string[], secret: string): Promise<T> => {
+    if(data && typeof data === 'string'){
+        return decryptStepValue(data, secret) as T;
+    }
     if (data && Array.isArray(data)) {
         let result: T[] = [];
         let i = 0;

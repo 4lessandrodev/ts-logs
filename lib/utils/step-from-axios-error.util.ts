@@ -23,7 +23,7 @@ export const stepPropsFromAxiosError = (error: CatchError, rmKeys: string[] = []
     const method = (error?.config?.method ?? 'NONE').toUpperCase() as Method;
     const url = error?.config?.url ?? 'none';
     const tags = tagsFromBody(reqData);
-    const data = JSON.stringify({ "requestData": reqData, "responseData": resData }, null, 2);
+    const data = { "requestData": reqData, "responseData": resData };
     const type = 'fatal' as Type;
     const createdAt = new Date();
 

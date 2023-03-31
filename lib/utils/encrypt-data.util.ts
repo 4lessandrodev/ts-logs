@@ -1,6 +1,9 @@
 import encryptStepValue from "./encrypt.util";
 
 export const encryptData = async <T>(data: T, keys: string[], secret: string): Promise<T> => {
+    if(data && typeof data === 'string') {
+        return encryptStepValue(data, secret) as T;
+    }
     if (data && Array.isArray(data)) {
         let result: T[] = [];
         let i = 0;
