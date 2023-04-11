@@ -1,6 +1,6 @@
 import TerminalLog from "../utils/log.utils";
 import { randomUUID } from "node:crypto";
-import { CatchError, CatchProps, EncryptStepOption, Locale, LocalOpt } from "../types";
+import { CatchError, CatchProps, EncryptStepOption, IMask, Locale, LocalOpt } from "../types";
 import { Method, SProps, Steps, Type } from "../types";
 import { deleteObjectKey, Messages, reference, stepPropsFromAxiosError } from "../utils";
 import extractBodyAsObject from "../utils/extract-body.util";
@@ -270,6 +270,10 @@ export class Step implements Steps {
      */
     setURL(url: string): Readonly<Step> {
         return new Step({ ...this, url });
+    }
+
+    mask(_: IMask[]): Readonly<Step> {
+        return this;
     }
 
     /**

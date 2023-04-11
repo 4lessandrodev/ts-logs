@@ -73,6 +73,11 @@ export interface MiddlewareOptions {
     writeLocal?: boolean;
 }
 
+export interface IMask {
+    key: string;
+    nCharDisplay?: number;
+}
+
 export interface SProps {
     readonly uid: string;
     readonly name: string;
@@ -119,6 +124,7 @@ export interface Steps extends SProps {
     setAdditionalInfo(info: string | null): Readonly<Steps>;
     encrypt(options: EncryptStepOption): Promise<Readonly<Steps>>;
     decrypt(options: EncryptStepOption): Promise<Readonly<Steps>>;
+    mask(attrs: IMask[]): Readonly<Steps>;
 }
 
 export interface Logs extends LProps {

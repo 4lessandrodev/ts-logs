@@ -380,4 +380,8 @@ describe('step', () => {
         const decrypted = await encrypted.decrypt({ attributes: ['echo'], secretKey: 'my-secret' });
         expect(decrypted.data).toEqual({ echo: 'data' });
     });
+
+    // it('should add mask to an object attribute', () => {
+
+    // });
 });
