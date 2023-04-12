@@ -22,11 +22,32 @@ describe('mask-attribute', () => {
 		expect(result).toEqual({ ...data, NAME: '**NE' });
 	});
 
+	it('should mask object key path', () => {
+		const data = { NAME: 'JANE', CARD: { NUMBER: '5308801581564738'} };
+		const b = { key: 'CARD.NUMBER', nCharDisplay: 4 };
+		const result = maskAttribute(b, data);
+		expect(result).toEqual({ ...data, CARD: { NUMBER: '************4738' } });
+	});
+
 	it('should mask number attribute with success', () => {
 		const data = { CPF: 98192391891, PASSPORT: 'GR874234K' };
 		const b = { key: 'CPF', nCharDisplay: 3 };
 		const result = maskAttribute(b, data);
 		expect(result).toEqual({ ...data, CPF: '********891' });
+	});
+
+	it('should do not mask if provide a date', () => {
+		const data = { CPF: new Date(), PASSPORT: 'GR874234K' };
+		const b = { key: 'CPF', nCharDisplay: 3 };
+		const result = maskAttribute(b, data);
+		expect(result).toEqual(data);
+	});
+
+	it('should do not mask if provide an array', () => {
+		const data = [{ CPF: 8989, PASSPORT: 'GR874234K' }];
+		const b = { key: 'CPF', nCharDisplay: 3 };
+		const result = maskAttribute(b, data);
+		expect(result).toEqual(data);
 	});
 
 	it('should mask none attribute', () => {

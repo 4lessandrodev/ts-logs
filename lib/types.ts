@@ -231,6 +231,8 @@ export interface S3Data {
     ContentType: string;
 }
 
+export type Callback = (value: string) => string;
+
 export interface AutoPublishOptions {
     publishWhenStatus: (status: number) => boolean;
 };
