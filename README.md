@@ -321,6 +321,37 @@ step.encrypt({ attributes: ["password"], secretKey: "my-secret-key" });
 
 ```
 
+#### Hidden Value - Mask
+you can mask any key value in step data. provide the key name you want or the path. example `user.password` for specific key in user object or `password` for any key called password
+
+```ts
+
+const name = 'sample';
+
+const data = { 
+  info: 'secret-text', 
+  user: { 
+    name: 'Jane',
+    password: '12345'
+  }
+};
+
+const step = Step.create({ name, data });
+
+const updated = step.mask([ { key: 'password' } ]);
+
+console.log(updated);
+{
+  info: 'secret-text', 
+  user: { 
+    name: 'Jane',
+    password: '*****'
+  } 
+}
+
+```
+
+
 #### Encrypt data
 
 Encryption is also available for `stackLog` and as cypher.
