@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.16] - 2023-04-12
+### Docs
+
+- doc: added README.md as doc file
+
+---
+
 ### [0.0.15] - 2023-04-12
 ### Feat
 
