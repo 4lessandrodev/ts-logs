@@ -6,6 +6,7 @@ import { deleteObjectKey, Messages, reference, stepPropsFromAxiosError } from ".
 import extractBodyAsObject from "../utils/extract-body.util";
 import encryptKeys from "../utils/encrypt-keys.util";
 import decryptKeys from "../utils/decrypt-keys.util";
+import maskData from "../utils/mask-step-data.util";
 
 export class Step implements Steps {
     readonly uid!: string;
@@ -272,8 +273,11 @@ export class Step implements Steps {
         return new Step({ ...this, url });
     }
 
-    mask(_: IMask[]): Readonly<Step> {
-        return this;
+    mask(attributes: IMask[]): Readonly<Step> {
+        const data = this.data;
+        if (!data) return this;
+        const payload = maskData(data, attributes);
+        return new Step({ ...this, data: payload });
     }
 
     /**

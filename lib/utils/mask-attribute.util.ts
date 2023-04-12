@@ -2,7 +2,7 @@ import { IMask } from "../types";
 import maskSubObjectKey from "./mask-sub-key.util";
 
 export const maskAttribute = <T extends {}>(mask: IMask, object: T): T => {
-	let result = {} as T;
+	let result = object;
 	const key = mask.key;
 	const nDigitsDisplay = (typeof mask?.nCharDisplay === 'undefined') ? 0 : mask.nCharDisplay;
 	const regexPattern = `\\w(?=\\w{${nDigitsDisplay}})`;
@@ -28,20 +28,21 @@ export const maskAttribute = <T extends {}>(mask: IMask, object: T): T => {
 		if (isTargetKey && (isStr || isNum)) {
 			const val = isNum ? keyValue.toString() : keyValue;
 			const hash = val.replace(regex, '*');
-			result = Object.assign(result, object, { [currentKey]: hash })
+			result = Object.assign({}, result, { [currentKey]: hash });
 			i++;
 			continue;
 		} else if (keyValue && (typeof keyValue === 'object')) {
 			if (Array.isArray(keyValue)) {
 				const subs = keyValue.map((el): T[] => maskAttribute(mask, el));
-				result = Object.assign(result, object, { [currentKey]: subs });
+				result = Object.assign({}, result, { [currentKey]: subs });
 			} else if ((typeof keyValue !== 'function') && !(keyValue instanceof Date)) {
 				const sub = maskAttribute(mask, keyValue);
-				result = Object.assign(result, object, { [currentKey]: sub });
+				result = Object.assign({}, result, { [currentKey]: sub });
 			}
 		}
 		i++;
 	}
+
 	result = (!isArr && !isDate && isObj && !isFn) ? Object.assign({}, object, result) : object;
 	result = maskSubObjectKey(key, result, (val): string => val.replace(regex, '*'));
 	return result;
