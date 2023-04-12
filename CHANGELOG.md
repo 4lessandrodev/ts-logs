@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.15] - 2023-04-12
+### Feat
+
+- step: feat added `mask` method to step instance. Now Its possible to hidden values with * char.
+
+---
 
 ### [0.0.14] - 2023-03-31
 ### Feat

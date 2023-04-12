@@ -380,4 +380,57 @@ describe('step', () => {
         const decrypted = await encrypted.decrypt({ attributes: ['echo'], secretKey: 'my-secret' });
         expect(decrypted.data).toEqual({ echo: 'data' });
     });
+
+    it('should add mask to an object attribute', () => {
+
+        const data = {
+            info: 'restricted-info',
+            user: {
+                name: 'jane',
+                pass: '12345',
+                card: { number: '4716653131802558' },
+                document: 980345787534
+            }
+        };
+        const step = Step.error({ message: 'err', name: 'err', data });
+        const result = step.mask([{ key: 'info' }]);
+        expect(result.data).toEqual({
+            info: '**********-****',
+            user: {
+                name: 'jane',
+                pass: '12345',
+                card: { number: '4716653131802558' },
+                document: 980345787534
+            }
+        });
+    });
+
+    it('should add mask to an object attribute', () => {
+
+        const data = {
+            info: 'restricted-info',
+            user: {
+                name: 'jane',
+                pass: '12345',
+                card: { number: '4716653131802558' },
+                document: 980345787534
+            }
+        };
+        const step = Step.error({ message: 'err', name: 'err', data });
+        const result = step.mask([
+            { key: 'info' },
+            { key: 'user.pass' },
+            { key: 'user.card.number', nCharDisplay: 4 },
+            { key: 'user.document', nCharDisplay: 2 }
+        ]);
+        expect(result.data).toEqual({
+            info: '**********-****',
+            user: {
+                name: 'jane',
+                pass: '*****',
+                card: { number: '************2558' },
+                document: '**********34'
+            }
+        });
+    });
 });
