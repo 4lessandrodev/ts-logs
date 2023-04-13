@@ -2,8 +2,8 @@ import { appendFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { Log } from "../core";
 import EnsureLocalFolder from "./ensure-local-folder.util";
-import GetFolderName from "./get-folder-name.util";
 import GetFileName from "./get-file-name.util";
+import { GetLogsDirname } from "./get-logs-dirname.util";
 
 /**
  * @description Save logs locally.
@@ -12,12 +12,10 @@ import GetFileName from "./get-file-name.util";
  * @returns Promise<void>
  */
 export const WriteDefaultLocal = async (log: Log, path?: string): Promise<void> => {
-    const local = process.cwd();
-    const folderName = GetFolderName(log.name);
+    const dir = GetLogsDirname(log.name, path);
     const fileName = GetFileName(log.createdAt);
-    const dir = path ? resolve(path) : resolve(local, 'logs', folderName);
     const exists = await EnsureLocalFolder(dir);
-    if(!exists) return;
+    if (!exists) return;
     const filePath = resolve(dir, fileName);
     await appendFile(filePath, JSON.stringify(log, null, 2) + '\n', 'utf8');
 };
