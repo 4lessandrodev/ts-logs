@@ -181,12 +181,12 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - log: format messages for each category
-- [ error ]: Step.error(props)
-- [ debug ]: Step.debug(props)
-- [ info ]: Step.info(props)
-- [ fatal ]: Step.fatal(props)
-- [ warn ]: Step.warn(props)
-- [ stack ]: Step.stack(props)
+- [ ERROR ]: Step.error(props)
+- [ DEBUG ]: Step.debug(props)
+- [ INFO ]: Step.info(props)
+- [ FATAL ]: Step.fatal(props)
+- [ WARN ]: Step.warn(props)
+- [ STACK ]: Step.stack(props)
 - [ UNDEF ]: When create step with invalid type
 - [ LOG ]: When create a global log - Log.ini()
 
