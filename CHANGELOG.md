@@ -6,7 +6,16 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.18] - 2023-04-13
+
+### Feat
+
+- feat: added `deleteExpiredFile` method to remove expired files from local log folder.
+
+---
+
 ### [0.0.17] - 2023-04-12
+
 ### Fix
 
 - fix: update mask regex to replace any char instead only alphanumeric one
@@ -14,6 +23,7 @@ All notable changes to this project will be documented in this file.
 ---
 
 ### [0.0.16] - 2023-04-12
+
 ### Docs
 
 - doc: added README.md as doc file
@@ -21,13 +31,15 @@ All notable changes to this project will be documented in this file.
 ---
 
 ### [0.0.15] - 2023-04-12
+
 ### Feat
 
-- step: feat added `mask` method to step instance. Now Its possible to hidden values with * char.
+- step: feat added `mask` method to step instance. Now Its possible to hidden values with \* char.
 
 ---
 
 ### [0.0.14] - 2023-03-31
+
 ### Feat
 
 - step: feat added support to data as object
@@ -35,6 +47,7 @@ All notable changes to this project will be documented in this file.
 ---
 
 ### [0.0.13] - 2023-02-11
+
 ### Fix
 
 - fix: fix `GetFileName` to add 0 when day number is less than 10.
@@ -45,6 +58,7 @@ All notable changes to this project will be documented in this file.
 ---
 
 ### [0.0.12] - 2023-02-10
+
 ### Feat
 
 - feat: added "encrypt" function to step.
@@ -142,6 +156,7 @@ All notable changes to this project will be documented in this file.
 - fix: change step from `info` to `stack`
 
 ### Changed
+
 ### Breaking change
 
 - rename: from `LOGMiddleware` to `stackLog`
@@ -166,14 +181,14 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - log: format messages for each category
-- [ ERROR ]: Step.error(props)
-- [ DEBUG ]: Step.debug(props)
-- [ INFO  ]: Step.info(props)
-- [ FATAL ]: Step.fatal(props)
-- [ WARN  ]: Step.warn(props)
-- [ STACK ]: Step.stack(props)
+- [ error ]: Step.error(props)
+- [ debug ]: Step.debug(props)
+- [ info ]: Step.info(props)
+- [ fatal ]: Step.fatal(props)
+- [ warn ]: Step.warn(props)
+- [ stack ]: Step.stack(props)
 - [ UNDEF ]: When create step with invalid type
-- [ LOG   ]: When create a global log - Log.ini()
+- [ LOG ]: When create a global log - Log.ini()
 
 ### Change
 
