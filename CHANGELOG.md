@@ -6,6 +6,13 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.0.17] - 2023-04-12
+### Fix
+
+- fix: update mask regex to replace any char instead only alphanumeric one
+
+---
+
 ### [0.0.16] - 2023-04-12
 ### Docs
 
