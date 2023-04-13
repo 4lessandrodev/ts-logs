@@ -1,4 +1,4 @@
-export const extractBodyAsObject = <T>(body: string | object): T => {
+export const ExtractBodyAsObject = <T>(body: string | object): T => {
     try {
         if (body && typeof body === 'object' && !(body instanceof Date)) {
             return body as T;
@@ -18,4 +18,4 @@ export const extractBodyAsObject = <T>(body: string | object): T => {
     }
 }
 
-export default extractBodyAsObject;
+export default ExtractBodyAsObject;

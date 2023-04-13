@@ -1,6 +1,6 @@
 import { AutoPublishOptions, Requests, Responses } from "../types";
 
-export const canAutoPublish = (req: Requests, res: Responses, options?: AutoPublishOptions): boolean => {
+export const CanAutoPublish = (req: Requests, res: Responses, options?: AutoPublishOptions): boolean => {
     if(!req?.log) return false;
     if(
         options && typeof options.publishWhenStatus === 'function' && 
@@ -11,4 +11,4 @@ export const canAutoPublish = (req: Requests, res: Responses, options?: AutoPubl
     if(!req.log.hasSteps()) return false;
     return true;
 }
-export default canAutoPublish;
+export default CanAutoPublish;

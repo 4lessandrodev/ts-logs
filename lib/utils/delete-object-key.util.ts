@@ -4,11 +4,11 @@
  * @param keys as array of string.
  * @returns body as object or array without removed keys.
  */
-export const deleteObjectKey = <T>(body: T, keys: string[]): Partial<T> => {
+export const DeleteObjectKey = <T>(body: T, keys: string[]): Partial<T> => {
     if(!Array.isArray(keys)) return body;
 
     if (Array.isArray(body)) {
-        return body.map((val): Partial<T> => deleteObjectKey(val, keys)) as T;
+        return body.map((val): Partial<T> => DeleteObjectKey(val, keys)) as T;
     }
     
     if (body && typeof body === 'object' && !(body instanceof Date) && keys.length > 0) {        
@@ -22,14 +22,14 @@ export const deleteObjectKey = <T>(body: T, keys: string[]): Partial<T> => {
             const value = body[currentKey];
 
             if (Array.isArray(value)) {
-                const arr = value.map((val): Partial<T> => deleteObjectKey(val, keys));
+                const arr = value.map((val): Partial<T> => DeleteObjectKey(val, keys));
                 result = Object.assign({}, result, { [currentKey]: arr });
                 currentObjectKeyIndex++;
                 continue;
             }
 
             if (value && typeof value === 'object' && !(value instanceof Date)) {
-                const subObj = deleteObjectKey(value, keys);
+                const subObj = DeleteObjectKey(value, keys);
                 result = Object.assign({}, result, { [currentKey]: subObj });
                 currentObjectKeyIndex++;
                 continue;
@@ -45,4 +45,4 @@ export const deleteObjectKey = <T>(body: T, keys: string[]): Partial<T> => {
     return body;
 }
 
-export default deleteObjectKey;
+export default DeleteObjectKey;

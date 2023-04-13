@@ -1,4 +1,4 @@
-import canAutoPublish from "../utils/can-auto-publish.util";
+import CanAutoPublish from "../utils/can-auto-publish.util";
 import { AutoPublishOptions, NextFunctions, PublishConfig } from "../types";
 import { PublisherMiddleware, Requests, Responses } from "../types";
 
@@ -13,7 +13,7 @@ import { PublisherMiddleware, Requests, Responses } from "../types";
 export const autoPublishLog = (config: PublishConfig, options?: AutoPublishOptions): PublisherMiddleware => {
     return async (req: Requests, res: Responses, next: NextFunctions): Promise<void> => {
         res.on('finish', async (): Promise<void> => { 
-            const canPublish = canAutoPublish(req, res, options);
+            const canPublish = CanAutoPublish(req, res, options);
             if(!canPublish) return next();
             await req?.log?.publish(config);
             return next();

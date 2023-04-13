@@ -1,8 +1,8 @@
-import maskData from "../lib/utils/mask-step-data.util";
+import MaskData from "../lib/utils/mask-step-data.util";
 
 describe('mask-step-data', () => {
 	it('should return empty object', () => {
-		const result = maskData({}, []);
+		const result = MaskData({}, []);
 		expect(result).toEqual({});
 	});
 
@@ -11,7 +11,7 @@ describe('mask-step-data', () => {
 			{ user: { pass: 12345678, name: 'jane' } },
 			{ user: { pass: '87654321', name: 'john' } }
 		];
-		const result = maskData(data, [{ key: 'user.pass', nCharDisplay: 2 }]);
+		const result = MaskData(data, [{ key: 'user.pass', nCharDisplay: 2 }]);
 		expect(result).toEqual([
 			{ "user": { "name": "jane", "pass": "******78" } },
 			{ "user": { "name": "john", "pass": "******21" } }
@@ -23,7 +23,7 @@ describe('mask-step-data', () => {
 			{ user: { pass: 12345678, name: 'jane' }, card: '897346786423' },
 			{ user: { pass: '87654321', name: 'john' }, card: '897346789999' }
 		];
-		const result = maskData(data, [
+		const result = MaskData(data, [
 			{ key: 'user.pass', nCharDisplay: 2 },
 			{ key: 'card', nCharDisplay: 2 }
 		]);
@@ -35,19 +35,19 @@ describe('mask-step-data', () => {
 
 	it('should mask object pass attribute', () => {
 		const data = { user: { pass: 12345678, name: 'jane' } };
-		const result = maskData(data, [{ key: 'user.pass', nCharDisplay: 2 }]);
+		const result = MaskData(data, [{ key: 'user.pass', nCharDisplay: 2 }]);
 		expect(result).toEqual({ "user": { "name": "jane", "pass": "******78" } });
 	});
 
 	it('should mask object pass attribute', () => {
 		const data = { user: { pass: '12345678', name: 'jane' } };
-		const result = maskData(data, [{ key: 'user.pass', nCharDisplay: 2 }]);
+		const result = MaskData(data, [{ key: 'user.pass', nCharDisplay: 2 }]);
 		expect(result).toEqual({ "user": { "name": "jane", "pass": "******78" } });
 	});
 
 	it('should mask object pass and name attributes', () => {
 		const data = { user: { pass: '12345678', name: 'jane' } };
-		const result = maskData(data, [
+		const result = MaskData(data, [
 			{ key: 'user.pass', nCharDisplay: 2 },
 			{ key: 'user.name', nCharDisplay: 2 }
 		]);
@@ -56,7 +56,7 @@ describe('mask-step-data', () => {
 
 	it('should mask object pass and name attributes', () => {
 		const data = { user: { pass: '12345678', name: 'jane' } };
-		const result = maskData(data, [
+		const result = MaskData(data, [
 			{ key: 'pass', nCharDisplay: 2 },
 			{ key: 'name', nCharDisplay: 2 }
 		]);

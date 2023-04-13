@@ -14,6 +14,4 @@ export const DeleteExpiredFile = (days: number, dirname: string): void => {
     })
 }
 
-export default {
-    DeleteExpiredFile
-};
+export default DeleteExpiredFile;

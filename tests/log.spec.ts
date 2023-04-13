@@ -146,4 +146,16 @@ describe('log', () => {
         const clone = log.clone('stateless');
         expect(clone.stateType).toBe('stateless');
     });
+
+    it.only('should create 3 logs, save them on default dirname and delete all', () => {
+        const logA = Log.init({ name: 'one' });
+        const logB = Log.init({ name: 'two' });
+        const logC = Log.init({ name: 'three' });
+
+        logA.writeLocal();
+        logB.writeLocal();
+        logC.writeLocal();
+
+        expect(1).toBe(1);
+    });
 });

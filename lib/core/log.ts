@@ -251,7 +251,7 @@ export class Log implements Logs {
      */
     rmLogs(days: number, dirname?: string): void {
         try {
-            const dir = GetLogsDirname(this.name, dirname)
+            const dir = GetLogsDirname(this.name, dirname);
 
             DeleteExpiredFile(days, dir);
         } catch (error) {

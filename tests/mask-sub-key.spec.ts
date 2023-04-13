@@ -1,11 +1,11 @@
-import maskSubObjectKey from "../lib/utils/mask-sub-key.util";
+import MaskSubObjectKey from "../lib/utils/mask-sub-key.util";
 
 describe('mask-sub-key', () => {
 	it('should mask sub key with success', () => {
 		const path = 'a.b.c';
 		const obj = { a: { b: { c: 'hey there' } }, other: 21 }
 		const callback = (val: string): string => val + ', you ok?';
-		const result = maskSubObjectKey(path, obj, callback);
+		const result = MaskSubObjectKey(path, obj, callback);
 
 		const target = { ...obj, a: { b: { c: 'hey there, you ok?' } } };
 
@@ -16,7 +16,7 @@ describe('mask-sub-key', () => {
 		const path = 'a.b.c';
 		const obj = { a: { b: { c: 200 } }, other: 21 }
 		const callback = (val: string): string => val + '300';
-		const result = maskSubObjectKey(path, obj, callback);
+		const result = MaskSubObjectKey(path, obj, callback);
 
 		const target = { ...obj, a: { b: { c: '200300' } } };
 
@@ -27,7 +27,7 @@ describe('mask-sub-key', () => {
 		const path = 'a';
 		const obj = { a: { b: { c: 'hey there' } }, other: 21 }
 		const callback = (val: string): string => val + ', you ok?';
-		const result = maskSubObjectKey(path, obj, callback);
+		const result = MaskSubObjectKey(path, obj, callback);
 
 		expect(result).toEqual(obj);
 	});
@@ -36,7 +36,7 @@ describe('mask-sub-key', () => {
 		const path = 'a.b.c';
 		const obj = { a: { b: { c: new Date() } }, other: 21 }
 		const callback = (val: string): string => val + 'new value';
-		const result = maskSubObjectKey(path, obj, callback);
+		const result = MaskSubObjectKey(path, obj, callback);
 
 		expect(result).toEqual(obj);
 	});
@@ -45,7 +45,7 @@ describe('mask-sub-key', () => {
 		const path = 'a.b.c';
 		const obj = { a: { b: { c: 'hey' } }, other: 21 }
 		const callback = {} as any;
-		const result = maskSubObjectKey(path, obj, callback);
+		const result = MaskSubObjectKey(path, obj, callback);
 
 		expect(result).toEqual(obj);
 	});
@@ -54,7 +54,7 @@ describe('mask-sub-key', () => {
 		const path = 'a.b.c';
 		const obj = 'not-object';
 		const callback = (val: string): string => val + 'new value';
-		const result = maskSubObjectKey(path, obj, callback);
+		const result = MaskSubObjectKey(path, obj, callback);
 
 		expect(result).toEqual(obj);
 	});

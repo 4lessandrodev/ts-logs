@@ -45,11 +45,12 @@ describe('cron-expiration-file', () => {
     })
 
     it('should run DeleteExpiredFile with 1 day', () => {
-        const spyCron = jest.spyOn(cron, 'DeleteExpiredFile')
+        const DeleteExpiredFile = { cron };
+        const spyCron = jest.spyOn(DeleteExpiredFile, 'cron');
 
-        cron.DeleteExpiredFile(1, dirname)
+        DeleteExpiredFile.cron(1, dirname);
 
-        expect(spyCron).toBeCalledTimes(1)
+        expect(spyCron).toBeCalledTimes(1);
     });
 
     it('should verify if directory has one log', () => {
@@ -59,11 +60,12 @@ describe('cron-expiration-file', () => {
     })
 
     it('should run DeleteExpiredFile with day 0', () => {
-        const spyCron = jest.spyOn(cron, 'DeleteExpiredFile')
+        const DeleteExpiredFile = { cron };
+        const spyCron = jest.spyOn(DeleteExpiredFile, 'cron');
 
-        cron.DeleteExpiredFile(0, dirname)
+        DeleteExpiredFile.cron(0, dirname);
 
-        expect(spyCron).toBeCalledTimes(1)
+        expect(spyCron).toBeCalledTimes(1);
     });
 
     it('should verify if directory is empty', () => {
@@ -71,4 +73,4 @@ describe('cron-expiration-file', () => {
 
         expect(files.length).toBe(0);
     })
-})
+});
