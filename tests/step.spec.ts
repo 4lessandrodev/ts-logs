@@ -395,7 +395,7 @@ describe('step', () => {
         const step = Step.error({ message: 'err', name: 'err', data });
         const result = step.mask([{ key: 'info' }]);
         expect(result.data).toEqual({
-            info: '**********-****',
+            info: '***************',
             user: {
                 name: 'jane',
                 pass: '12345',
@@ -424,7 +424,7 @@ describe('step', () => {
             { key: 'user.document', nCharDisplay: 2 }
         ]);
         expect(result.data).toEqual({
-            info: '**********-****',
+            info: '***************',
             user: {
                 name: 'jane',
                 pass: '*****',
@@ -432,5 +432,71 @@ describe('step', () => {
                 document: '**********34'
             }
         });
+    });
+
+    it('should replace any special char', () => {
+        const data = {
+            info: "some",
+            product: { name: "cake", price: 21.30 },
+            user: {
+                name: "jane doe",
+                document: "9234879234",
+                age: 21,
+                password: "J@ne#12%0-$!,.><~^3"
+            }
+        };
+
+        const step = Step.create({ name: "step", data }).mask([
+            { key: "user.password" }
+        ]);
+
+        expect(step.data).toEqual(
+            {
+                "info": "some",
+                "product": {
+                    "name": "cake",
+                    "price": 21.3,
+                },
+                "user": {
+                    "age": 21,
+                    "document": "9234879234",
+                    "name": "jane doe",
+                    "password": "*******************",
+                },
+            }
+        )
+    });
+
+    it('should replace any space or special char', () => {
+        const data = {
+            info: "some",
+            product: { name: "chocolate-cake", price: 21.30 },
+            user: {
+                name: "jane doe",
+                document: "9234879234",
+                age: 21,
+                password: 12345
+            }
+        };
+
+        const step = Step.create({ name: "step", data }).mask([
+            { key: "name" }
+        ]);
+
+        expect(step.data).toEqual(
+            {
+                "info": "some",
+                "product": {
+                    "name": "**************",
+                    "price": 21.3,
+                },
+                "user": {
+                    "age": 21,
+                    "document": "9234879234",
+                    "name": "********",
+                    "password": 12345,
+                },
+            }
+        );
     });
 });
