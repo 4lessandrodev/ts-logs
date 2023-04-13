@@ -2,10 +2,12 @@ import { randomUUID } from "node:crypto";
 import { HttpConfig, Locale, LocalOpt, Logs, LProps, S3Config, Steps, LogStateType } from "../types";
 import WriteDefaultLocal from "../utils/write-default-local.util";
 import BuildLogMessage from "../utils/build-log-message.util";
+import { CronValidateExpirationFile } from "../utils/delete-expired-file.util";
 import TerminalLog from "../utils/log.utils";
 import S3Provider from "./s3-provider";
 import { SavePayload } from "../types";
 import HttProvider from "./http-provider";
+import { GetLogsDirname } from "../utils/get-logs-dirname.util";
 
 /**
  * @description Global log to manage steps and behavior.
@@ -229,16 +231,31 @@ export class Log implements Logs {
      */
     async publish(config: S3Config | HttpConfig): Promise<SavePayload | null> {
         try {
-            if((config as S3Config)?.bucketName && (config as S3Config)?.region && (config as S3Config)?.credentials){
+            if ((config as S3Config)?.bucketName && (config as S3Config)?.region && (config as S3Config)?.credentials) {
                 return S3Provider.save(config as S3Config, this);
             }
-            if((config as HttpConfig)?.url){
+            if ((config as HttpConfig)?.url) {
                 return HttProvider.save(config as HttpConfig, this);
             }
             return null;
         } catch (error) {
             TerminalLog(`error on publish...${(error as Error).message}\n`);
             return null;
+        }
+    }
+
+    /**
+     * @description Delete expired files based in 'days' params.
+     * @param days as integer.
+     * @param dirname as string.
+     */
+    rmLogs(days: number, dirname?: string): void {
+        try {
+            const dir = GetLogsDirname(this.name, dirname)
+
+            CronValidateExpirationFile(days, dir);
+        } catch (error) {
+            TerminalLog(`error on delete expired files...${(error as Error).message}\n`);
         }
     }
 }
