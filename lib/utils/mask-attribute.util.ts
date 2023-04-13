@@ -5,7 +5,7 @@ export const maskAttribute = <T extends {}>(mask: IMask, object: T): T => {
 	let result = object;
 	const key = mask.key;
 	const nDigitsDisplay = (typeof mask?.nCharDisplay === 'undefined') ? 0 : mask.nCharDisplay;
-	const regexPattern = `\\w(?=\\w{${nDigitsDisplay}})`;
+	const regexPattern = `.(?=.{${nDigitsDisplay}})`;
 	const regex = new RegExp(regexPattern, 'g'); 
 
 	const hasObject = (typeof object !== 'undefined');
