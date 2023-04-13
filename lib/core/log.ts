@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { HttpConfig, Locale, LocalOpt, Logs, LProps, S3Config, Steps, LogStateType } from "../types";
 import WriteDefaultLocal from "../utils/write-default-local.util";
 import BuildLogMessage from "../utils/build-log-message.util";
-import { CronValidateExpirationFile } from "../utils/delete-expired-file.util";
+import { DeleteExpiredFile } from "../utils/delete-expired-file.util";
 import TerminalLog from "../utils/log.utils";
 import S3Provider from "./s3-provider";
 import { SavePayload } from "../types";
@@ -253,7 +253,7 @@ export class Log implements Logs {
         try {
             const dir = GetLogsDirname(this.name, dirname)
 
-            CronValidateExpirationFile(days, dir);
+            DeleteExpiredFile(days, dir);
         } catch (error) {
             TerminalLog(`error on delete expired files...${(error as Error).message}\n`);
         }

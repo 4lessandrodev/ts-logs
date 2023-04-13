@@ -44,10 +44,10 @@ describe('cron-expiration-file', () => {
         expect(files.length).toBe(11);
     })
 
-    it('should run CronValidateExpirationFile with 1 day', () => {
-        const spyCron = jest.spyOn(cron, 'CronValidateExpirationFile')
+    it('should run DeleteExpiredFile with 1 day', () => {
+        const spyCron = jest.spyOn(cron, 'DeleteExpiredFile')
 
-        cron.CronValidateExpirationFile(1, dirname)
+        cron.DeleteExpiredFile(1, dirname)
 
         expect(spyCron).toBeCalledTimes(1)
     });
@@ -58,10 +58,10 @@ describe('cron-expiration-file', () => {
         expect(files.length).toBe(1);
     })
 
-    it('should run CronValidateExpirationFile with day 0', () => {
-        const spyCron = jest.spyOn(cron, 'CronValidateExpirationFile')
+    it('should run DeleteExpiredFile with day 0', () => {
+        const spyCron = jest.spyOn(cron, 'DeleteExpiredFile')
 
-        cron.CronValidateExpirationFile(0, dirname)
+        cron.DeleteExpiredFile(0, dirname)
 
         expect(spyCron).toBeCalledTimes(1)
     });

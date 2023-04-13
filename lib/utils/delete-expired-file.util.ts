@@ -2,7 +2,7 @@ import { statSync, readdirSync, unlinkSync } from 'node:fs';
 import { join } from 'node:path';
 const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
 
-export const CronValidateExpirationFile = (days: number, dirname: string): void => {
+export const DeleteExpiredFile = (days: number, dirname: string): void => {
     const files = readdirSync(dirname);
 
     files.forEach(file => {
@@ -15,5 +15,5 @@ export const CronValidateExpirationFile = (days: number, dirname: string): void 
 }
 
 export default {
-    CronValidateExpirationFile
+    DeleteExpiredFile
 };
