@@ -139,7 +139,7 @@ export interface Logs extends LProps {
     publish(config: PublishConfig): Promise<SavePayload | null>;
     hasSteps(): boolean;
     clone(stateType: LogStateType): Readonly<Logs> | Logs;
-    rmLogs(days: number, dirname?: string): void
+    rmLogs(days: number, dirname?: string): Promise<void>;
 }
 
 export type BuildStepMessages = (step: Steps, locales?: Locale, options?: LocalOpt) => string;

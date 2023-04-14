@@ -249,14 +249,17 @@ export class Log implements Logs {
      * @param days as integer.
      * @param dirname as string.
      */
-    rmLogs(days: number, dirname?: string): void {
-        try {
-            const dir = GetLogsDirname(this.name, dirname);
-
-            DeleteExpiredFile(days, dir);
-        } catch (error) {
-            TerminalLog(`error on delete expired files...${(error as Error).message}\n`);
-        }
+    rmLogs(days: number, dirname?: string): Promise<void> {
+        return new Promise((resolve, reject) => {
+            try {
+                const dir = GetLogsDirname(this.name, dirname);
+                DeleteExpiredFile(days, dir);
+                resolve();
+            } catch (error) {
+                TerminalLog(`error on delete expired files...${(error as Error).message}\n`);
+                reject(error);
+            }
+        });
     }
 }
 

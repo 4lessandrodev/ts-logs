@@ -30,7 +30,7 @@ describe('cron-expiration-file', () => {
         } else {
             createFiles();
         }
-    })
+    });
 
     afterAll(() => {
         rmSync(dirname, { recursive: true });

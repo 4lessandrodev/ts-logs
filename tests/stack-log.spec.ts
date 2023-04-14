@@ -38,7 +38,7 @@ describe('stack-log', () => {
 
         const log = Log.init({ name: 'test' });
         const writeLocal = jest.spyOn(log, 'writeLocal');
-        jest.spyOn(log, 'writeLocal').mockImplementationOnce(async (path?: string) => { console.log(path) });
+        jest.spyOn(log, 'writeLocal').mockImplementationOnce(async (path?: string) => { (path) });
 
         const err = new Error('Info Test');
         req.log = log;
@@ -76,7 +76,7 @@ describe('stack-log', () => {
 
         const log = Log.init({ name: 'test' });
         const callback = async (a: any, b: any, c: any, d: any, e: any) => {
-            console.log({ a, b, c, d, e });
+            ({ a, b, c, d, e });
         };
 
         const useCase = { execute: callback };

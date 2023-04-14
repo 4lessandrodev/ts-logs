@@ -1,8 +1,9 @@
 import { LProps } from "../lib/types";
 import { Log, Step } from "../lib/core";
+import { join } from "node:path";
+import { readdirSync } from "node:fs";
 
 describe('log', () => {
-
     const step1 = Step.info({ message: 'a', name: 'step-1' });
     const step2 = Step.info({ message: 'a', name: 'step-1' });
 
@@ -147,15 +148,71 @@ describe('log', () => {
         expect(clone.stateType).toBe('stateless');
     });
 
-    it.only('should create 3 logs, save them on default dirname and delete all', () => {
+    it('should create 3 logs, save them on default dirname and delete all', async () => {
         const logA = Log.init({ name: 'one' });
         const logB = Log.init({ name: 'two' });
         const logC = Log.init({ name: 'three' });
 
-        logA.writeLocal();
-        logB.writeLocal();
-        logC.writeLocal();
+        await logA.writeLocal();
+        await logB.writeLocal();
+        await logC.writeLocal();
 
-        expect(1).toBe(1);
+        const dirnameA = join(__dirname, '..', 'logs', 'one');
+        const dirnameB = join(__dirname, '..', 'logs', 'two');
+        const dirnameC = join(__dirname, '..', 'logs', 'three');
+
+        const existsA = readdirSync(dirnameA);
+        const existsB = readdirSync(dirnameB);
+        const existsC = readdirSync(dirnameC);
+
+        expect(existsA).toHaveLength(1);
+        expect(existsB).toHaveLength(1);
+        expect(existsC).toHaveLength(1);
+
+        await logA.rmLogs(0);
+        await logB.rmLogs(0);
+        await logC.rmLogs(0);
+
+        const filesA = readdirSync(dirnameA);
+        const filesB = readdirSync(dirnameB);
+        const filesC = readdirSync(dirnameC);
+
+        expect(filesA).toHaveLength(0);
+        expect(filesB).toHaveLength(0);
+        expect(filesC).toHaveLength(0);
+    });
+
+    it('should create 3 logs, save them on provided dirname and delete all', async () => {
+        const logA = Log.init({ name: 'one' });
+        const logB = Log.init({ name: 'two' });
+        const logC = Log.init({ name: 'three' });
+
+        await logA.writeLocal();
+        await logB.writeLocal();
+        await logC.writeLocal();
+
+        const dirnameA = join(__dirname, '..', 'logs', 'one');
+        const dirnameB = join(__dirname, '..', 'logs', 'two');
+        const dirnameC = join(__dirname, '..', 'logs', 'three');
+
+        const existsA = readdirSync(dirnameA);
+        const existsB = readdirSync(dirnameB);
+        const existsC = readdirSync(dirnameC);
+
+        expect(existsA).toHaveLength(1);
+        expect(existsB).toHaveLength(1);
+        expect(existsC).toHaveLength(1);
+
+        await logA.rmLogs(0, dirnameA);
+        await logB.rmLogs(0, dirnameB);
+        await logC.rmLogs(0, dirnameC);
+
+        const filesA = readdirSync(dirnameA);
+        const filesB = readdirSync(dirnameB);
+        const filesC = readdirSync(dirnameC);
+
+        expect(filesA).toHaveLength(0);
+        expect(filesB).toHaveLength(0);
+        expect(filesC).toHaveLength(0);
     });
 });
