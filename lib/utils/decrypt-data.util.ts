@@ -1,15 +1,15 @@
-import decryptStepValue from "./decrypt.util";
+import DecryptStepValue from "./decrypt.util";
 
-export const decryptData = async <T>(data: T, keys: string[], secret: string): Promise<T> => {
+export const DecryptData = async <T>(data: T, keys: string[], secret: string): Promise<T> => {
     if(data && typeof data === 'string'){
-        return decryptStepValue(data, secret) as T;
+        return DecryptStepValue(data, secret) as T;
     }
     if (data && Array.isArray(data)) {
         let result: T[] = [];
         let i = 0;
         while (data[i]) {
             const attr = data[i];
-            const payload = await decryptData(attr, keys, secret) as T;
+            const payload = await DecryptData(attr, keys, secret) as T;
             result.push(payload);
             i++;
         }
@@ -29,7 +29,7 @@ export const decryptData = async <T>(data: T, keys: string[], secret: string): P
             if (!(keysToEncrypt.includes(currentObjectKey))) {
                 const target = data[currentObjectKey];
                 if (typeof target === 'object') {
-                    const subObj = await decryptData(target, keys, secret);
+                    const subObj = await DecryptData(target, keys, secret);
                     result = Object.assign({}, result, { [currentObjectKey]: subObj });
                     objectKeysIndex++;
                     continue;
@@ -46,7 +46,7 @@ export const decryptData = async <T>(data: T, keys: string[], secret: string): P
                 if (currentRemoveKey === currentObjectKey && isString) {
                     let decrypted = '';
                     try {
-                        decrypted = await decryptStepValue(target, secret);
+                        decrypted = await DecryptStepValue(target, secret);
                     } catch (error) {
                         decrypted = target;
                     }
@@ -69,4 +69,4 @@ export const decryptData = async <T>(data: T, keys: string[], secret: string): P
     return data;
 }
 
-export default decryptData;
+export default DecryptData;

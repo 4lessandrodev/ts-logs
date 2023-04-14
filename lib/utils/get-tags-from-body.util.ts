@@ -1,4 +1,4 @@
-export const tagsFromBody = <T>(body: T): string[] => {
+export const TagsFromBody = <T>(body: T): string[] => {
     try {
         if (body && typeof body === 'object' && !(body instanceof Date) && !(Array.isArray(body))) {
             return Object.keys(body);
@@ -28,4 +28,4 @@ export const tagsFromBody = <T>(body: T): string[] => {
     }
 }
 
-export default tagsFromBody;
+export default TagsFromBody;

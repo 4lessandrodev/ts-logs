@@ -1,9 +1,9 @@
 import { IMask } from "../types";
-import extractBodyAsObject from "./extract-body.util";
-import maskAttribute from "./mask-attribute.util";
+import ExtractBodyAsObject from "./extract-body.util";
+import MaskAttribute from "./mask-attribute.util";
 
-export const maskData = <T>(data: T, attributes: IMask[]): T => {
-	const body: {} = extractBodyAsObject(data as {});
+export const MaskData = <T>(data: T, attributes: IMask[]): T => {
+	const body: {} = ExtractBodyAsObject(data as {});
 	if (JSON.stringify(body) === '{}') return data;
 
 	if (Array.isArray(body)) {
@@ -14,7 +14,7 @@ export const maskData = <T>(data: T, attributes: IMask[]): T => {
 			let at = 0;
 			while (attributes[at]) {
 				const mask = attributes[at];
-				val = maskAttribute(mask, val) as T;
+				val = MaskAttribute(mask, val) as T;
 				at++;
 			}
 			res.push(val);
@@ -28,10 +28,10 @@ export const maskData = <T>(data: T, attributes: IMask[]): T => {
 	let payload = body;
 	while (attributes[i]) {
 		const mask = attributes[i];
-		payload = maskAttribute(mask, payload);
+		payload = MaskAttribute(mask, payload);
 		i++;
 	}
 
 	return payload as T;
 };
-export default maskData;
+export default MaskData;

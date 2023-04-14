@@ -2,11 +2,11 @@ import TerminalLog from "../utils/log.utils";
 import { randomUUID } from "node:crypto";
 import { CatchError, CatchProps, EncryptStepOption, IMask, Locale, LocalOpt } from "../types";
 import { Method, SProps, Steps, Type } from "../types";
-import { deleteObjectKey, Messages, reference, stepPropsFromAxiosError } from "../utils";
-import extractBodyAsObject from "../utils/extract-body.util";
-import encryptKeys from "../utils/encrypt-keys.util";
-import decryptKeys from "../utils/decrypt-keys.util";
-import maskData from "../utils/mask-step-data.util";
+import { DeleteObjectKey, Messages, Reference, StepPropsFromAxiosError } from "../utils";
+import ExtractBodyAsObject from "../utils/extract-body.util";
+import EncryptKeys from "../utils/encrypt-keys.util";
+import DecryptKeys from "../utils/decrypt-keys.util";
+import MaskData from "../utils/mask-step-data.util";
 
 export class Step implements Steps {
     readonly uid!: string;
@@ -45,7 +45,7 @@ export class Step implements Steps {
      * @returns instance of Step.
      */
     async encrypt(options: EncryptStepOption): Promise<Readonly<Steps>> {
-        const data = await encryptKeys(this, options);
+        const data = await EncryptKeys(this, options);
         return new Step({ ...this, data });
     }
 
@@ -55,7 +55,7 @@ export class Step implements Steps {
      * @returns instance of Step.
      */
     async decrypt(options: EncryptStepOption): Promise<Readonly<Steps>> {
-        const data = await decryptKeys(this, options);
+        const data = await DecryptKeys(this, options);
         return new Step({ ...this, data });
     }
 
@@ -130,7 +130,7 @@ export class Step implements Steps {
      * @returns id or undefined
      */
     private static extractId(body: string | Object = {}): string {
-        const data = extractBodyAsObject<{}>(body);
+        const data = ExtractBodyAsObject<{}>(body);
         const id = data?.['id'] ?? randomUUID();
         return id;
     }
@@ -141,7 +141,7 @@ export class Step implements Steps {
      * @returns tags as array of string or empty array.
      */
     private static extractTagsFromData(body: string | Object = {}): string[] {
-        const data = extractBodyAsObject<{}>(body);
+        const data = ExtractBodyAsObject<{}>(body);
         const isObject = data && typeof data === 'object';
         const isNotArray = !(Array.isArray(data));
         return (isObject && isNotArray) ? Object.keys(data).slice(0,5): [];
@@ -164,9 +164,9 @@ export class Step implements Steps {
     public static catch(error: Error | CatchError, props?: CatchProps): Readonly<Step> {
         const rmKeys = (props && props.remove) ? props.remove : [];
         const err = new Error('sample');
-        const name = reference.fromError(err);
+        const name = Reference.fromError(err);
         error.name = name;
-        const params = stepPropsFromAxiosError(error as CatchError, rmKeys);
+        const params = StepPropsFromAxiosError(error as CatchError, rmKeys);
         return Step.create(params);
     }
 
@@ -204,8 +204,8 @@ export class Step implements Steps {
      */
     remove(keys: string[]): Readonly<Step> {
         const body = this.data;
-        const result = extractBodyAsObject(body);
-        const updated = deleteObjectKey(result, keys) as Partial<SProps>;
+        const result = ExtractBodyAsObject(body);
+        const updated = DeleteObjectKey(result, keys) as Partial<SProps>;
         const data = JSON.stringify(updated);
         return new Step({ ...this, data });
     }
@@ -276,7 +276,7 @@ export class Step implements Steps {
     mask(attributes: IMask[]): Readonly<Step> {
         const data = this.data;
         if (!data) return this;
-        const payload = maskData(data, attributes);
+        const payload = MaskData(data, attributes);
         return new Step({ ...this, data: payload });
     }
 

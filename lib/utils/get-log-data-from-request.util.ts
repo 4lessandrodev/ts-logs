@@ -1,6 +1,6 @@
 import { LogDataFromRequest, Requests } from "../types";
 
-export const getLogDataFromRequest = (req: Requests): LogDataFromRequest => {
+export const GetLogDataFromRequest = (req: Requests): LogDataFromRequest => {
     const uid = req?.headers['uid'] as string ?? req?.headers?.['id'] ?? req.body?.['id'] ?? req?.params?.['id'];
     const captName = req?.originalUrl?.replace(/\//, '') ?? '';
     const name = (typeof captName === 'string' && captName.length > 1) ? captName : 'index';
@@ -11,4 +11,4 @@ export const getLogDataFromRequest = (req: Requests): LogDataFromRequest => {
     return { name, ip, origin, uid };
 }
 
-export default getLogDataFromRequest;
+export default GetLogDataFromRequest;

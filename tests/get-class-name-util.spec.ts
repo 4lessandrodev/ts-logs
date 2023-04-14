@@ -1,18 +1,18 @@
-import { reference } from "../lib/utils/get-function-name.util";
+import { Reference } from "../lib/utils/get-function-name.util";
 
 describe('get-class-name.util', () => {
 
     class Example {
         execute(): string{
             const err = new Error('Simulation');
-            return reference.fromError(err);
+            return Reference.fromError(err);
         }
     }
 
     const instance = new Example();
 
     const GetName = (): string => {
-        return reference.new();
+        return Reference.new();
     }
 
     it('should get class name: Example.execute', () => {

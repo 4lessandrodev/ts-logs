@@ -1,12 +1,12 @@
 import { StepDataFromRequest, Method, Requests } from "../types";
-import extractBodyAsObject from "./extract-body.util";
+import ExtractBodyAsObject from "./extract-body.util";
 
-export const getStepDataFromRequest = (err: Error, req: Requests): StepDataFromRequest => {
+export const GetStepDataFromRequest = (err: Error, req: Requests): StepDataFromRequest => {
     const message = err?.message ?? 'Internal Server Error';
     const stack = err?.stack ?? '';
     const statusCode = 500;
     const method = req?.method as Method ?? 'NONE' as Method;
-    const body = extractBodyAsObject<{}>(req?.body ?? {});
+    const body = ExtractBodyAsObject<{}>(req?.body ?? {});
     const uid = body?.['id'] ?? req?.params?.['id'];
     const isNotArr = !(Array.isArray(body));
     const hasKeys = (Object.keys(body ?? {}).length > 0);
@@ -16,4 +16,4 @@ export const getStepDataFromRequest = (err: Error, req: Requests): StepDataFromR
     return { message, stack, statusCode, method, tags, data, body, uid  };
 }
 
-export default getStepDataFromRequest;
+export default GetStepDataFromRequest;

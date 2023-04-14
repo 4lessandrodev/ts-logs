@@ -2,7 +2,7 @@
  * @description Get class or function name.
  * @returns className or functionName as string.
  */
-export const reference = ({
+export const Reference = ({
     fromError(error: Error): string  {
         const isNotEmpty = (val: string): boolean => val !== '';
         const isNotAt = (val: string): boolean => val !== 'at';
@@ -28,4 +28,4 @@ export const reference = ({
     }
 })
 
-export default reference;
+export default Reference;

@@ -1,6 +1,6 @@
 import { createCipheriv, scrypt } from 'node:crypto';
 
-export const encryptStepValue = async (value: string, secret: string): Promise<string> => {
+export const EncryptStepValue = async (value: string, secret: string): Promise<string> => {
 	const algorithm = 'aes-256-gcm';
 	const iv = Buffer.alloc(16, 0);
 
@@ -15,4 +15,4 @@ export const encryptStepValue = async (value: string, secret: string): Promise<s
 	});
 };
 
-export default encryptStepValue;
+export default EncryptStepValue;

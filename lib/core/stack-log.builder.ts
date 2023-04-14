@@ -1,8 +1,8 @@
 import { StackMiddleware, MiddlewareOptions, NextFunctions, Requests, Responses, SProps } from "../types";
-import getLogDataFromRequest from "../utils/get-log-data-from-request.util";
-import getStepDataFromRequest from "../utils/get-step-data-from-request.util";
-import encryptString from "../utils/encrypt-string.util";
-import deleteObjectKey from "../utils/delete-object-key.util";
+import GetLogDataFromRequest from "../utils/get-log-data-from-request.util";
+import GetStepDataFromRequest from "../utils/get-step-data-from-request.util";
+import EncryptString from "../utils/encrypt-string.util";
+import DeleteObjectKey from "../utils/delete-object-key.util";
 import Step from "./step";
 import Log from "./log";
 
@@ -20,14 +20,14 @@ export const stackLog = (options: MiddlewareOptions): StackMiddleware => {
 
     return async (err: Error, req: Requests, res: Responses, next: NextFunctions): Promise<any> => {
 
-        const { name, uid, ip, origin } = getLogDataFromRequest(req);
+        const { name, uid, ip, origin } = GetLogDataFromRequest(req);
 
         const log = req?.log ?? Log.init({ name, uid, ip, origin });
 
-        const { message, method, stack, statusCode, tags, ...param } = getStepDataFromRequest(err, req);
+        const { message, method, stack, statusCode, tags, ...param } = GetStepDataFromRequest(err, req);
 
-        const body = deleteObjectKey<{}>(param.body, keysToRemoveFromBody);
-        const encrypted = await encryptString({ data: param.data, encryptOption, encrypt });
+        const body = DeleteObjectKey<{}>(param.body, keysToRemoveFromBody);
+        const encrypted = await EncryptString({ data: param.data, encryptOption, encrypt });
         const data = encrypt ? encrypted : JSON.stringify(body);
 
         const stepId = param.uid;

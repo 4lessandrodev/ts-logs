@@ -1,7 +1,7 @@
 import { CatchError, Method, SProps, Type } from '../types';
-import deleteObjectKey from './delete-object-key.util';
-import extractBodyAsObject from './extract-body.util';
-import tagsFromBody from './get-tags-from-body.util';
+import DeleteObjectKey from './delete-object-key.util';
+import ExtractBodyAsObject from './extract-body.util';
+import TagsFromBody from './get-tags-from-body.util';
 
 /**
  * @description Create an instance of Step with axios error data.
@@ -9,20 +9,20 @@ import tagsFromBody from './get-tags-from-body.util';
  * @param rmKeys array of string as key to remove from data.
  * @returns instance of Step.
  */
-export const stepPropsFromAxiosError = (error: CatchError, rmKeys: string[] = []): Partial<SProps> => {
+export const StepPropsFromAxiosError = (error: CatchError, rmKeys: string[] = []): Partial<SProps> => {
     const hasResponse = !!error?.response?.data;
     const resData = hasResponse ? error?.response?.data : {};
     const name = error.name;
     const headId = error?.config?.headers?.['uid'] ?? error?.config?.headers?.['id'];
     const uid = error?.config?.data?.['id'] ?? headId;
-    const body = extractBodyAsObject(error?.config?.data);
-    const reqData = deleteObjectKey(body, rmKeys);
+    const body = ExtractBodyAsObject(error?.config?.data);
+    const reqData = DeleteObjectKey(body, rmKeys);
     const stack = error.stack ?? 'none';
     const message = error.message;
     const statusCode = error?.response?.status ? error.response.status : 500;
     const method = (error?.config?.method ?? 'NONE').toUpperCase() as Method;
     const url = error?.config?.url ?? 'none';
-    const tags = tagsFromBody(reqData);
+    const tags = TagsFromBody(reqData);
     const data = { "requestData": reqData, "responseData": resData };
     const type = 'fatal' as Type;
     const createdAt = new Date();
@@ -45,4 +45,4 @@ export const stepPropsFromAxiosError = (error: CatchError, rmKeys: string[] = []
     return props;
 }
 
-export default stepPropsFromAxiosError;
+export default StepPropsFromAxiosError;

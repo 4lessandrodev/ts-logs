@@ -1,7 +1,7 @@
 import { Callback } from "../types";
 
 
-export const maskSubObjectKey = <T = {}>(path: string, object: T, callback: Callback): T => {
+export const MaskSubObjectKey = <T = {}>(path: string, object: T, callback: Callback): T => {
 	if (typeof path !== 'string') return object;
 	if (typeof object !== 'object') return object;
 	if (typeof callback !== 'function') return object;
@@ -30,4 +30,4 @@ export const maskSubObjectKey = <T = {}>(path: string, object: T, callback: Call
 	return object;
 };
 
-export default maskSubObjectKey;
+export default MaskSubObjectKey;

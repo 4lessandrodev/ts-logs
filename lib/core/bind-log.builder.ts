@@ -1,6 +1,6 @@
 import { Log } from "./log";
 import { BinderMiddleware, NextFunctions, Requests, Responses } from "../types";
-import getLogDataFromRequest from "../utils/get-log-data-from-request.util";
+import GetLogDataFromRequest from "../utils/get-log-data-from-request.util";
 
 /**
  * @description Bind log instance to request.
@@ -10,7 +10,7 @@ import getLogDataFromRequest from "../utils/get-log-data-from-request.util";
  */
 export const bindLog = (): BinderMiddleware => {
     return (req: Requests, _: Responses, next: NextFunctions): void => {
-        const { name, ip, origin, uid } = getLogDataFromRequest(req);
+        const { name, ip, origin, uid } = GetLogDataFromRequest(req);
         req.log = Log.init({ name, ip, origin, uid })
         next();
     }

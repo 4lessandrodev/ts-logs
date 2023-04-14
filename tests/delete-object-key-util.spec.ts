@@ -1,33 +1,33 @@
-import { deleteObjectKey } from "../lib/utils";
+import { DeleteObjectKey } from "../lib/utils";
 
 describe('delete-object-key.util', () => {
     it('should delete key', () => {
         const obj = { card: { number: '1254545478745', cvv: 566, exp: 1020 }, name: 'user', email: 'test@mail.com' };
-        const result = deleteObjectKey(obj, ['card', 'email']);
+        const result = DeleteObjectKey(obj, ['card', 'email']);
         expect(result).toEqual({ name: 'user' });
     });
 
     it('should do not delete', () => {
         const obj = { card: { number: '1254545478745', cvv: 566, exp: 1020 }, name: 'user', email: 'test@mail.com' };
-        const result = deleteObjectKey(obj, []);
+        const result = DeleteObjectKey(obj, []);
         expect(result).toEqual(obj);
     });
 
     it('should do not delete if not provide array', () => {
         const obj = { card: { number: '1254545478745', cvv: 566, exp: 1020 }, name: 'user', email: 'test@mail.com' };
-        const result = deleteObjectKey(obj, {} as any);
+        const result = DeleteObjectKey(obj, {} as any);
         expect(result).toEqual(obj);
     });
 
     it('should do not delete if provide array', () => {
         const obj = ["hello", "password", 200];
-        const result = deleteObjectKey(obj, ["password"]);
+        const result = DeleteObjectKey(obj, ["password"]);
         expect(result).toEqual(obj);
     });
 
     it('should not delete from array', () => {
         const obj = ["hello", { "password": 1234 }, 200];
-        const result = deleteObjectKey(obj, ["password"]);
+        const result = DeleteObjectKey(obj, ["password"]);
         expect(result).toEqual(["hello", {}, 200]);
     });
 
@@ -59,7 +59,7 @@ describe('delete-object-key.util', () => {
             }
         }
 
-        const result = deleteObjectKey(obj, ["password", "token"]);
+        const result = DeleteObjectKey(obj, ["password", "token"]);
 
         expect(result).toEqual({
             user: "jane",

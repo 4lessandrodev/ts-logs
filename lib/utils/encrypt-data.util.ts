@@ -1,15 +1,15 @@
-import encryptStepValue from "./encrypt.util";
+import EncryptStepValue from "./encrypt.util";
 
-export const encryptData = async <T>(data: T, keys: string[], secret: string): Promise<T> => {
+export const EncryptData = async <T>(data: T, keys: string[], secret: string): Promise<T> => {
     if(data && typeof data === 'string') {
-        return encryptStepValue(data, secret) as T;
+        return EncryptStepValue(data, secret) as T;
     }
     if (data && Array.isArray(data)) {
         let result: T[] = [];
         let i = 0;
         while(data[i]){
             const attr = data[i];
-            const payload = await encryptData(attr, keys, secret) as T;
+            const payload = await EncryptData(attr, keys, secret) as T;
             result.push(payload);
             i++;
         }
@@ -29,7 +29,7 @@ export const encryptData = async <T>(data: T, keys: string[], secret: string): P
             if (!(keysToEncrypt.includes(currentObjectKey))) {
                 const target = data[currentObjectKey];
                 if(typeof target === 'object'){
-                    const subObj = await encryptData(target, keys, secret);
+                    const subObj = await EncryptData(target, keys, secret);
                     result = Object.assign({}, result, { [currentObjectKey]: subObj });
                     objectKeysIndex++;
                     continue;
@@ -44,7 +44,7 @@ export const encryptData = async <T>(data: T, keys: string[], secret: string): P
                 const target = data[currentObjectKey];
                 if(currentRemoveKey === currentObjectKey){
                     const value = typeof target === 'string' ? target : JSON.stringify(target);
-                    const encrypted = await encryptStepValue(value, secret);
+                    const encrypted = await EncryptStepValue(value, secret);
                     result = Object.assign({}, result, { [currentObjectKey]: encrypted });
                 }
                 keysToEncryptIndex++;
@@ -56,4 +56,4 @@ export const encryptData = async <T>(data: T, keys: string[], secret: string): P
     return data;
 }
 
-export default encryptData;
+export default EncryptData;

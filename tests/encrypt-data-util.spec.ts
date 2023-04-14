@@ -1,10 +1,10 @@
-import encryptData from "../lib/utils/encrypt-data.util";
-import decryptData from '../lib/utils/decrypt-data.util';
+import EncryptData from "../lib/utils/encrypt-data.util";
+import DecryptData from '../lib/utils/decrypt-data.util';
 
 describe('encrypt-data', () => {
     it('should encrypt data', async () => {
         const data = { password: '1234', detail: { profile: { age: 21, name: 'Jane', password: 'abc' } } }
-        const result = await encryptData(data, ['password'], 'my-secret');
+        const result = await EncryptData(data, ['password'], 'my-secret');
         expect(result).toEqual({ "password": "04e53a90", "detail": { "profile": { "age": 21, "name": "Jane", "password": "54b56a" } } });
     });
 
@@ -23,7 +23,7 @@ describe('encrypt-data', () => {
                 ]
             }
         };
-        const result = await encryptData(data, ['password'], 'my-secret');
+        const result = await EncryptData(data, ['password'], 'my-secret');
         expect(result).toEqual({
             "password": "04e53a90",
             "detail": {
@@ -71,7 +71,7 @@ describe('encrypt-data', () => {
             }
         };
 
-        const decrypted = await decryptData(data, ['password'], 'my-secret');
+        const decrypted = await DecryptData(data, ['password'], 'my-secret');
         expect(decrypted).toEqual(result);
     });
 });
