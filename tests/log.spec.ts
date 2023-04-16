@@ -1,5 +1,5 @@
 import { LProps } from "../lib/types";
-import { Log, Step } from "../lib/core";
+import { GlobalLog, Log, Step } from "../lib/core";
 import { join } from "node:path";
 import { readdirSync } from "node:fs";
 
@@ -227,19 +227,40 @@ describe('log', () => {
 
         expect(log.steps).toHaveLength(2);
 
-        log.clearSteps();
+        log.clear();
         expect(log.steps).toHaveLength(0);
     });
 
-    
+    it('should clear and generate a new id to global log', () => {
+        const log = GlobalLog.singleton();
+        const originalId = log.uid;
+        log.clear();
+        expect(log.uid).not.toBe(originalId);
+    })
+
     it('should clear all steps from copy and keep original log immutable', () => {
         const step = Step.info({ message: 'message', name: 'info' });
         const log = Log.init({ name: 'log', stateType: 'stateless', steps:[ step, step ] });
 
         expect(log.steps).toHaveLength(2);
 
-        const copy = log.clearSteps();
+        const copy = log.clear();
         expect(log.steps).toHaveLength(2);
         expect(copy.steps).toHaveLength(0);
+    });
+
+    it('should change log state (id) with success', () => {
+        const log = Log.init({ name: 'log' });
+        const newId = 'new-uuid-set';
+        log.setId(newId);
+        expect(log.uid).toBe(newId);
+    });
+
+    it('should do not change id if stateless', () => {
+        const log = Log.init({ name: 'log', stateType: 'stateless', uid: 'original-id' });
+        const newId = 'new-uuid-set';
+        const newLog = log.setId(newId);
+        expect(newLog.uid).toBe(newId);
+        expect(log.uid).toBe('original-id');
     });
 });

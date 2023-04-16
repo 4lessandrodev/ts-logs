@@ -72,31 +72,49 @@ $ yarn add ts-logs
 ---
 ## Documentation
 
-sdk in beta version.
-
 Example
 
 ```ts
 import { Log, Step } from 'ts-logs';
 
 // create a global log
-const global = Log.init({ name: 'First Log', origin: 'https://global.com' });
+const log = Log.init({ name: 'First Log', origin: 'https://global.com' });
 
 // create steps
 const info = Step.info({ message: 'Fetching api...', name: 'Request Login', method: 'POST' });
 const error = Step.error({ message: 'Timeout', name: 'Login', stack: 'Error stack' });
 
 // add steps to global log
-global.addSteps([ info, error ]);
+log.addSteps([ info, error ]);
 
 // print or save logs
-global.print();
-global.writeLocal();
-global.publish(config);
+log.print();
+await log.writeLocal();
+await log.publish(config);
 
 ```
 
 ---
+
+### Use a Singleton Instance Globally
+
+You can use a global log to publish once on finish all process
+
+```ts
+
+import { GlobalLog, Config } from 'ts-logs';
+
+const global = GlobalLog.singleton();
+
+// ...
+
+global.addStep(step);
+
+// ...
+
+await global.publish(Config.Mongo({ url: 'mongodb://localhost:27017' }));
+
+```
 
 ### Create step from catch block
 
@@ -114,7 +132,7 @@ class DoSomething {
         } catch(error) {
 
             // create step instance from error
-            return Step.catch(error);
+            global.addStep(Step.catch(error));
         }
     }
 }
@@ -139,6 +157,7 @@ Example generated log. The log is a json object with array of step object
   "steps": [
     {
       "name": "Find Item",
+      "category": "none",
       "tags": ["item", "product", "card"],
       "url": "https://my-app.com/products/1",
       "stack": "none",

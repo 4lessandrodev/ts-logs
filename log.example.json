@@ -4,22 +4,20 @@
     "ip": "127.0.0.1",
     "origin": "https://my-domain.com.br",
     "createdAt": "2022-01-21T07:01:5300Z",
+    "stateType": "stateful",
     "steps": [
         {
             "uid": "e0de0bcd-d25c-4d26-9ee6-80bc59317abb",
             "name": "login",
-            "tags": [
-                "request",
-                "post",
-                "login"
-            ],
+            "tags": [ "request", "post", "login" ],
             "url": "https://app2.domain.com.br/user",
             "stack": "invalid data app.js:201:54",
-            "data": "{ email: 'ac@gmail.com', password: '*******' }",
+            "data": { "email": "ac@gmail.com", "password": "*******" },
             "statusCode": 401,
             "message": "invalid password",
             "type": "error | info | warn | debug | fatal | trace",
-            "createdAt": "2022-01-21T07:01:5300Z"
+            "createdAt": "2022-01-21T07:01:5300Z",
+            "category": "none"
         }
     ]
 }

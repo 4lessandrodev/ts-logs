@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { HttpConfig, Locale, LocalOpt, Logs, LProps, S3Config, Steps, LogStateType } from "../types";
+import { HttpConfig, Locale, LocalOpt, Logs, LProps, S3Config, Steps, LogStateType, MongoConfig } from "../types";
 import WriteDefaultLocal from "../utils/write-default-local.util";
 import BuildLogMessage from "../utils/build-log-message.util";
 import { DeleteExpiredFile } from "../utils/delete-expired-file.util";
@@ -8,6 +8,7 @@ import S3Provider from "./s3-provider";
 import { SavePayload } from "../types";
 import HttProvider from "./http-provider";
 import { GetLogsDirname } from "../utils/get-logs-dirname.util";
+import MongoProvider from "./mongo-provider";
 
 /**
  * @description Global log to manage steps and behavior.
@@ -87,6 +88,24 @@ export class Log implements Logs {
             return this;
         }
         return new Log({ ...this, ip });
+    }
+
+    /**
+     * @description Set a new uid to identify the log instance
+     * @param uid as unique identifier id
+     * @returns instance of Log with uid set
+     * @summary Check `stateType` option.
+     * It defines the behavior of the state. Whether to change state or return a new instance without changing original state.
+     * If `stateType` is defined as `stateful` the original state of log will be changed. If `stateType` is defined as `stateless`
+     * a new instance of Log will be created and returned without change the original state.
+     * @default `stateType` is `stateful`
+     */
+    setId(uid: string): Readonly<Logs> | Logs {
+        if (this.stateType === 'stateful') {
+            this.uid = uid;
+            return this;
+        }
+        return new Log({ ...this, uid });
     }
 
     /**
@@ -229,13 +248,14 @@ export class Log implements Logs {
      * > 200
      * 
      */
-    async publish(config: S3Config | HttpConfig): Promise<SavePayload | null> {
+    async publish(config: S3Config | HttpConfig | MongoConfig): Promise<SavePayload | null> {
         try {
             if ((config as S3Config)?.bucketName && (config as S3Config)?.region && (config as S3Config)?.credentials) {
                 return S3Provider.save(config as S3Config, this);
-            }
-            if ((config as HttpConfig)?.url) {
+            } else if ((config as HttpConfig)?.url && (config as MongoConfig).type !== 'mongodb') {
                 return HttProvider.save(config as HttpConfig, this);
+            } else if ((config as MongoConfig).type === 'mongodb' && (config as MongoConfig).url){
+                return MongoProvider.save(config as MongoConfig, this);
             }
             return null;
         } catch (error) {
@@ -263,17 +283,19 @@ export class Log implements Logs {
     }
 
     /**
-     * @description Delete all steps from log instance.
+     * @description Delete all steps from log instance and generate a new uid.
      * @summary If statetype is defined as `stateful` the original state will be replaced.
      * @summary If statetype is defined as `stateless` a new instance will be created and the original state will not be changed.
      * @returns instance of Log
      */
-    clearSteps(): Logs | Readonly<Logs> {
+    clear(): Logs | Readonly<Logs> {
+        const uid = randomUUID();
         if (this.stateType === 'stateful') {
             this.steps = [];
+            this.uid = uid;
             return this;
         }
-        return new Log({ ...this, steps: [] });
+        return new Log({ ...this, steps: [], uid });
     }
 }
 

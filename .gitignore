@@ -20,3 +20,4 @@ types.js.map
 logs/
 **/*.log
 .env
+data/
