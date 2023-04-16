@@ -6,3 +6,4 @@ export * from './s3-provider';
 export * from './http-provider';
 export * from './providers';
 export * from './auto-publish-log.builder';
+export * from './global-log';
