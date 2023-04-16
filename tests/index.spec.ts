@@ -27,7 +27,7 @@ describe('log', () => {
         const message = "Internal Error";
 
         // full props for debug step
-        const debugProps: Omit<SProps, 'type' | 'createdAt' | 'additionalInfo'> = { data, message, name: 'Signup', stack: GetStack(), statusCode: 500, tags, uid, url, method: 'GET' };
+        const debugProps: Omit<SProps, 'type' | 'createdAt' | 'additionalInfo' | 'category'> = { data, message, name: 'Signup', stack: GetStack(), statusCode: 500, tags, uid, url, method: 'GET' };
 
         // create a global log
         const global = Log.init({ name: 'First Log', uid, origin });
