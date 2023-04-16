@@ -261,6 +261,20 @@ export class Log implements Logs {
             }
         });
     }
+
+    /**
+     * @description Delete all steps from log instance.
+     * @summary If statetype is defined as `stateful` the original state will be replaced.
+     * @summary If statetype is defined as `stateless` a new instance will be created and the original state will not be changed.
+     * @returns instance of Log
+     */
+    clearSteps(): Logs | Readonly<Logs> {
+        if (this.stateType === 'stateful') {
+            this.steps = [];
+            return this;
+        }
+        return new Log({ ...this, steps: [] });
+    }
 }
 
 export default Log;
