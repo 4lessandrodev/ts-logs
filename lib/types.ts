@@ -1,5 +1,6 @@
 import { AxiosError, RawAxiosRequestHeaders, Axios } from "axios";
 import { NextFunction, Request, Response } from "express";
+import { MongoClientOptions } from "mongodb";
 
 export type Type = "error" | "info" | "warn" | "debug" | "fatal" | "stack";
 export type Locale = Intl.LocalesArgument;
@@ -135,6 +136,7 @@ export interface Steps extends SProps {
 }
 
 export interface Logs extends LProps {
+    setId(uid: string):Readonly<Logs> | Logs;
     setName(name: string): Readonly<Logs> | Logs;
     setIp(ip: string): Readonly<Logs> | Logs;
     setOrigin(url: string): Readonly<Logs> | Logs;
@@ -147,7 +149,7 @@ export interface Logs extends LProps {
     hasSteps(): boolean;
     clone(stateType: LogStateType): Readonly<Logs> | Logs;
     rmLogs(days: number, dirname?: string): Promise<void>;
-    clearSteps(): Readonly<Logs> | Logs;
+    clear(): Readonly<Logs> | Logs;
 }
 
 export type BuildStepMessages = (step: Steps, locales?: Locale, options?: LocalOpt) => string;
@@ -202,6 +204,12 @@ export interface HttpConfig {
 export interface S3Credentials {
     accessKeyId: string;
     secretAccessKey: string;
+}
+
+export interface MongoConfig {
+    url: string;
+    type?: 'mongodb';
+    options?: MongoClientOptions;
 }
 
 export type AWSRegions = 'us-east-2' |

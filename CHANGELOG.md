@@ -6,6 +6,65 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.1.0] - 2023-04-13
+
+### Feat
+
+- feat: added support to mongodb provider
+- added global log as singleton
+- added category atribute to step
+- added mask option to stackLog middleware
+
+#### Now Its possible create an unique instance of log globally using
+
+```ts
+
+import { GlobalLog } from 'ts-logs';
+
+const global = GlobalLog.singleton();
+
+// ...
+// remember clear steps after publish or write local
+global.clear();
+
+```
+
+#### Now Its possible publish log to mongodb
+
+The operation is updateOne with `upsert=true` based on `log.uid` and `log.name`.
+If already exists some log them update else insert
+
+```ts
+
+await log.publish(Config.Mongo({ url: 'mongodb://localhost:27017' }));
+
+```
+
+#### Now you can categorize the step
+
+Based on your business rule Its possible define a category to a step
+
+```ts
+
+Step.info({ name: 'some', message: 'info', category: 'financial' });
+
+```
+
+#### Now Its possible add mask to stackLog
+
+The middleware stackLog accept mask config
+
+```ts
+
+stackLog({
+    writeLocal: true,
+    mask: [ { key: 'password' } ]
+})
+
+```
+
+---
+
 ### [0.0.18] - 2023-04-13
 
 ### Feat

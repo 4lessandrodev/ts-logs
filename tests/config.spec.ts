@@ -24,4 +24,12 @@ describe('config', () => {
 
         expect(Config.S3(config)).toEqual(config);
     });
+
+    it('should create mongo config', () => {
+        const config = Config.Mongo({ url: 'mongodb://localhost:27017' });
+        expect(config).toEqual({
+            "type": "mongodb",
+            "url": "mongodb://localhost:27017",
+        });
+    });
 });
