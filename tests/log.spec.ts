@@ -215,4 +215,31 @@ describe('log', () => {
         expect(filesB).toHaveLength(0);
         expect(filesC).toHaveLength(0);
     });
+
+    it('should clear all steps from original log if stateful', () => {
+        const log = Log.init({ name: 'log' });
+
+        expect(log.stateType).toBe('stateful');
+        expect(log.steps).toHaveLength(0);
+
+        const step = Step.info({ message: 'message', name: 'info' });
+        log.addSteps([ step, step ]);
+
+        expect(log.steps).toHaveLength(2);
+
+        log.clearSteps();
+        expect(log.steps).toHaveLength(0);
+    });
+
+    
+    it('should clear all steps from copy and keep original log immutable', () => {
+        const step = Step.info({ message: 'message', name: 'info' });
+        const log = Log.init({ name: 'log', stateType: 'stateless', steps:[ step, step ] });
+
+        expect(log.steps).toHaveLength(2);
+
+        const copy = log.clearSteps();
+        expect(log.steps).toHaveLength(2);
+        expect(copy.steps).toHaveLength(0);
+    });
 });
