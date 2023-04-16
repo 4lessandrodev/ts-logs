@@ -91,6 +91,7 @@ export interface SProps {
     readonly type: Type;
     readonly createdAt: Date;
     readonly additionalInfo: string | null;
+    readonly category: string;
 }
 
 export interface LProps {
@@ -125,6 +126,7 @@ export interface Steps extends SProps {
     encrypt(options: EncryptStepOption): Promise<Readonly<Steps>>;
     decrypt(options: EncryptStepOption): Promise<Readonly<Steps>>;
     mask(attrs: IMask[]): Readonly<Steps>;
+    setCategory(category: string): Readonly<Steps>;
 }
 
 export interface Logs extends LProps {
@@ -140,6 +142,7 @@ export interface Logs extends LProps {
     hasSteps(): boolean;
     clone(stateType: LogStateType): Readonly<Logs> | Logs;
     rmLogs(days: number, dirname?: string): Promise<void>;
+    clearSteps(): Readonly<Logs> | Logs;
 }
 
 export type BuildStepMessages = (step: Steps, locales?: Locale, options?: LocalOpt) => string;
