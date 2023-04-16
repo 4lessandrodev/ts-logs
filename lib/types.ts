@@ -11,7 +11,7 @@ export type Http = Axios;
 export type Requests = Request;
 export type Responses = Response;
 export type NextFunctions = NextFunction;
-export type PublishConfig = S3Config | HttpConfig;;
+export type PublishConfig = S3Config | HttpConfig | MongoConfig;
 
 /**
  * @description Defines the behavior of the state. Whether to change state or return a new instance without changing original state.

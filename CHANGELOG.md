@@ -6,7 +6,15 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### [0.1.0] - 2023-04-13
+### [0.1.1] - 2023-04-17
+
+### Fix
+
+- fix: added mongo config type to autoPublish middleware
+
+---
+
+### [0.1.0] - 2023-04-16
 
 ### Feat
 
