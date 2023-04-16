@@ -27,8 +27,11 @@ export const stackLog = (options: MiddlewareOptions): StackMiddleware => {
         const { message, method, stack, statusCode, tags, ...param } = GetStepDataFromRequest(err, req);
 
         const body = DeleteObjectKey<{}>(param.body, keysToRemoveFromBody);
+
+        const maybeMasked = Array.isArray(opt?.mask) ? Step.create({ data: body }).mask(opt.mask).data : body;
+
         const encrypted = await EncryptString({ data: param.data, encryptOption, encrypt });
-        const data = encrypt ? encrypted : JSON.stringify(body);
+        const data = encrypt ? encrypted : maybeMasked;
 
         const stepId = param.uid;
         const props = { message, stack, statusCode, data, url: origin, method, name, uid: stepId } satisfies Partial<SProps>;

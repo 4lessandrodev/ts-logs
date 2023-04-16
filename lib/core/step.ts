@@ -21,6 +21,7 @@ export class Step implements Steps {
     readonly method!: Method;
     readonly createdAt!: Date;
     readonly additionalInfo!: string | null;
+    readonly category: string;
 
     private constructor (props: Partial<SProps>) {
         this.name = props.name ?? 'default';
@@ -36,6 +37,7 @@ export class Step implements Steps {
         const uid = props.uid ?? Step.extractId(props.data);
         this.uid = uid;
         this.additionalInfo = props.additionalInfo ?? null;
+        this.category = props.category ?? 'none';
         Object.freeze(this);
     }
 
@@ -93,7 +95,7 @@ export class Step implements Steps {
      * @param props as Object with SProps params
      * @returns an instance of Step
      */
-    public static debug(props: Omit<SProps, 'type' | 'createdAt' | 'additionalInfo'>): Readonly<Step> {
+    public static debug(props: Omit<SProps, 'type' | 'createdAt' | 'additionalInfo' | 'category'>): Readonly<Step> {
         return new Step({ ...props, type: 'debug' });
     }
 
@@ -102,7 +104,7 @@ export class Step implements Steps {
      * @param props as Object with SProps params
      * @returns an instance of Step
      */
-    public static fatal(props: Omit<SProps, 'type' | 'createdAt' | 'additionalInfo'>): Readonly<Step> {
+    public static fatal(props: Omit<SProps, 'type' | 'createdAt' | 'additionalInfo' | 'category'>): Readonly<Step> {
         return new Step({ ...props, type: 'fatal' });
     }
 
@@ -300,6 +302,15 @@ export class Step implements Steps {
         const builder = Messages[this.type];
         if (!builder) return Messages['default'](this, locales, options);
         return builder(this, locales, options);
+    }
+
+    /**
+     * @description Create a new instance of Step with provided category.
+     * @param category params as string.
+     * @returns new instance of Step with provided category.
+     */
+    setCategory(category: string): Readonly<Steps> {
+        return new Step({ ...this, category });
     }
 }
 

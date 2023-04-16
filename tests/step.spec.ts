@@ -15,7 +15,8 @@ describe('step', () => {
             "method",
             "createdAt",
             "uid",
-            "additionalInfo"
+            "additionalInfo",
+            "category"
         ];
         const step = Step.create({});
         expect.assertions(keys.length + 1);
@@ -107,6 +108,7 @@ describe('step', () => {
 
         expect(result).toEqual({
             "additionalInfo": null,
+            "category": "catch",
             "createdAt": expect.any(Date),
             "data": {
                 "requestData": {
@@ -131,7 +133,7 @@ describe('step', () => {
             ],
             "type": "fatal",
             "uid": "508791f9-9063-463d-a54b-cb6a777870af",
-            "url": "https://postback-4dev.onrender.com/inv/not-found"
+            "url": "https://postback-4dev.onrender.com/inv/not-found",
         });
 
         expect(result).toMatchSnapshot({ createdAt: expect.any(Date) });
@@ -153,6 +155,7 @@ describe('step', () => {
 
         expect(result).toEqual({
             "additionalInfo": null,
+            "category": "catch",
             "createdAt": expect.any(Date),
             "data": {
                 "requestData": {
@@ -498,5 +501,13 @@ describe('step', () => {
                 },
             }
         );
+    });
+
+    it('should set a new category for step and keep the original state immutable', () => {
+        const step = Step.info({ name: 'sample', message: 'message' });
+        expect(step.category).toBe('none');
+
+        expect(step.setCategory('info').category).toBe('info');
+        expect(step.category).toBe('none');
     });
 });

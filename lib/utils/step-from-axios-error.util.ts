@@ -39,7 +39,8 @@ export const StepPropsFromAxiosError = (error: CatchError, rmKeys: string[] = []
         type,
         url,
         createdAt,
-        additionalInfo: null
+        additionalInfo: null,
+        category: 'catch'
     } satisfies SProps;
 
     return props;

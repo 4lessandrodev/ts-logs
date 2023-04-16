@@ -25,3 +25,4 @@ export * from './utils/get-logs-dirname.util';
 export * from './utils/mask-sub-key.util';
 export * from './utils/mask-attribute.util';
 export * from './utils/mask-step-data.util';
+export * from './core/global-log';

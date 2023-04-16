@@ -90,4 +90,25 @@ describe('stack-log', () => {
         expect(call).toHaveBeenCalled();
     });
     
+    it('should mask data with success', async () => {
+        const log = Log.init({ name: 'test' });
+        const print = jest.spyOn(log, 'print');
+        jest.spyOn(log, 'print').mockImplementationOnce(() => jest.fn() );
+
+        const err = new Error('Info Test');
+        req.log = log;
+        req.body = { "password": "pass123@", "name": "Jane" };
+
+        await stackLog({
+            print: true, 
+            publish: false, 
+            sendAsResponse: false, 
+            writeLocal: false,
+            mask: [{ key: 'password', nCharDisplay: 2 }]
+        })(err, req, res, next);
+
+        expect(log.steps).toHaveLength(1);
+        expect(print).toHaveBeenCalled();
+        expect(log.steps[0].data).toEqual({ "name": "Jane", "password": "******3@" });
+    });
 });
