@@ -71,6 +71,11 @@ export interface MiddlewareOptions {
      * @description Write a local file on root folder "log" with log data as .log extension
      */
     writeLocal?: boolean;
+
+    /**
+     * @description Add mask to hidden attribute from step in log.
+     */
+    mask?: IMask[];
 }
 
 export interface IMask {
