@@ -114,6 +114,9 @@ global.addStep(step);
 
 await global.publish(Config.Mongo({ url: 'mongodb://localhost:27017' }));
 
+// remember when using global log as singleton clear steps
+global.clear();
+
 ```
 
 ### Create step from catch block
