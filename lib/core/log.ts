@@ -250,14 +250,17 @@ export class Log implements Logs {
      */
     async publish(config: S3Config | HttpConfig | MongoConfig): Promise<SavePayload | null> {
         try {
+            let result: SavePayload | null = null;
+            if (!!config?.ignoreEmpty && !(this.hasSteps())) { return result; }
             if ((config as S3Config)?.bucketName && (config as S3Config)?.region && (config as S3Config)?.credentials) {
-                return S3Provider.save(config as S3Config, this);
+                result = await S3Provider.save(config as S3Config, this);
             } else if ((config as HttpConfig)?.url && (config as MongoConfig).type !== 'mongodb') {
-                return HttProvider.save(config as HttpConfig, this);
-            } else if ((config as MongoConfig).type === 'mongodb' && (config as MongoConfig).url){
-                return MongoProvider.save(config as MongoConfig, this);
+                result = await HttProvider.save(config as HttpConfig, this);
+            } else if ((config as MongoConfig).type === 'mongodb' && (config as MongoConfig).url) {
+                result = await MongoProvider.save(config as MongoConfig, this);
             }
-            return null;
+            if (!!(config?.clearAfterPublish)) this.clear();
+            return result;
         } catch (error) {
             TerminalLog(`error on publish...${(error as Error).message}\n`);
             return null;
@@ -284,8 +287,8 @@ export class Log implements Logs {
 
     /**
      * @description Delete all steps from log instance and generate a new uid.
-     * @summary If statetype is defined as `stateful` the original state will be replaced.
-     * @summary If statetype is defined as `stateless` a new instance will be created and the original state will not be changed.
+     * @summary If stateType is defined as `stateful` the original state will be replaced.
+     * @summary If stateType is defined as `stateless` a new instance will be created and the original state will not be changed.
      * @returns instance of Log
      */
     clear(): Logs | Readonly<Logs> {
