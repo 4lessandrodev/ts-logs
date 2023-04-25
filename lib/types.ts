@@ -196,7 +196,11 @@ export abstract class Provider<T> {
     abstract save(config: T, log: Readonly<Logs>): Promise<SavePayload>;
 }
 
-export interface HttpConfig {
+interface BaseConfig {
+    ignoreEmpty?: boolean;
+    clearAfterPublish?: boolean;
+}
+export interface HttpConfig extends BaseConfig {
     url: string;
     headers?: RawAxiosRequestHeaders;
 };
@@ -206,9 +210,10 @@ export interface S3Credentials {
     secretAccessKey: string;
 }
 
-export interface MongoConfig {
+export interface MongoConfig extends BaseConfig {
     url: string;
     type?: 'mongodb';
+    expireAfterDays?: number;
     options?: MongoClientOptions;
 }
 
@@ -235,7 +240,7 @@ export type AWSRegions = 'us-east-2' |
     'me-south-1' |
     'sa-east-1';
 
-export interface S3Config {
+export interface S3Config extends BaseConfig {
     region: AWSRegions;
     credentials: S3Credentials;
     bucketName: string;

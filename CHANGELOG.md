@@ -6,6 +6,29 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.1.2] - 2023-04-24
+
+### Feat
+
+- feat: added ttl option to expire log
+- feat: added ignore empty step on publish
+- feat: added clear step after publish
+
+```ts
+
+log.publish(
+    Config.Mongo({
+        url: 'mongodb://mongo:mongo@localhost:27017',
+        clearAfterPublish: true,
+        expireAfterDays: 7, // default 30 days
+        ignoreEmpty: true
+    })
+);
+
+```
+
+---
+
 ### [0.1.1] - 2023-04-17
 
 ### Fix

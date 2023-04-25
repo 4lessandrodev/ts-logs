@@ -80,6 +80,51 @@ describe('integration test', () => {
             expect(result?.url).toBe(log.uid);
         });
 
+        it('should save log in local database and clear all steps after publish', async () => {
+            jest.setTimeout(900000);
+            const log = GlobalLog.singleton({ name: 'test-log' });
+            log.addStep(Step.create({ name: 'clear-all-after-publish' }));
+
+            const result = await log.publish(Config.Mongo({
+                url: 'mongodb://mongo:mongo@localhost:27017',
+                clearAfterPublish: true
+            }));
+            console.log(result);
+
+            expect(result?.statusCode).toBe(200);
+            expect(result?.url).toBe(log.uid);
+            expect(log.hasSteps()).toBeFalsy();
+        });
+
+        it('should ignore if empty', async () => {
+            jest.setTimeout(900000);
+            const log = GlobalLog.singleton({ name: 'test-log' });
+            log.clear();
+
+            const result = await log.publish(Config.Mongo({
+                url: 'mongodb://mongo:mongo@localhost:27017',
+                ignoreEmpty: true
+            }));
+            console.log(result);
+
+            expect(result).toBeNull();
+        });
+
+        it('should publish and expires after 1 day', async () => {
+            jest.setTimeout(900000);
+            const log = GlobalLog.singleton({ name: 'test-log' });
+            log.addStep(Step.create({ name: 'expires-in-one-day' }));
+
+            const result = await log.publish(Config.Mongo({
+                url: 'mongodb://mongo:mongo@localhost:27017',
+                expireAfterDays: 1
+            }));
+            console.log(result);
+
+            expect(result?.statusCode).toBe(200);
+            expect(result?.url).toBe(log.uid);
+        });
+
         it('should update log and add step', async () => {
             jest.setTimeout(900000);
             const log = GlobalLog.singleton({ name: 'test-log' });

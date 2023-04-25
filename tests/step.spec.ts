@@ -510,4 +510,32 @@ describe('step', () => {
         expect(step.setCategory('info').category).toBe('info');
         expect(step.category).toBe('none');
     });
+
+    it('should mask catch', () => {
+
+        const error = {
+            stack: 'internal server error',
+            message: 'something went wrong',
+            config: { data: { password: '1234@abc', name: 'Jane' } },
+            response: { data: { token: 'lorem-ipsum-dol', card: '3247293472934' } }
+        };
+
+        const step = Step.catch(error as unknown as Error).mask([
+            { key: 'password' },
+            { key: 'card', nCharDisplay: 2 }
+        ]);
+
+        expect(step.data).toEqual(
+            {
+                "requestData": {
+                    "name": "Jane",
+                    "password": "********",
+                },
+                "responseData": {
+                    "card": "***********34",
+                    "token": "lorem-ipsum-dol",
+                },
+            }
+        );
+    });
 });

@@ -1,6 +1,7 @@
 import CanAutoPublish from "../utils/can-auto-publish.util";
 import { AutoPublishOptions, NextFunctions, PublishConfig } from "../types";
 import { PublisherMiddleware, Requests, Responses } from "../types";
+import GlobalLog from "./global-log";
 
 /**
  * @description Add middleware to listen response and publish log when status match if options.
@@ -15,7 +16,8 @@ export const autoPublishLog = (config: PublishConfig, options?: AutoPublishOptio
         res.on('finish', async (): Promise<void> => { 
             const canPublish = CanAutoPublish(req, res, options);
             if(!canPublish) return next();
-            await req?.log?.publish(config);
+            const log = req?.log || GlobalLog.singleton();
+            await log.publish(config);
             return next();
         });
         return next();
