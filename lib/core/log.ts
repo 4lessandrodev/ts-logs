@@ -36,7 +36,7 @@ export class Log implements Logs {
         this.name = props.name ?? 'default';
         this.ip = props.ip ?? 'none';
         this.origin = props.origin ?? 'none';
-        this.createdAt = new Date();
+        this.createdAt = props?.createdAt ?? new Date();
         this.stateType = stateType ?? 'stateful';
         const statefulArr = props.steps ? [...props.steps] : [];
         const statelessArr = Object.freeze(props.steps ?? []);
@@ -251,8 +251,9 @@ export class Log implements Logs {
     async publish(config: S3Config | HttpConfig | MongoConfig): Promise<SavePayload | null> {
         try {
             let result: SavePayload | null = null;
-            if (!!config?.ignoreEmpty && !(this.hasSteps())) { return result; }
-            if ((config as S3Config)?.bucketName && (config as S3Config)?.region && (config as S3Config)?.credentials) {
+            if (!!config?.ignoreEmpty && !(this.hasSteps())) { 
+                return result; 
+            } else if ((config as S3Config)?.bucketName && (config as S3Config)?.region && (config as S3Config)?.credentials) {
                 result = await S3Provider.save(config as S3Config, this);
             } else if ((config as HttpConfig)?.url && (config as MongoConfig).type !== 'mongodb') {
                 result = await HttProvider.save(config as HttpConfig, this);
@@ -294,11 +295,13 @@ export class Log implements Logs {
     clear(): Logs | Readonly<Logs> {
         const uid = randomUUID();
         if (this.stateType === 'stateful') {
+            this.createdAt = new Date();
             this.steps = [];
             this.uid = uid;
             return this;
         }
-        return new Log({ ...this, steps: [], uid });
+        const createdAt = new Date();
+        return new Log({ ...this, steps: [], uid, createdAt });
     }
 }
 
