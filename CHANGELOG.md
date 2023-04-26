@@ -6,6 +6,14 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.1.3] - 2023-04-26
+
+### Fix
+
+- fix: ensure reset `createdAt` attribute for a new date on clear `GlobalLog`
+
+---
+
 ### [0.1.2] - 2023-04-24
 
 ### Feat

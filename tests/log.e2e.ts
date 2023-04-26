@@ -112,11 +112,11 @@ describe('integration test', () => {
 
         it('should publish and expires after 1 day', async () => {
             jest.setTimeout(900000);
-            const log = GlobalLog.singleton({ name: 'test-log' });
+            const log = GlobalLog.singleton({ name: 'one-day' });
             log.addStep(Step.create({ name: 'expires-in-one-day' }));
 
             const result = await log.publish(Config.Mongo({
-                url: 'mongodb://mongo:mongo@localhost:27017',
+                url: 'mongodb://mongo:mongo@localhost:27017/?authSource=admin',
                 expireAfterDays: 1
             }));
             console.log(result);

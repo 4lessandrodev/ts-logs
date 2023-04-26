@@ -95,6 +95,7 @@ describe('log', () => {
         const step = Step.info({ name: 'Info', message: 'Teste 1' });
         const log = Log.init({ name: 'Teste', steps: [step], stateType: 'stateless' });
         expect(log.steps).toHaveLength(1);
+        expect(log.hasSteps()).toBeTruthy();
         expect(Object.isFrozen(log.steps)).toBeTruthy();
 
         const newLog = log.removeStep(step.uid);
@@ -243,10 +244,12 @@ describe('log', () => {
         const log = Log.init({ name: 'log', stateType: 'stateless', steps:[ step, step ] });
 
         expect(log.steps).toHaveLength(2);
+        expect(log.hasSteps()).toBeTruthy();
 
         const copy = log.clear();
         expect(log.steps).toHaveLength(2);
         expect(copy.steps).toHaveLength(0);
+        expect(copy.hasSteps()).toBeFalsy();
     });
 
     it('should change log state (id) with success', () => {
@@ -262,5 +265,16 @@ describe('log', () => {
         const newLog = log.setId(newId);
         expect(newLog.uid).toBe(newId);
         expect(log.uid).toBe('original-id');
+    });
+
+    it('should create a new date and uid after clear', () => {
+        const log = GlobalLog.singleton();
+        const date1 = log.createdAt.getTime();
+        const uid1 = log.uid;
+        // after clear
+        const date2 = log.clear().createdAt.getTime();
+        const uid2 = log.uid;
+        expect(date1).not.toBe(date2);
+        expect(uid1).not.toBe(uid2);
     });
 });
