@@ -8,21 +8,37 @@ const MongoProvider: Provider<MongoConfig> = ({
         const expireAfterSeconds = (config?.expireAfterDays ?? 30) * ONE_DAY;
         const client = new mongo.MongoClient(config.url, config.options);
         const collectionName = GetFolderName(log.name);
+        const indexes: mongo.IndexDescription[] = [
+            { key: { "createdAt": 1 }, expireAfterSeconds },
+            { key: { "uid": 1, 'name': 1 } }
+        ];
+
         await client.connect();
 
-        await client.db('logs')
-            .collection<LProps>(collectionName)
-            .createIndex({ "createdAt": 1 }, { expireAfterSeconds });
+        const collection = client.db('logs')
+            .collection<LProps>(collectionName);
 
-        await client.db('logs')
-            .collection<LProps>(collectionName)
-            .createIndex({ "uid": 1, 'name': 1 });
+        const filter: mongo.Filter<LProps> = { uid: log.uid, name: log.name };
+        const update: mongo.UpdateFilter<LProps> = {
+            $set: {
+                createdAt: log.createdAt,
+                ip: log.ip, name: log.name,
+                origin: log.origin,
+                stateType: log.stateType,
+                uid: log.uid
+            },
+            $push: { steps: { $each: [...log.steps] } }
+        };
 
-        await client.db('logs')
-            .collection<LProps>(collectionName)
-            .updateOne({ uid: log.uid, name: log.name }, { $set: { ...log } }, { upsert: true });
+        try { await collection.createIndexes(indexes) } catch (error) { };
 
-        await client.close();
+        try {
+            await collection.updateOne(filter, update, { upsert: true });
+        } catch (error) {
+            return { statusCode: 400, url: (error as Error).message };
+        } finally {
+            await client.close();
+        }
         return { statusCode: 200, url: log.uid };
     }
 });
