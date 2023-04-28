@@ -6,6 +6,15 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+### [0.1.4] - 2023-04-27
+
+### Fix
+
+- fix: ensure `publish` method create all index on unique command.
+- fix: ensure on `publish`do not replace steps on existing log,
+
+---
+
 ### [0.1.3] - 2023-04-26
 
 ### Fix
