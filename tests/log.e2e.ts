@@ -82,18 +82,20 @@ describe('integration test', () => {
 
         it('should save log in local database and clear all steps after publish', async () => {
             jest.setTimeout(900000);
-            const log = GlobalLog.singleton({ name: 'test-log' });
-            log.addStep(Step.create({ name: 'clear-all-after-publish' }));
+            const myLog = GlobalLog.singleton({ name: 'test-log' });
+            myLog.addStep(Step.create({ name: 'clear-all-after-publish' }));
 
-            const result = await log.publish(Config.Mongo({
+            const uid = myLog.uid;
+            const result = await myLog.publish(Config.Mongo({
                 url: 'mongodb://mongo:mongo@localhost:27017',
                 clearAfterPublish: true
             }));
             console.log(result);
 
             expect(result?.statusCode).toBe(200);
-            expect(result?.url).toBe(log.uid);
-            expect(log.hasSteps()).toBeFalsy();
+            expect(result?.url).toBe(uid);
+            expect(myLog.hasSteps()).toBeFalsy();
+            expect(myLog.hasSteps()).toBeFalsy();
         });
 
         it('should ignore if empty', async () => {
@@ -121,8 +123,8 @@ describe('integration test', () => {
             }));
             console.log(result);
 
-            expect(result?.statusCode).toBe(200);
             expect(result?.url).toBe(log.uid);
+            expect(result?.statusCode).toBe(200);
         });
 
         it('should update log and add step', async () => {
