@@ -6,7 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ---
 
-### [0.2.0-beta] - 2024-10-22
+## Released
+
+### [0.2.0] - 2024-10-22
 
 ### Feat
 
@@ -14,8 +16,6 @@ All notable changes to this project will be documented in this file.
 - fix: ensure delete logs files for 0 days
 
 ---
-
-## Unreleased
 
 ### [0.1.5] - 2023-12-15
 
