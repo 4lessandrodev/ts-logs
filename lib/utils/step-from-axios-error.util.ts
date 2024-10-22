@@ -1,4 +1,5 @@
 import { CatchError, Method, SProps, Type } from '../types';
+import ExtractBodyToJson from './body-to-json.util';
 import DeleteObjectKey from './delete-object-key.util';
 import ExtractBodyAsObject from './extract-body.util';
 import TagsFromBody from './get-tags-from-body.util';
@@ -15,7 +16,7 @@ export const StepPropsFromAxiosError = (error: CatchError, rmKeys: string[] = []
     const name = error.name;
     const headId = error?.config?.headers?.['uid'] ?? error?.config?.headers?.['id'];
     const uid = error?.config?.data?.['id'] ?? headId;
-    const body = ExtractBodyAsObject(error?.config?.data);
+    const body = ExtractBodyToJson(error) ?? ExtractBodyAsObject(error?.config?.data);
     const reqData = DeleteObjectKey(body, rmKeys);
     const stack = error.stack ?? 'none';
     const message = error.message;

@@ -9,7 +9,7 @@ export const DeleteExpiredFile = (days: number, dirname: string): void => {
         const stats = statSync(filePath)
         const daysToDeleteLogs = Date.now() - stats.mtime.getTime() > days * ONE_DAY_IN_MS;
 
-        if (daysToDeleteLogs) unlinkSync(filePath)
+        if (daysToDeleteLogs || days === 0) unlinkSync(filePath)
     });
 }
 

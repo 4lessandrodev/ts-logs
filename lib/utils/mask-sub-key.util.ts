@@ -23,7 +23,7 @@ export const MaskSubObjectKey = <T = {}>(path: string, object: T, callback: Call
 
 	if ((!strOrNullA && !strOrNullB)) return object;
 
-	const valToChange: string = strOrNullA ? strOrNullA : strOrNullB;
+	const valToChange: string = strOrNullA ? strOrNullA : strOrNullB ?? '';
 
 	if (value?.[lastKey]) value[lastKey] = callback(valToChange);
 
