@@ -1,7 +1,7 @@
 {
 	"name": "ts-logs",
 	"description": "This package provide a skd for audit and manager logs in nodejs and express",
-	"version": "0.1.5",
+	"version": "0.2.0-beta",
 	"main": "index.js",
 	"types": "index.d.ts",
 	"author": "Alessandro Dev",
@@ -44,7 +44,7 @@
 	"homepage": "https://github.com/4lessandrodev/ts-logs",
 	"license": "MIT",
 	"engines": {
-		"node": ">=14.x <19"
+		"node": ">=14.x <22.x"
 	},
 	"keywords": [
 		"Logs",
