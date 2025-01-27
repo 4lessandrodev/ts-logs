@@ -1,7 +1,7 @@
 {
 	"name": "ts-logs",
 	"description": "This package provide a skd for audit and manager logs in nodejs and express",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"main": "index.js",
 	"types": "index.d.ts",
 	"author": "Alessandro Dev",
@@ -19,19 +19,19 @@
 	"devDependencies": {
 		"@types/express": "^5.0.0",
 		"@types/jest": "^29.4.0",
-		"@types/node": "^22.5.1",
+		"@types/node": "^22.10.10",
 		"env-cmd": "^10.1.0",
 		"jest": "^29.4.1",
 		"madge": "^6.0.0",
-		"rimraf": "^5.0.0",
+		"rimraf": "^5.0.10",
 		"ts-jest": "^29.0.5",
 		"ts-node": "^10.9.1",
-		"typescript": "^5.6.3"
+		"typescript": "^5.7.3"
 	},
 	"peerDependencies": {
-		"@aws-sdk/client-s3": "^3.321.1",
+		"@aws-sdk/client-s3": "^3.735.0",
 		"@types/express": "^5.0.0",
-		"axios": "^1.4.0",
+		"axios": "^1.7.9",
 		"express": "^4.18.2"
 	},
 	"repository": {
@@ -44,7 +44,7 @@
 	"homepage": "https://github.com/4lessandrodev/ts-logs",
 	"license": "MIT",
 	"engines": {
-		"node": ">=14.x <22.x"
+		"node": ">=14.x <=23.x"
 	},
 	"keywords": [
 		"Logs",
@@ -74,8 +74,8 @@
 		"README.md"
 	],
 	"dependencies": {
-		"@aws-sdk/client-s3": "^3.474.0",
-		"axios": "^1.6.2",
-		"mongodb": "^6.0.0"
+		"@aws-sdk/client-s3": "^3.735.0",
+		"axios": "^1.7.9",
+		"mongodb": "^6.12.0"
 	}
 }
