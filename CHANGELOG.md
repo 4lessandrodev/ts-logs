@@ -8,6 +8,17 @@ All notable changes to this project will be documented in this file.
 
 ## Released
 
+---
+
+### [0.3.0] - 2024-10-22
+
+### Fix
+
+- Support for nodejs v23
+- Update deps
+
+---
+
 ### [0.2.0] - 2024-10-22
 
 ### Feat
